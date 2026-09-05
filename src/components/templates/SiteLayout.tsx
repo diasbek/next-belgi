@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { getContent } from "@/i18n/get-content";
+import { localePath } from "@/i18n/paths";
 import { Header } from "@/components/organisms/Header";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
 import { HashScroll } from "@/components/organisms/HashScroll";
@@ -25,6 +26,8 @@ export function SiteLayout({ locale, children }: SiteLayoutProps) {
         text={content.ui.cookieText}
         acceptLabel={content.ui.cookieAccept}
         declineLabel={content.ui.cookieDecline}
+        policyHref={localePath(locale, "/cookies/")}
+        policyLabel={locale === "ru" ? "Политика cookie" : "Cookie siyosati"}
       />
     </>
   );

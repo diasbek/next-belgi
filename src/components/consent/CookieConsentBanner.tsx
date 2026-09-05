@@ -1,15 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function CookieConsentBanner({
   text,
   acceptLabel,
   declineLabel,
+  policyHref,
+  policyLabel,
 }: {
   text: string;
   acceptLabel: string;
   declineLabel: string;
+  policyHref?: string;
+  policyLabel?: string;
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -35,7 +40,20 @@ export function CookieConsentBanner({
 
   return (
     <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[60] mx-auto w-[min(100%-1.5rem,var(--content-band))] rounded-2xl border border-black/10 bg-white p-4 shadow-md md:inset-x-auto md:right-4 md:bottom-4">
-      <p className="m-0 text-sm leading-relaxed text-ink">{text}</p>
+      <p className="m-0 text-sm leading-relaxed text-ink">
+        {text}
+        {policyHref && policyLabel ? (
+          <>
+            {" "}
+            <Link
+              href={policyHref}
+              className="font-medium underline underline-offset-2"
+            >
+              {policyLabel}
+            </Link>
+          </>
+        ) : null}
+      </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"

@@ -39,6 +39,8 @@ export function RegisterForm({ locale }: { locale: Locale }) {
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,6 +77,10 @@ export function RegisterForm({ locale }: { locale: Locale }) {
   }
 
   async function sendOtp() {
+    if (!acceptTerms) {
+      setError(copy.login.acceptRequired);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -175,7 +181,18 @@ export function RegisterForm({ locale }: { locale: Locale }) {
 
       {caps.google && step === "identity" ? (
         <a
-          href={`/api/auth/google/start/?next=${encodeURIComponent(next)}`}
+          href={
+            acceptTerms
+              ? `/api/auth/google/start/?next=${encodeURIComponent(next)}`
+              : "#"
+          }
+          aria-disabled={!acceptTerms}
+          onClick={(e) => {
+            if (!acceptTerms) {
+              e.preventDefault();
+              setError(copy.login.acceptRequired);
+            }
+          }}
           className="mb-6 flex w-full items-center justify-center rounded-full border border-black/10 bg-white px-4 py-3 text-sm font-medium text-ink hover:bg-black/[0.03]"
         >
           {copy.login.google}
@@ -201,6 +218,48 @@ export function RegisterForm({ locale }: { locale: Locale }) {
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
             />
+          </label>
+          <label className="flex items-start gap-3 text-sm text-ink">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              required
+            />
+            <span>
+              {copy.login.acceptTerms}{" "}
+              <Link
+                href={localePath(locale, "/terms/")}
+                className="underline underline-offset-2"
+              >
+                {locale === "ru" ? "Оферта" : "Oferta"}
+              </Link>
+              ,{" "}
+              <Link
+                href={localePath(locale, "/privacy/")}
+                className="underline underline-offset-2"
+              >
+                {locale === "ru" ? "Конфиденциальность" : "Maxfiylik"}
+              </Link>
+              ,{" "}
+              <Link
+                href={localePath(locale, "/consent/")}
+                className="underline underline-offset-2"
+              >
+                {locale === "ru" ? "Согласие" : "Rozilik"}
+              </Link>
+              .
+            </span>
+          </label>
+          <label className="flex items-start gap-3 text-sm text-ink-muted">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={acceptMarketing}
+              onChange={(e) => setAcceptMarketing(e.target.checked)}
+            />
+            <span>{copy.login.acceptMarketing}</span>
           </label>
           <Button type="submit" disabled={loading} className="w-full">
             {copy.login.continue}

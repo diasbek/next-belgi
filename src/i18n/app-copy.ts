@@ -60,6 +60,11 @@ export type AppCopy = {
     priceLabel: string;
     resumeHint: string;
     continueCheck: string;
+    payNotice: string;
+    debitMoment: string;
+    offerLink: string;
+    refundLink: string;
+    creditsLink: string;
   };
   profile: {
     title: string;
@@ -78,10 +83,18 @@ export type AppCopy = {
     googleUnlinked: string;
     linkEmail: string;
     linkPhone: string;
+    changeEmail: string;
+    changePhone: string;
+    currentValue: string;
+    emptyEmail: string;
+    emptyPhone: string;
+    newEmail: string;
+    newPhone: string;
     emailPlaceholder: string;
     phonePlaceholder: string;
     sendOtp: string;
     linkDone: string;
+    changeDone: string;
     cancel: string;
   };
   adminDash: {
@@ -235,6 +248,9 @@ export type AppCopy = {
     needDestination: string;
     switchToSignUp: string;
     switchToSignIn: string;
+    acceptTerms: string;
+    acceptMarketing: string;
+    acceptRequired: string;
     error: string;
     errors: Record<string, string>;
   };
@@ -303,6 +319,13 @@ export const uzApp: AppCopy = {
     resumeHint:
       "Kredit yetarli emas. Toʻldiring — tekshiruv avtomatik davom etadi.",
     continueCheck: "Tekshiruvni davom ettirish",
+    payNotice:
+      "Toʻlovdan oldin paket, kreditlar soni, narx, yechib olish va qaytarish shartlarini tekshiring.",
+    debitMoment:
+      "Kredit AI-tekshiruv muvaffaqiyatli ishga tushganda yechib olinadi (odatda 1 kredit).",
+    offerLink: "Ommaviy oferta",
+    refundLink: "Qaytarish siyosati",
+    creditsLink: "Tarif va kreditlar",
   },
   profile: {
     title: "Profil",
@@ -319,12 +342,20 @@ export const uzApp: AppCopy = {
     linkGoogle: "Google hisobini bogʻlash",
     unlinkGoogle: "Google bogʻlanishini uzish",
     googleUnlinked: "Google hisobi uzildi",
-    linkEmail: "Emailni bogʻlash",
-    linkPhone: "Telefonni bogʻlash",
+    linkEmail: "Email qoʻshish",
+    linkPhone: "Telefon qoʻshish",
+    changeEmail: "Emailni oʻzgartirish",
+    changePhone: "Telefonni oʻzgartirish",
+    currentValue: "Hozirgi",
+    emptyEmail: "Email hali bogʻlanmagan.",
+    emptyPhone: "Telefon hali bogʻlanmagan.",
+    newEmail: "Yangi email",
+    newPhone: "Yangi telefon",
     emailPlaceholder: "email@example.com",
     phonePlaceholder: "+998…",
     sendOtp: "Tasdiqlash kodini yuborish",
     linkDone: "Muvaffaqiyatli bogʻlandi",
+    changeDone: "Muvaffaqiyatli oʻzgartirildi",
     cancel: "Bekor qilish",
   },
   adminDash: {
@@ -506,6 +537,11 @@ export const uzApp: AppCopy = {
     needDestination: "Avval email yoki telefonni kiriting",
     switchToSignUp: "Hisobingiz yoʻqmi? Roʻyxatdan oʻting",
     switchToSignIn: "Allaqachon hisobingiz bormi? Kiring",
+    acceptTerms:
+      "Foydalanuvchi kelishuvi (oferta)ni qabul qilaman va Maxfiylik siyosati bilan tanishganimni tasdiqlayman.",
+    acceptMarketing:
+      "Xizmat yangiliklari va takliflar haqida xabar olishga roziman (ixtiyoriy).",
+    acceptRequired: "Davom etish uchun shartlarni qabul qiling",
     error: "Amalni bajarib boʻlmadi. Qayta urinib koʻring.",
     errors: {
       invalid_credentials: "Email/telefon yoki parol notoʻgʻri",
@@ -602,6 +638,13 @@ export const ruApp: AppCopy = {
     resumeHint:
       "Недостаточно кредитов. Пополните — проверка продолжится автоматически.",
     continueCheck: "Продолжить проверку",
+    payNotice:
+      "Перед оплатой проверьте тариф, число кредитов, стоимость, момент списания и условия возврата.",
+    debitMoment:
+      "Кредит списывается при успешном запуске AI-проверки (как правило, 1 кредит).",
+    offerLink: "Публичная оферта",
+    refundLink: "Политика возврата",
+    creditsLink: "Тарифы и кредиты",
   },
   profile: {
     title: "Профиль",
@@ -618,12 +661,20 @@ export const ruApp: AppCopy = {
     linkGoogle: "Привязать Google",
     unlinkGoogle: "Отвязать Google",
     googleUnlinked: "Google отвязан",
-    linkEmail: "Привязать email",
-    linkPhone: "Привязать телефон",
+    linkEmail: "Добавить email",
+    linkPhone: "Добавить телефон",
+    changeEmail: "Изменить email",
+    changePhone: "Изменить телефон",
+    currentValue: "Текущий",
+    emptyEmail: "Email ещё не привязан.",
+    emptyPhone: "Телефон ещё не привязан.",
+    newEmail: "Новый email",
+    newPhone: "Новый телефон",
     emailPlaceholder: "email@example.com",
     phonePlaceholder: "+998…",
     sendOtp: "Отправить код подтверждения",
     linkDone: "Успешно привязано",
+    changeDone: "Успешно изменено",
     cancel: "Отмена",
   },
   adminDash: {
@@ -805,6 +856,11 @@ export const ruApp: AppCopy = {
     needDestination: "Сначала укажите email или телефон",
     switchToSignUp: "Нет аккаунта? Зарегистрироваться",
     switchToSignIn: "Уже есть аккаунт? Войти",
+    acceptTerms:
+      "Я принимаю Пользовательское соглашение (оферту) и подтверждаю ознакомление с Политикой конфиденциальности.",
+    acceptMarketing:
+      "Согласен(на) получать новости и предложения сервиса (необязательно).",
+    acceptRequired: "Примите условия, чтобы продолжить",
     error: "Не удалось выполнить действие. Попробуйте ещё раз.",
     errors: {
       invalid_credentials: "Неверный email/телефон или пароль",

@@ -98,7 +98,15 @@ export function ContactForm({
           />
           <label className="flex items-start gap-3 text-sm text-ink">
             <Field type="checkbox" name="consent" className="mt-1" />
-            <span>{content.formCommon.consent}</span>
+            <span>
+              {content.formCommon.consent}{" "}
+              <a
+                href={locale === "ru" ? "/ru/consent/" : "/consent/"}
+                className="font-medium underline underline-offset-2"
+              >
+                {locale === "ru" ? "Текст согласия" : "Rozilik matni"}
+              </a>
+            </span>
           </label>
           {touched.consent && errors.consent ? (
             <p className="m-0 text-sm text-danger">{content.ui.required}</p>

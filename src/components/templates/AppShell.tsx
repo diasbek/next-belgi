@@ -205,16 +205,6 @@ export function AppShell({
                   {renderNavLinks(closeDrawer)}
                 </div>
               </nav>
-              <div className="border-t border-black/5 p-3">
-                <Link
-                  href={homeHref}
-                  onClick={closeDrawer}
-                  className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-ink-muted hover:bg-black/[0.04] hover:text-ink"
-                >
-                  {copy.backToSite}
-                  <span aria-hidden>↗</span>
-                </Link>
-              </div>
             </aside>
           </div>,
           document.body,
@@ -270,15 +260,6 @@ export function AppShell({
                 locale={locale}
                 className="!min-h-9 !rounded-full !border-black/10 !bg-white !px-2.5 !text-sm sm:!px-3"
               />
-              <Link
-                href={homeHref}
-                className="hidden items-center gap-1.5 text-sm font-medium text-ink-muted hover:text-ink sm:inline-flex"
-              >
-                {copy.backToSite}
-                <span aria-hidden className="text-xs">
-                  ↗
-                </span>
-              </Link>
               <div className="relative" ref={menuRef}>
                 <button
                   type="button"

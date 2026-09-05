@@ -11,9 +11,26 @@ import {
   WorksPageView,
   ServicesPageView,
   ContactsPageView,
-  PrivacyPageView,
-  TermsPageView,
 } from "@/views/ContentPageViews";
+import {
+  LegalDocPageView,
+  LegalIndexPageView,
+} from "@/views/LegalPageViews";
+import {
+  getLegalDocByAlias,
+  getLegalDocBySlug,
+  type LegalDocMeta,
+} from "@/data/legal/catalog";
+import {
+  extractLegalDescription,
+  extractLegalTitle,
+  loadLegalMarkdown,
+} from "@/lib/legal/load";
+import { notFound } from "next/navigation";
+import { createPageMetadata, canonicalPageUrl } from "@/utils/seo/metadata";
+import { getLocalizedAlternates, localePath } from "@/i18n/paths";
+import { ogLocale } from "@/i18n/config";
+import type { Metadata } from "next";
 
 export function createHomePage(locale: Locale) {
   return {
@@ -148,28 +165,125 @@ export function createRegisterPage(locale: Locale) {
   };
 }
 
+function legalMetadata(
+  locale: Locale,
+  meta: LegalDocMeta,
+  path: string,
+): Metadata {
+  const md = loadLegalMarkdown(locale, meta);
+  const title = md
+    ? extractLegalTitle(md, meta.footerLabel[locale])
+    : meta.footerLabel[locale];
+  const description = md
+    ? extractLegalDescription(md, meta.footerLabel[locale])
+    : meta.footerLabel[locale];
+  const noIndex = meta.group === "internal";
+  const alternates = getLocalizedAlternates(path);
+  return createPageMetadata(title, description, localePath(locale, path), {
+    ogLocale: ogLocale[locale],
+    alternates: Object.fromEntries(
+      Object.entries(alternates).map(([lang, href]) => [
+        lang,
+        canonicalPageUrl(href),
+      ]),
+    ),
+    noIndex,
+  });
+}
+
+function LegalDocRoute({
+  locale,
+  meta,
+}: {
+  locale: Locale;
+  meta: LegalDocMeta;
+}) {
+  const markdown = loadLegalMarkdown(locale, meta);
+  if (!markdown) notFound();
+  return (
+    <SiteLayout locale={locale}>
+      <LegalDocPageView locale={locale} meta={meta} markdown={markdown} />
+    </SiteLayout>
+  );
+}
+
 export function createPrivacyPage(locale: Locale) {
+  const meta = getLegalDocByAlias("/privacy/")!;
   return {
-    generateMetadata: () => getLocalizedPageMetadata(locale, "privacy"),
+    generateMetadata: () => legalMetadata(locale, meta, "/privacy/"),
     Page: async function PrivacyPage() {
+      return <LegalDocRoute locale={locale} meta={meta} />;
+    },
+  };
+}
+
+export function createTermsPage(locale: Locale) {
+  const meta = getLegalDocByAlias("/terms/")!;
+  return {
+    generateMetadata: () => legalMetadata(locale, meta, "/terms/"),
+    Page: async function TermsPage() {
+      return <LegalDocRoute locale={locale} meta={meta} />;
+    },
+  };
+}
+
+export function createLegalAliasPage(locale: Locale, aliasPath: string) {
+  const meta = getLegalDocByAlias(aliasPath);
+  if (!meta) {
+    throw new Error(`Unknown legal alias: ${aliasPath}`);
+  }
+  return {
+    generateMetadata: () => legalMetadata(locale, meta, aliasPath),
+    Page: async function LegalAliasPage() {
+      return <LegalDocRoute locale={locale} meta={meta} />;
+    },
+  };
+}
+
+export function createLegalIndexPage(locale: Locale) {
+  const title =
+    locale === "ru" ? "Юридические документы" : "Yuridik hujjatlar";
+  const description =
+    locale === "ru"
+      ? "Публичные условия, документы подачи заявки и внутренние регламенты Belgi.ai."
+      : "Belgi.ai ommaviy shartlari, ariza hujjatlari va ichki reglamentlar.";
+  const alternates = getLocalizedAlternates("/legal/");
+  return {
+    generateMetadata: (): Metadata =>
+      createPageMetadata(title, description, localePath(locale, "/legal/"), {
+        ogLocale: ogLocale[locale],
+        alternates: Object.fromEntries(
+          Object.entries(alternates).map(([lang, href]) => [
+            lang,
+            canonicalPageUrl(href),
+          ]),
+        ),
+      }),
+    Page: async function LegalIndexPage() {
       return (
         <SiteLayout locale={locale}>
-          <PrivacyPageView locale={locale} />
+          <LegalIndexPageView locale={locale} />
         </SiteLayout>
       );
     },
   };
 }
 
-export function createTermsPage(locale: Locale) {
+export function createLegalSlugPage(locale: Locale, slug: string) {
+  const meta = getLegalDocBySlug(slug);
+  if (!meta) {
+    return {
+      generateMetadata: async () => ({}),
+      Page: async function MissingLegal() {
+        notFound();
+      },
+    };
+  }
   return {
-    generateMetadata: () => getLocalizedPageMetadata(locale, "terms"),
-    Page: async function TermsPage() {
-      return (
-        <SiteLayout locale={locale}>
-          <TermsPageView locale={locale} />
-        </SiteLayout>
-      );
+    generateMetadata: () =>
+      legalMetadata(locale, meta, `/legal/${meta.slug}/`),
+    Page: async function LegalSlugPage() {
+      return <LegalDocRoute locale={locale} meta={meta} />;
     },
   };
 }

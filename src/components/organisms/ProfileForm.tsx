@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { authErrorMessage, getAppCopy } from "@/i18n/app-copy";
 import { Button } from "@/components/atoms/Button";
+import { DashPanel } from "@/components/molecules/DashChrome";
 import { fieldInput, sectionLead, sectionTitle } from "@/styles/ui";
 import { localePath } from "@/i18n/paths";
 
@@ -33,12 +34,15 @@ export function ProfileForm({
   const [emailDest, setEmailDest] = useState("");
   const [phoneDest, setPhoneDest] = useState("");
   const [linkCode, setLinkCode] = useState("");
-  const [activeChannel, setActiveChannel] = useState<LinkChannel | null>(null);
-  const [linkStep, setLinkStep] = useState<"idle" | "code" | "done">("idle");
+  const [editing, setEditing] = useState<LinkChannel | null>(null);
+  const [linkStep, setLinkStep] = useState<"form" | "code">("form");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const displayPhone = phone || initial.phone || "";
+  const currentEmail = email.trim();
+  const currentPhone = (phone || initial.phone || "").trim();
+  const hasEmail = Boolean(currentEmail);
+  const hasPhone = Boolean(currentPhone);
 
   async function onSave(e: React.FormEvent) {
     e.preventDefault();
@@ -62,10 +66,29 @@ export function ProfileForm({
     }
   }
 
+  function startEdit(channel: LinkChannel) {
+    setError(null);
+    setMessage(null);
+    setEditing(channel);
+    setLinkStep("form");
+    setLinkCode("");
+    if (channel === "email") setEmailDest("");
+    else setPhoneDest("");
+  }
+
+  function cancelEdit() {
+    setEditing(null);
+    setLinkStep("form");
+    setLinkCode("");
+    setEmailDest("");
+    setPhoneDest("");
+  }
+
   async function sendLinkOtp(channel: LinkChannel) {
     setError(null);
     setMessage(null);
-    const destination = channel === "email" ? emailDest.trim() : phoneDest.trim();
+    const destination =
+      channel === "email" ? emailDest.trim() : phoneDest.trim();
     if (!destination) return;
     const res = await fetch("/api/auth/otp/send/", {
       method: "POST",
@@ -81,16 +104,17 @@ export function ProfileForm({
       setError(authErrorMessage(copy, json.error, copy.profile.error));
       return;
     }
-    setActiveChannel(channel);
+    setEditing(channel);
     setLinkCode("");
     setLinkStep("code");
   }
 
   async function verifyLinkOtp() {
-    if (!activeChannel) return;
+    if (!editing) return;
     setError(null);
     const destination =
-      activeChannel === "email" ? emailDest.trim() : phoneDest.trim();
+      editing === "email" ? emailDest.trim() : phoneDest.trim();
+    const hadValue = editing === "email" ? hasEmail : hasPhone;
     const verify = await fetch("/api/auth/otp/verify/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -119,9 +143,8 @@ export function ProfileForm({
       setError(authErrorMessage(copy, cjson.error, copy.profile.error));
       return;
     }
-    setLinkStep("done");
-    setMessage(copy.profile.linkDone);
-    setActiveChannel(null);
+    cancelEdit();
+    setMessage(hadValue ? copy.profile.changeDone : copy.profile.linkDone);
     router.refresh();
   }
 
@@ -137,12 +160,126 @@ export function ProfileForm({
     router.refresh();
   }
 
+  function renderContact(channel: LinkChannel) {
+    const isEmail = channel === "email";
+    const title = isEmail ? copy.profile.email : copy.profile.phone;
+    const value = isEmail ? currentEmail : currentPhone;
+    const hasValue = isEmail ? hasEmail : hasPhone;
+    const isEditing = editing === channel;
+    const dest = isEmail ? emailDest : phoneDest;
+    const onDestChange = isEmail ? setEmailDest : setPhoneDest;
+    const actionLabel = hasValue
+      ? isEmail
+        ? copy.profile.changeEmail
+        : copy.profile.changePhone
+      : isEmail
+        ? copy.profile.linkEmail
+        : copy.profile.linkPhone;
+    const fieldLabel = hasValue
+      ? isEmail
+        ? copy.profile.newEmail
+        : copy.profile.newPhone
+      : title;
+    const placeholder = isEmail
+      ? copy.profile.emailPlaceholder
+      : copy.profile.phonePlaceholder;
+    const emptyHint = isEmail
+      ? copy.profile.emptyEmail
+      : copy.profile.emptyPhone;
+
+    return (
+      <DashPanel key={channel} className="p-4 sm:p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="m-0 text-base font-semibold text-ink">{title}</h2>
+            {hasValue ? (
+              <p className="mt-2 break-all text-sm text-ink">
+                <span className="text-ink-muted">
+                  {copy.profile.currentValue}:{" "}
+                </span>
+                {value}
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-ink-muted">{emptyHint}</p>
+            )}
+          </div>
+          {!isEditing ? (
+            <Button
+              type="button"
+              variant={hasValue ? "secondary" : "primary"}
+              className="shrink-0"
+              onClick={() => startEdit(channel)}
+            >
+              {actionLabel}
+            </Button>
+          ) : null}
+        </div>
+
+        {isEditing ? (
+          <div className="mt-4 flex flex-col gap-3 border-t border-black/5 pt-4">
+            {linkStep === "form" ? (
+              <>
+                <label className="text-sm font-medium">
+                  {fieldLabel}
+                  <input
+                    className={`${fieldInput} mt-1`}
+                    type={isEmail ? "email" : "tel"}
+                    placeholder={placeholder}
+                    value={dest}
+                    onChange={(e) => onDestChange(e.target.value)}
+                    autoComplete={isEmail ? "email" : "tel"}
+                  />
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    disabled={!dest.trim()}
+                    onClick={() => void sendLinkOtp(channel)}
+                  >
+                    {copy.profile.sendOtp}
+                  </Button>
+                  <Button type="button" variant="ghost" onClick={cancelEdit}>
+                    {copy.profile.cancel}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="m-0 text-sm text-ink-muted">{copy.login.otpSent}</p>
+                <p className="m-0 text-sm font-medium text-ink">{dest}</p>
+                <label className="text-sm font-medium">
+                  {copy.login.otpCode}
+                  <input
+                    className={`${fieldInput} mt-1`}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    placeholder={copy.login.otpCode}
+                    value={linkCode}
+                    onChange={(e) => setLinkCode(e.target.value)}
+                  />
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  <Button type="button" onClick={() => void verifyLinkOtp()}>
+                    {copy.login.verifyOtp}
+                  </Button>
+                  <Button type="button" variant="ghost" onClick={cancelEdit}>
+                    {copy.profile.cancel}
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        ) : null}
+      </DashPanel>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex max-w-lg flex-col gap-6">
       <div>
         <h1 className={sectionTitle}>{copy.profile.title}</h1>
         <p className={sectionLead}>{copy.profile.lead}</p>
-        <form onSubmit={onSave} className="flex max-w-md flex-col gap-4">
+        <form onSubmit={onSave} className="flex flex-col gap-4">
           <label className="text-sm font-medium">
             {copy.profile.name}
             <input
@@ -152,43 +289,26 @@ export function ProfileForm({
               autoComplete="name"
             />
           </label>
-          <label className="text-sm font-medium">
-            {copy.profile.email}
-            <input
-              className={`${fieldInput} mt-1`}
-              type="email"
-              value={email}
-              disabled
-              placeholder={copy.profile.emailPlaceholder}
-              autoComplete="email"
-            />
-          </label>
-          <label className="text-sm font-medium">
-            {copy.profile.phone}
-            <input
-              className={`${fieldInput} mt-1`}
-              type="tel"
-              value={displayPhone}
-              disabled
-              placeholder={copy.profile.phonePlaceholder}
-              autoComplete="tel"
-            />
-          </label>
           <Button type="submit" disabled={loading}>
             {copy.profile.save}
           </Button>
           {saved ? (
-            <p className="text-sm text-success">{copy.profile.saved}</p>
+            <p className="m-0 text-sm text-success">{copy.profile.saved}</p>
           ) : null}
         </form>
       </div>
 
-      <div className="max-w-md">
-        <h2 className="mb-2 text-lg font-semibold">{copy.profile.providers}</h2>
-        <p className="mb-3 text-sm text-ink-muted">
+      {renderContact("email")}
+      {renderContact("phone")}
+
+      <DashPanel className="p-4 sm:p-5">
+        <h2 className="m-0 text-base font-semibold text-ink">
+          {copy.profile.providers}
+        </h2>
+        <p className="mt-2 text-sm text-ink-muted">
           {hasPassword ? copy.profile.hasPassword : copy.profile.noPassword}
         </p>
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           {googleLinked ? (
             <Button
               type="button"
@@ -206,96 +326,11 @@ export function ProfileForm({
             </a>
           )}
         </div>
+      </DashPanel>
 
-        <div className="flex flex-col gap-5">
-          <div>
-            <label className="text-sm font-medium">
-              {copy.profile.linkEmail}
-              <input
-                className={`${fieldInput} mt-1`}
-                type="email"
-                placeholder={copy.profile.emailPlaceholder}
-                value={emailDest}
-                onChange={(e) => setEmailDest(e.target.value)}
-                autoComplete="email"
-                disabled={linkStep === "code" && activeChannel === "phone"}
-              />
-            </label>
-            {linkStep !== "code" || activeChannel !== "email" ? (
-              <Button
-                type="button"
-                className="mt-3"
-                disabled={!emailDest.trim() || linkStep === "code"}
-                onClick={() => void sendLinkOtp("email")}
-              >
-                {copy.profile.sendOtp}
-              </Button>
-            ) : null}
-          </div>
-
-          <div>
-            <label className="text-sm font-medium">
-              {copy.profile.linkPhone}
-              <input
-                className={`${fieldInput} mt-1`}
-                type="tel"
-                placeholder={copy.profile.phonePlaceholder}
-                value={phoneDest}
-                onChange={(e) => setPhoneDest(e.target.value)}
-                autoComplete="tel"
-                disabled={linkStep === "code" && activeChannel === "email"}
-              />
-            </label>
-            {linkStep !== "code" || activeChannel !== "phone" ? (
-              <Button
-                type="button"
-                className="mt-3"
-                disabled={!phoneDest.trim() || linkStep === "code"}
-                onClick={() => void sendLinkOtp("phone")}
-              >
-                {copy.profile.sendOtp}
-              </Button>
-            ) : null}
-          </div>
-        </div>
-
-        {linkStep === "code" && activeChannel ? (
-          <div className="mt-4 flex flex-col gap-2 rounded-xl bg-surface-muted p-4">
-            <p className="text-sm text-ink-muted">{copy.login.otpSent}</p>
-            <label className="text-sm font-medium">
-              {copy.login.otpCode}
-              <input
-                className={`${fieldInput} mt-1`}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                placeholder={copy.login.otpCode}
-                value={linkCode}
-                onChange={(e) => setLinkCode(e.target.value)}
-              />
-            </label>
-            <div className="flex flex-wrap gap-2">
-              <Button type="button" onClick={() => void verifyLinkOtp()}>
-                {copy.login.verifyOtp}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => {
-                  setLinkStep("idle");
-                  setActiveChannel(null);
-                  setLinkCode("");
-                }}
-              >
-                {copy.profile.cancel}
-              </Button>
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      {message ? <p className="text-sm text-success">{message}</p> : null}
+      {message ? <p className="m-0 text-sm text-success">{message}</p> : null}
       {error ? (
-        <p className="text-sm text-danger" role="alert">
+        <p className="m-0 text-sm text-danger" role="alert">
           {error}
         </p>
       ) : null}

@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { Button } from "@/components/atoms/Button";
 import { sectionLead, sectionTitle } from "@/styles/ui";
+import { localePath } from "@/i18n/paths";
 import {
   isCheckResumePath,
   safeInternalNext,
@@ -151,6 +153,30 @@ export function BillingPanel({
       ) : null}
 
       <h2 className="mb-3 text-lg font-semibold text-ink">{copy.billing.plans}</h2>
+      <div className="mb-4 rounded-xl border border-black/5 bg-white px-4 py-3 text-sm text-ink-muted">
+        <p className="m-0">{copy.billing.payNotice}</p>
+        <p className="mt-2 m-0">{copy.billing.debitMoment}</p>
+        <p className="mt-2 m-0 flex flex-wrap gap-x-3 gap-y-1">
+          <Link
+            href={localePath(locale, "/offer/")}
+            className="font-medium text-ink underline-offset-2 hover:underline"
+          >
+            {copy.billing.offerLink}
+          </Link>
+          <Link
+            href={localePath(locale, "/credits/")}
+            className="font-medium text-ink underline-offset-2 hover:underline"
+          >
+            {copy.billing.creditsLink}
+          </Link>
+          <Link
+            href={localePath(locale, "/refunds/")}
+            className="font-medium text-ink underline-offset-2 hover:underline"
+          >
+            {copy.billing.refundLink}
+          </Link>
+        </p>
+      </div>
       <ul className="mb-10 divide-y divide-black/5 border-y border-black/5">
         {plans.map((plan) => {
           const title = locale === "ru" ? plan.title_ru : plan.title_uz;

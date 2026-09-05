@@ -21,6 +21,19 @@ export function normalizeEmail(input: string): string | null {
   return e;
 }
 
+/** Synthetic emails for phone-only accounts — not shown as a real email. */
+export function isSyntheticPhoneEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return email.toLowerCase().endsWith("@phone.belgi.local");
+}
+
+export function displayAuthEmail(
+  email: string | null | undefined,
+): string | null {
+  if (!email || isSyntheticPhoneEmail(email)) return null;
+  return email;
+}
+
 export type OtpChannel = "sms" | "email";
 
 export function detectChannel(destination: string): {

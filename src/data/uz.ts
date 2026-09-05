@@ -221,7 +221,7 @@ export const uzCopy: SiteCopy = {
     replaceHint: "Boshqa nomga almashtiring",
     specialistHint: "yoki mutaxassisga murojaat qiling",
     disclaimer:
-      "* Adliya vazirligi ushbu ekspert xulosasi va hisobotdagi xulosa bilan kelishmasligi mumkin, chunki yuqoridagi tovar belgilari bazalari muntazam yangilanadi.",
+      "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan o‘xshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, ro‘yxatga olish to‘g‘risida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi. Adliya vazirligi / vakolatli organ hisobot xulosalari bilan kelishmasligi mumkin, chunki reestrlar muntazam yangilanadi.",
     lawyersTitle: "Yuristlar",
   },
   login: {
@@ -254,7 +254,8 @@ export const uzCopy: SiteCopy = {
     phone: "Telefon",
     email: "Email",
     message: "Xabar",
-    consent: "Shaxsiy maʼlumotlarni qayta ishlashga roziman",
+    consent:
+      "Shaxsiy maʼlumotlarni qayta ishlashga roziman (rozilik matni bilan tanishdim)",
     honeypot: "Toʻldirmang",
   },
 };

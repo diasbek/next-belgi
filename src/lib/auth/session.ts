@@ -5,6 +5,7 @@ import {
   resolveSessionUserId,
 } from "@/lib/auth/app-session";
 import { getServiceDb } from "@/lib/db/client";
+import { displayAuthEmail } from "@/lib/otp/normalize";
 
 export type ProfileRole = "user" | "admin";
 
@@ -59,7 +60,7 @@ export async function getAppUser(): Promise<AppUser | null> {
         .maybeSingle(),
     ]);
 
-  const email = authUser.user?.email ?? null;
+  const email = displayAuthEmail(authUser.user?.email ?? null);
   const phone =
     profile.phone ||
     (authUser.user?.phone as string | undefined) ||

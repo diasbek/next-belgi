@@ -268,7 +268,13 @@ export function CheckResultPageView({
         </div>
 
         <p className="m-0 text-xs leading-relaxed text-ink-muted">
-          {copy.report.disclaimer}
+          {copy.report.disclaimer}{" "}
+          <a
+            href={locale === "ru" ? "/ru/ai-disclaimer/" : "/ai-disclaimer/"}
+            className="font-medium text-ink underline underline-offset-2"
+          >
+            {locale === "ru" ? "Подробнее" : "Batafsil"}
+          </a>
         </p>
       </PageContainer>
     </section>

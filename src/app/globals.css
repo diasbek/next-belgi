@@ -7,6 +7,12 @@ body {
   min-height: 100%;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
+  padding-bottom: env(safe-area-inset-bottom);
 }
+

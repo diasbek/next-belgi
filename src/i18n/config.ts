@@ -28,6 +28,7 @@ export type PageKey =
   | "check"
   | "checkResult"
   | "login"
+  | "register"
   | "privacy"
   | "terms"
   | "notFound";
@@ -41,6 +42,7 @@ export const pagePaths: Record<PageKey, string> = {
   check: "/check/",
   checkResult: "/check/result/",
   login: "/login/",
+  register: "/register/",
   privacy: "/privacy/",
   terms: "/terms/",
   notFound: "/404/",

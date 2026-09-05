@@ -1,7 +1,9 @@
 // @ts-check
 
-const PROD_SITE = "https://belgi.ai";
-const siteUrl = PROD_SITE;
+const DEFAULT_SITE = "https://belgi.nocode.uz";
+const siteUrl =
+  (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE).replace(/\/$/, "") ||
+  DEFAULT_SITE;
 
 /**
  * @param {string} url
@@ -10,7 +12,7 @@ function siteOrigin(url) {
   try {
     return new URL(url).origin;
   } catch {
-    return PROD_SITE;
+    return DEFAULT_SITE;
   }
 }
 
@@ -68,6 +70,8 @@ const nextConfig = {
       bodySizeLimit: "1mb",
       allowedOrigins: [
         siteOrigin(siteUrl),
+        "belgi.nocode.uz",
+        "www.belgi.nocode.uz",
         "belgi.ai",
         "www.belgi.ai",
         "localhost:3000",
@@ -97,6 +101,13 @@ const nextConfig = {
     imageSizes: [32, 48, 64, 96, 128, 256, 320, 384, 640],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "yfslkvdnnlbbuqriyfcu.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
   async redirects() {
     return [

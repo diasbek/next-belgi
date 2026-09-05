@@ -18,6 +18,9 @@ interface CheckFormProps {
   compact?: boolean;
   initialQuery?: string;
   initialActivity?: string;
+  idPrefix?: string;
+  /** Where to navigate after submit (default public /check/) */
+  actionPath?: string;
 }
 
 export function CheckForm({
@@ -29,11 +32,15 @@ export function CheckForm({
   compact,
   initialQuery = "",
   initialActivity = "",
+  idPrefix = "check",
+  actionPath = "/check/",
 }: CheckFormProps) {
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
   const [activity, setActivity] = useState(initialActivity);
   const [pending, setPending] = useState(false);
+  const brandId = `${idPrefix}-brand`;
+  const activityId = `${idPrefix}-activity`;
 
   function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -43,25 +50,23 @@ export function CheckForm({
     setPending(true);
     trackEvent("check_form_submit");
     const params = new URLSearchParams({ q, activity: a });
-    router.push(`${localePath(locale, "/check/")}?${params.toString()}`);
+    router.push(`${localePath(locale, actionPath)}?${params.toString()}`);
   }
 
   return (
     <form
       onSubmit={onSubmit}
-      className={cn(
-        "grid gap-3",
-        compact
-          ? "md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)_auto]"
-          : "w-full max-w-3xl",
+        className={cn(
+        "grid w-full gap-[var(--grid-gap)]",
+        compact && "lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)_auto]",
         className,
       )}
     >
-      <label className="sr-only" htmlFor="brand-name">
+      <label className="sr-only" htmlFor={brandId}>
         {brandPlaceholder}
       </label>
       <input
-        id="brand-name"
+        id={brandId}
         name="query"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -70,11 +75,11 @@ export function CheckForm({
         required
         autoComplete="off"
       />
-      <label className="sr-only" htmlFor="activity">
+      <label className="sr-only" htmlFor={activityId}>
         {activityPlaceholder}
       </label>
       <input
-        id="activity"
+        id={activityId}
         name="activity"
         value={activity}
         onChange={(e) => setActivity(e.target.value)}
@@ -83,7 +88,11 @@ export function CheckForm({
         required
         autoComplete="off"
       />
-      <Button type="submit" disabled={pending} className="min-w-[9rem]">
+      <Button
+        type="submit"
+        disabled={pending}
+        className="w-full min-w-0 lg:min-w-[9rem]"
+      >
         {submitLabel}
       </Button>
     </form>

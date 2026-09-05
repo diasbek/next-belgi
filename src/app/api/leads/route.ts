@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
-
-type LeadType = "contact" | "lawyer" | "check";
+import { insertLead, updateLeadStatus } from "@/lib/db";
+import type { LeadType } from "@/lib/db/types";
+import { sendResendEmail } from "@/lib/notifications/resend";
+import { sendTelegramMessage } from "@/lib/notifications/telegram";
+import { getIntegration } from "@/lib/integrations/store";
 
 interface LeadPayload {
   type: LeadType;
@@ -61,20 +63,15 @@ async function notifyResend(record: {
   type: LeadType;
   [key: string]: unknown;
 }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const notifyTo =
-    process.env.RESEND_NOTIFY_TO || process.env.NEXT_PUBLIC_CONTACT_EMAIL;
-  const from = process.env.RESEND_FROM || "Belgi.ai <onboarding@resend.dev>";
-  if (!apiKey || !notifyTo) return false;
-
-  const resend = new Resend(apiKey);
-  await resend.emails.send({
-    from,
-    to: notifyTo,
+  const cfg = await getIntegration("resend");
+  if (!cfg?.api_key || !cfg.notify_to) return false;
+  const sent = await sendResendEmail({
+    to: cfg.notify_to,
     subject: `[Belgi] ${record.type.toUpperCase()} ${record.id}`,
     text: formatLeadText(record),
+    kind: "lead",
   });
-  return true;
+  return sent.ok;
 }
 
 async function notifyTelegram(record: {
@@ -82,27 +79,9 @@ async function notifyTelegram(record: {
   type: LeadType;
   [key: string]: unknown;
 }) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return false;
-
   const text = `Belgi lead ${record.type.toUpperCase()} ${record.id}\n\n${formatLeadText(record)}`;
-  const response = await fetch(
-    `https://api.telegram.org/bot${token}/sendMessage`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: text.slice(0, 3900),
-        disable_web_page_preview: true,
-      }),
-    },
-  );
-  if (!response.ok) {
-    throw new Error(`telegram_http_${response.status}`);
-  }
-  return true;
+  const sent = await sendTelegramMessage(text);
+  return sent.ok;
 }
 
 export async function POST(request: Request) {
@@ -150,10 +129,24 @@ export async function POST(request: Request) {
 
   console.info("[lead]", JSON.stringify(record));
 
+  await insertLead({
+    id,
+    type: body.type,
+    locale: record.locale,
+    pageUrl: record.pageUrl,
+    utm: record.utm,
+    requestId: body.requestId ?? null,
+    payload: body.data,
+    status: "new",
+  });
+
   const notifyResults = await Promise.allSettled([
     notifyResend(record),
     notifyTelegram(record),
   ]);
+
+  let emailOk = false;
+  let telegramOk = false;
 
   notifyResults.forEach((result, index) => {
     if (result.status === "rejected") {
@@ -161,8 +154,22 @@ export async function POST(request: Request) {
         index === 0 ? "[lead:email]" : "[lead:telegram]",
         result.reason,
       );
+      return;
     }
+    if (index === 0) emailOk = Boolean(result.value);
+    if (index === 1) telegramOk = Boolean(result.value);
   });
+
+  const [resendCfg, telegramCfg] = await Promise.all([
+    getIntegration("resend"),
+    getIntegration("telegram"),
+  ]);
+  const notifyConfigured = Boolean(resendCfg || telegramCfg);
+
+  await updateLeadStatus(
+    id,
+    !notifyConfigured || emailOk || telegramOk ? "sent" : "failed",
+  );
 
   return NextResponse.json({ id, ok: true });
 }

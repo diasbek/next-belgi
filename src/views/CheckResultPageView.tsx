@@ -11,7 +11,17 @@ import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
 import { CheckForm } from "@/components/molecules/CheckForm";
 import { readStoredReport } from "@/lib/check/storage";
-import { cardLime, section } from "@/styles/ui";
+import { cardLime, section, sectionGrid } from "@/styles/ui";
+import { cn } from "@/lib/cn";
+
+function lawyerInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
 
 export function CheckResultPageView({
   locale,
@@ -37,7 +47,7 @@ export function CheckResultPageView({
   if (!report) {
     return (
       <section className={`${section} bg-white`}>
-        <PageContainer className="max-w-xl text-center">
+        <PageContainer measure="focus" innerClassName="text-center">
           <h1 className="m-0 mb-4 text-2xl font-semibold">
             {copy.check.errorTitle}
           </h1>
@@ -53,30 +63,31 @@ export function CheckResultPageView({
 
   return (
     <section className={`${section} bg-white`}>
-      <PageContainer className="max-w-4xl">
+      <PageContainer>
         <CheckForm
           locale={locale}
           brandPlaceholder={copy.ui.brandPlaceholder}
           activityPlaceholder={copy.ui.activityPlaceholder}
           submitLabel={copy.ui.check}
           compact
+          idPrefix="result-check"
           initialQuery={report.query}
           initialActivity={report.activity || activity}
-          className="mb-10"
+          className="mb-8 sm:mb-10"
         />
 
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <p className="m-0 text-sm text-ink-muted">
               {copy.report.markTypeLabel}
             </p>
-            <h1 className="m-0 mt-1 font-display text-4xl font-semibold tracking-tight md:text-5xl">
+            <h1 className="m-0 mt-1 break-words font-display text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
               {report.query}
             </h1>
           </div>
-          <div className="text-right text-sm">
+          <div className="min-w-0 text-left text-sm sm:max-w-xs sm:text-right">
             <p className="m-0 text-ink-muted">{copy.report.classesLabel}</p>
-            <p className="m-0 mt-1 max-w-xs text-ink">
+            <p className="m-0 mt-1 break-words text-ink">
               {report.niceClasses.join(" ")}
             </p>
             <p className="m-0 mt-2 text-ink-muted">
@@ -89,45 +100,50 @@ export function CheckResultPageView({
           <h2 className="m-0 mb-4 text-base font-semibold">
             {copy.report.registryUz}
           </h2>
-          <div className="divide-y divide-border rounded-2xl border border-border">
+          <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border">
             {(uzSource?.matches ?? []).map((match) => (
               <article
                 key={match.id}
-                className="grid gap-3 px-4 py-5 md:grid-cols-[1fr_1.2fr_auto] md:items-start"
+                className="grid gap-3 px-3 py-4 sm:px-4 sm:py-5 md:grid-cols-[1fr_1.2fr_auto] md:items-start"
               >
-                <div>
-                  <p className="m-0 text-lg font-semibold">{match.name}</p>
-                  {match.owner ? (
-                    <p className="m-0 mt-2 text-xs text-ink-muted">
-                      {match.owner}
+                <div className="flex items-start justify-between gap-3 md:block">
+                  <div className="min-w-0">
+                    <p className="m-0 text-lg font-semibold">{match.name}</p>
+                    {match.owner ? (
+                      <p className="m-0 mt-2 break-words text-xs text-ink-muted">
+                        {match.owner}
+                      </p>
+                    ) : null}
+                    <p className="m-0 mt-1 text-xs text-ink-muted">
+                      {[
+                        match.registeredFrom
+                          ? `Рег. ${match.registeredFrom}${match.registeredTo ? ` - ${match.registeredTo}` : ""}`
+                          : null,
+                        match.status ? `[${match.status}]` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                     </p>
-                  ) : null}
-                  <p className="m-0 mt-1 text-xs text-ink-muted">
-                    {[
-                      match.registeredFrom
-                        ? `Рег. ${match.registeredFrom}${match.registeredTo ? ` - ${match.registeredTo}` : ""}`
-                        : null,
-                      match.status ? `[${match.status}]` : null,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
+                  </div>
+                  <p className="m-0 shrink-0 rounded-full bg-surface-muted px-2.5 py-1 text-xs font-semibold text-ink md:hidden">
+                    {match.similarity}%
                   </p>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="m-0 text-xs text-ink-muted">
                     {copy.report.classesLabel}
                   </p>
-                  <p className="m-0 mt-1 whitespace-pre-line text-sm leading-relaxed text-ink">
+                  <p className="m-0 mt-1 break-words whitespace-pre-line text-sm leading-relaxed text-ink">
                     {match.classesText}
                   </p>
                 </div>
-                <p className="m-0 text-sm font-semibold text-ink">
+                <p className="m-0 hidden text-sm font-semibold text-ink md:block">
                   {copy.report.similarityLabel} {match.similarity}%
                 </p>
               </article>
             ))}
           </div>
-          <p className="mt-3 text-right text-xs text-ink-muted">
+          <p className="mt-3 text-left text-xs text-ink-muted sm:text-right">
             {copy.report.nameSimilarity} {uzSource?.matches.length ?? 0}
           </p>
         </div>
@@ -140,14 +156,16 @@ export function CheckResultPageView({
                 {source.emptyText || copy.report.noMatches}
               </p>
             ) : (
-              <div className="divide-y divide-border rounded-2xl border border-border">
+              <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border">
                 {source.matches.map((match) => (
                   <article
                     key={match.id}
-                    className="flex items-center justify-between gap-4 px-4 py-4"
+                    className="flex items-center justify-between gap-4 px-3 py-4 sm:px-4"
                   >
-                    <p className="m-0 font-semibold">{match.name}</p>
-                    <p className="m-0 text-sm">
+                    <p className="m-0 min-w-0 break-words font-semibold">
+                      {match.name}
+                    </p>
+                    <p className="m-0 shrink-0 text-sm">
                       {copy.report.similarityLabel} {match.similarity}%
                     </p>
                   </article>
@@ -157,7 +175,12 @@ export function CheckResultPageView({
           </div>
         ))}
 
-        <div className="mb-10 grid gap-4 lg:grid-cols-2">
+        <div
+          className={cn(
+            sectionGrid,
+            "mb-10 [&>*]:col-span-4 lg:[&>*]:col-span-6",
+          )}
+        >
           <div className={cardLime}>
             <h2 className="m-0 text-base font-semibold">
               {copy.report.conclusionTitle}
@@ -169,7 +192,7 @@ export function CheckResultPageView({
               {report.classRisks.map((risk) => (
                 <div
                   key={risk.classNumber}
-                  className="flex h-28 w-28 flex-col justify-between rounded-xl bg-white p-3"
+                  className="flex h-24 w-[calc(50%-0.375rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-3 sm:h-28 sm:w-28"
                 >
                   <span className="text-xs text-ink-muted">
                     {risk.classNumber} класс
@@ -180,14 +203,14 @@ export function CheckResultPageView({
             </div>
           </div>
 
-          <div className="rounded-[var(--radius-md)] bg-primary p-5 text-white md:p-6">
+          <div className="rounded-[var(--radius-md)] bg-primary p-4 text-white sm:p-5 md:p-6">
             <h2 className="m-0 text-base font-semibold">
               {copy.report.recommendationsTitle}
             </h2>
             <p className="mt-4 text-sm text-white/75">
               {copy.report.replaceHint}
             </p>
-            <p className="mt-2 text-lg font-semibold">
+            <p className="mt-2 break-words text-lg font-semibold">
               {report.recommendations.alternatives.join(" / ")}
             </p>
             <p className="mt-6 text-xs text-white/60">
@@ -196,14 +219,24 @@ export function CheckResultPageView({
           </div>
         </div>
 
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className={cn(
+            sectionGrid,
+            "mb-8 [&>*]:col-span-4 sm:[&>*]:col-span-4 lg:[&>*]:col-span-3",
+          )}
+        >
           {report.lawyers.map((lawyer) => (
             <article
               key={lawyer.id}
               className="rounded-2xl border border-border bg-white p-4"
             >
-              <div className="mb-3 flex h-28 items-end justify-center rounded-xl bg-surface-muted text-4xl">
-                👤
+              <div
+                className={cn(
+                  "mb-3 flex h-24 items-center justify-center rounded-xl bg-surface-muted text-xl font-semibold text-ink/50 sm:h-28",
+                )}
+                aria-hidden
+              >
+                {lawyerInitials(lawyer.name)}
               </div>
               <p className="m-0 text-xs text-ink-muted">{lawyer.role}</p>
               <p className="m-0 mt-1 text-sm font-semibold leading-snug">

@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 
 /** Public origin used for canonical, Open Graph, sitemap, robots, JSON-LD. */
-export const CANONICAL_SITE_URL = "https://belgi.ai";
+export const CANONICAL_SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+  "https://belgi.nocode.uz";
 
-export const PRODUCTION_HOSTS = new Set(["belgi.ai", "www.belgi.ai"]);
+export const PRODUCTION_HOSTS = new Set([
+  "belgi.nocode.uz",
+  "www.belgi.nocode.uz",
+  "belgi.ai",
+  "www.belgi.ai",
+]);
 
 const STAGING_HOSTS = new Set(["localhost", "127.0.0.1"]);
 

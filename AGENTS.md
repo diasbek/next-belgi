@@ -8,7 +8,7 @@ Next.js 16 App Router. Prefer docs under `node_modules/next/dist/docs/` when API
 - Static TypeScript content (`src/data`, `src/i18n`)
 - Locales: `uz` (default, unprefixed) and `ru` (`/ru/`)
 - Check API via BFF + env adapter; mock when `BELGI_CHECK_API_URL` is unset
-- No admin panel yet
+- Account `/account` + Admin `/admin` (RBAC `profiles.role`); credits + Payme/Click
 
 ## Product rules
 

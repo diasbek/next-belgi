@@ -40,6 +40,8 @@ export interface SiteCopy {
     checkResultDescription: string;
     loginTitle: string;
     loginDescription: string;
+    registerTitle: string;
+    registerDescription: string;
     privacyTitle: string;
     privacyDescription: string;
     termsTitle: string;
@@ -103,6 +105,18 @@ export interface SiteCopy {
     title: string;
     lead: string;
     items: Array<{ title: string; text: string }>;
+    attorneysTitle: string;
+    attorneysLead: string;
+    attorneysSource: string;
+    attorneysSearch: string;
+    attorneysEmpty: string;
+    attorneysCount: string;
+    attorneysColumns: {
+      name: string;
+      contacts: string;
+      location: string;
+      services: string;
+    };
   };
   contacts: {
     title: string;

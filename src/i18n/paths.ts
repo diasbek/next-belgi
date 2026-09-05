@@ -55,7 +55,14 @@ export function getLocalizedAlternates(path: string) {
   };
 }
 
-export function switchLocalePath(pathname: string, target: Locale): string {
+export function switchLocalePath(
+  pathname: string,
+  target: Locale,
+  search = "",
+): string {
   const { path } = stripLocalePrefix(pathname);
-  return localePath(target, path);
+  const base = localePath(target, path);
+  if (!search) return base;
+  const q = search.startsWith("?") ? search : `?${search}`;
+  return `${base}${q}`;
 }

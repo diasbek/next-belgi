@@ -18,7 +18,9 @@ export const ruCopy: SiteCopy = {
     checkResultTitle: "Отчёт по товарному знаку",
     checkResultDescription: "AI-отчёт о схожести и уровне риска.",
     loginTitle: "Вход",
-    loginDescription: "Личный кабинет Belgi.ai.",
+    loginDescription: "Вход в личный кабинет Belgi.ai.",
+    registerTitle: "Регистрация",
+    registerDescription: "Создание аккаунта Belgi.ai.",
     privacyTitle: "Политика конфиденциальности",
     privacyDescription: "Как Belgi.ai обрабатывает персональные данные.",
     termsTitle: "Условия использования",
@@ -169,6 +171,19 @@ export const ruCopy: SiteCopy = {
         text: "Ответы на запросы экспертов и ускоренные сценарии при необходимости.",
       },
     ],
+    attorneysTitle: "Патентные поверенные",
+    attorneysLead:
+      "Список патентных поверенных (patent vakillari) из официального реестра Министерства юстиции.",
+    attorneysSource: "Источник: im.adliya.uz/patent-attorney",
+    attorneysSearch: "Поиск по имени, региону, услугам…",
+    attorneysEmpty: "Ничего не найдено. Измените запрос.",
+    attorneysCount: "Найдено: {count}",
+    attorneysColumns: {
+      name: "Имя",
+      contacts: "Контакты",
+      location: "Регион",
+      services: "Услуги",
+    },
   },
   contacts: {
     title: "Контакты",
@@ -211,8 +226,8 @@ export const ruCopy: SiteCopy = {
   },
   login: {
     title: "Вход",
-    lead: "Личный кабинет скоро будет доступен.",
-    stubNote: "Авторизация пока не подключена.",
+    lead: "Войдите в кабинет по email или телефону и паролю.",
+    stubNote: "Для регистрации подтвердите email или телефон.",
   },
   privacy: {
     title: "Политика конфиденциальности",

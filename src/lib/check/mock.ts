@@ -1,17 +1,37 @@
+import type { ActivityClassification } from "@/lib/classify";
+import {
+  classRisksFromClassification,
+  niceClassesFromClassification,
+} from "@/lib/classify";
 import type { TrademarkReport } from "./types";
 
 export function buildMockReport(
   query: string,
   activity: string,
+  classification?: ActivityClassification,
 ): TrademarkReport {
   const q = query.trim() || "Kiroko";
-  const act = activity.trim() || "Детские подгузники";
+  const act =
+    classification?.activityNormalized?.trim() ||
+    activity.trim() ||
+    "Детские подгузники";
+
+  const niceClasses = classification
+    ? niceClassesFromClassification(classification)
+    : ["[3] подгузник", "[5] влажный салфетка"];
+
+  const classRisks = classification
+    ? classRisksFromClassification(classification)
+    : [
+        { classNumber: 3, percent: 60 },
+        { classNumber: 5, percent: 55 },
+      ];
 
   return {
     query: q,
     activity: act,
     markType: "словесный",
-    niceClasses: ["[3] подгузник", "[5] влажный салфетка"],
+    niceClasses,
     sources: [
       {
         id: "uz",
@@ -67,10 +87,7 @@ export function buildMockReport(
       lead: "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",
       positive: true,
     },
-    classRisks: [
-      { classNumber: 3, percent: 60 },
-      { classNumber: 5, percent: 55 },
-    ],
+    classRisks,
     recommendations: {
       title: "Рекомендации по регистрации товарного знака",
       replaceHint: "Замените на другое название",

@@ -18,7 +18,9 @@ export const uzCopy: SiteCopy = {
     checkResultTitle: "Tovar belgi boʻyicha hisobot",
     checkResultDescription: "Oʻxshashlik va xavf darajasi boʻyicha AI-hisobot.",
     loginTitle: "Kirish",
-    loginDescription: "Belgi.ai shaxsiy kabineti.",
+    loginDescription: "Belgi.ai shaxsiy kabinetiga kirish.",
+    registerTitle: "Roʻyxatdan oʻtish",
+    registerDescription: "Belgi.ai hisobini yaratish.",
     privacyTitle: "Maxfiylik siyosati",
     privacyDescription: "Belgi.ai shaxsiy maʼlumotlarni qanday qayta ishlaydi.",
     termsTitle: "Foydalanish shartlari",
@@ -169,6 +171,19 @@ export const uzCopy: SiteCopy = {
         text: "Ekspert soʻrovlariga javoblar va kerak boʻlsa tezkor ssenariylar.",
       },
     ],
+    attorneysTitle: "Patent vakillari",
+    attorneysLead:
+      "Adliya vazirligining rasmiy reyestridan patent vakillari (патентные поверенные) roʻyxati.",
+    attorneysSource: "Manba: im.adliya.uz/patent-attorney",
+    attorneysSearch: "Ism, hudud yoki xizmat boʻyicha qidirish…",
+    attorneysEmpty: "Hech narsa topilmadi. Soʻrovni oʻzgartiring.",
+    attorneysCount: "Topildi: {count}",
+    attorneysColumns: {
+      name: "Ism",
+      contacts: "Kontaktlar",
+      location: "Hudud",
+      services: "Xizmatlar",
+    },
   },
   contacts: {
     title: "Kontaktlar",
@@ -211,8 +226,8 @@ export const uzCopy: SiteCopy = {
   },
   login: {
     title: "Kirish",
-    lead: "Shaxsiy kabinet tez orada ochiladi.",
-    stubNote: "Avtorizatsiya hozircha ulanmagan.",
+    lead: "Email yoki telefon va parol bilan kabinetga kiring.",
+    stubNote: "Roʻyxatdan oʻtish uchun email yoki telefonni tasdiqlang.",
   },
   privacy: {
     title: "Maxfiylik siyosati",

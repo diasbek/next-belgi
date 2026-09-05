@@ -17,6 +17,7 @@ const metaKeyByPage: Record<
   check: "checkTitle",
   checkResult: "checkResultTitle",
   login: "loginTitle",
+  register: "registerTitle",
   privacy: "privacyTitle",
   terms: "termsTitle",
 };
@@ -33,6 +34,7 @@ const descKeyByPage: Record<
   check: "checkDescription",
   checkResult: "checkResultDescription",
   login: "loginDescription",
+  register: "registerDescription",
   privacy: "privacyDescription",
   terms: "termsDescription",
 };
@@ -55,7 +57,10 @@ export function getLocalizedPageMetadata(
       ogLocale: ogLocale[locale],
       noIndex:
         options?.noIndex ??
-        (page === "check" || page === "checkResult" || page === "login"),
+        (page === "check" ||
+          page === "checkResult" ||
+          page === "login" ||
+          page === "register"),
       alternates: Object.fromEntries(
         Object.entries(alternates).map(([lang, href]) => [
           lang,

@@ -1,13 +1,14 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import { localeLabels } from "@/i18n/config";
 import { switchLocalePath } from "@/i18n/paths";
 import { cn } from "@/lib/cn";
 
-export function LanguageSwitcher({
+function LanguageSwitcherInner({
   locale,
   className,
 }: {
@@ -15,8 +16,14 @@ export function LanguageSwitcher({
   className?: string;
 }) {
   const pathname = usePathname() || "/";
+  const searchParams = useSearchParams();
   const nextLocale = locale === "uz" ? "ru" : "uz";
-  const href = switchLocalePath(pathname, nextLocale);
+  const search = searchParams.toString();
+  const href = switchLocalePath(
+    pathname,
+    nextLocale,
+    search ? `?${search}` : "",
+  );
 
   return (
     <Link
@@ -28,5 +35,30 @@ export function LanguageSwitcher({
     >
       {localeLabels[nextLocale]}
     </Link>
+  );
+}
+
+export function LanguageSwitcher({
+  locale,
+  className,
+}: {
+  locale: Locale;
+  className?: string;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <span
+          className={cn(
+            "inline-flex min-h-12 items-center justify-center rounded-[var(--radius-pill)] border border-black/10 bg-white/70 px-4 text-sm font-medium text-ink/50",
+            className,
+          )}
+        >
+          …
+        </span>
+      }
+    >
+      <LanguageSwitcherInner locale={locale} className={className} />
+    </Suspense>
   );
 }

@@ -4,12 +4,13 @@ import { SiteLayout } from "@/components/templates/SiteLayout";
 import { HomePageView } from "@/views/HomePageView";
 import { CheckPageView } from "@/views/CheckPageView";
 import { CheckResultPageView } from "@/views/CheckResultPageView";
+import { LoginPage } from "@/views/LoginPage";
+import { RegisterPage } from "@/views/RegisterPage";
 import {
   AgencyPageView,
   WorksPageView,
   ServicesPageView,
   ContactsPageView,
-  LoginPageView,
   PrivacyPageView,
   TermsPageView,
 } from "@/views/ContentPageViews";
@@ -131,12 +132,18 @@ export function createLoginPage(locale: Locale) {
   return {
     generateMetadata: () =>
       getLocalizedPageMetadata(locale, "login", { noIndex: true }),
-    Page: async function LoginPage() {
-      return (
-        <SiteLayout locale={locale}>
-          <LoginPageView locale={locale} />
-        </SiteLayout>
-      );
+    Page: async function LoginPageRoute() {
+      return <LoginPage locale={locale} />;
+    },
+  };
+}
+
+export function createRegisterPage(locale: Locale) {
+  return {
+    generateMetadata: () =>
+      getLocalizedPageMetadata(locale, "register", { noIndex: true }),
+    Page: async function RegisterPageRoute() {
+      return <RegisterPage locale={locale} />;
     },
   };
 }

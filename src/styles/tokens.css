@@ -11,9 +11,14 @@
   --color-danger: #c62828;
   --color-warning: #e6a800;
   --color-success: #2e7d32;
-  --page-padding: clamp(1rem, 4vw, 3.75rem);
-  --page-max: 94.5rem;
-  --section-y: clamp(3rem, 8vw, 5.5rem);
+  --page-padding: 1rem;
+  --page-max: 82.5rem;
+  /* Unified section measures inside pageContainer */
+  --content-band: 48rem; /* centered hero / form clusters */
+  --content-copy: 42rem; /* prose / legal / intros */
+  --content-focus: 28rem; /* empty / login / loading */
+  --grid-gap: 1rem;
+  --section-y: clamp(2.25rem, 7vw, 5rem);
   --radius-sm: 0.75rem;
   --radius-md: 1.25rem;
   --radius-lg: 2rem;
@@ -23,16 +28,25 @@
   --font-sans: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
   --font-display: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
   --tap-min: 44px;
-  --header-height: 4.5rem;
+  --header-height: 4.25rem;
   --motion-fast: 160ms;
   --motion-base: 420ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+@media (min-width: 640px) {
+  :root {
+    --page-padding: clamp(1.25rem, 3.5vw, 2.5rem);
+    --section-y: clamp(2.75rem, 7vw, 5.25rem);
+    --grid-gap: 1.25rem;
+  }
+}
+
 @media (min-width: 1024px) {
   :root {
     --header-height: 5rem;
-    --page-padding: clamp(1.5rem, 4vw, 3.75rem);
+    --page-padding: clamp(1.5rem, 4vw, 3.5rem);
+    --grid-gap: 1.5rem;
   }
 }
 

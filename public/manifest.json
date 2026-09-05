@@ -1,0 +1,9 @@
+{
+  "name": "Belgi.ai",
+  "short_name": "Belgi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#DFFF9E",
+  "theme_color": "#4A4D46",
+  "lang": "uz"
+}

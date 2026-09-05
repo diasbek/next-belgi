@@ -9,6 +9,11 @@ export const localeLabels: Record<Locale, string> = {
   ru: "Русский",
 };
 
+export const localeLabelsShort: Record<Locale, string> = {
+  uz: "Oʻz",
+  ru: "Ru",
+};
+
 export const htmlLang: Record<Locale, string> = {
   uz: "uz",
   ru: "ru",

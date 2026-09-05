@@ -1,5 +1,10 @@
 import { AdminRegistryPage } from "@/views/admin/AdminRegistryPage";
 
-export default function Page() {
-  return <AdminRegistryPage locale="ru" />;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const params = await searchParams;
+  return <AdminRegistryPage locale="ru" query={params.q ?? ""} />;
 }

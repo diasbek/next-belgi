@@ -23,6 +23,10 @@ export type AppCopy = {
     checks: string;
     leads: string;
     registry: string;
+    attorneys: string;
+    ledger: string;
+    notifications: string;
+    sessions: string;
     settings: string;
     integrations: string;
   };
@@ -33,6 +37,7 @@ export type AppCopy = {
     recent: string;
     emptyChecks: string;
     topUp: string;
+    totalChecks: string;
   };
   history: {
     title: string;
@@ -93,6 +98,21 @@ export type AppCopy = {
     role: string;
     balance: string;
     adjust: string;
+    roleAdmin: string;
+    roleUser: string;
+    searchPlaceholder: string;
+    allRoles: string;
+    allStatuses: string;
+    colUser: string;
+    status: string;
+    statusActive: string;
+    actions: string;
+    shown: string;
+    statTotal: string;
+    statActive: string;
+    statBalance: string;
+    addUser: string;
+    userId: string;
   };
   adminPayments: {
     title: string;
@@ -115,6 +135,29 @@ export type AppCopy = {
     lead: string;
     count: string;
     importStatus: string;
+    search: string;
+    searchPlaceholder: string;
+    showing: string;
+    empty: string;
+  };
+  adminAttorneys: {
+    title: string;
+    lead: string;
+    count: string;
+  };
+  adminLedger: {
+    title: string;
+    lead: string;
+  };
+  adminNotifications: {
+    title: string;
+    lead: string;
+  };
+  adminSessions: {
+    title: string;
+    lead: string;
+    active: string;
+    revoked: string;
   };
   adminSettings: {
     title: string;
@@ -222,6 +265,10 @@ export const uzApp: AppCopy = {
     checks: "Tekshiruvlar",
     leads: "Murojaatlar",
     registry: "Reestr",
+    attorneys: "Patent vakillar",
+    ledger: "Ledger",
+    notifications: "Bildirishnomalar",
+    sessions: "Sessiyalar",
     settings: "Sozlamalar",
     integrations: "Integratsiyalar",
   },
@@ -232,6 +279,7 @@ export const uzApp: AppCopy = {
     recent: "Soʻnggi tekshiruvlar",
     emptyChecks: "Hali tekshiruv yoʻq.",
     topUp: "Toʻldirish",
+    totalChecks: "Tekshiruvlar",
   },
   history: {
     title: "Tekshiruvlar tarixi",
@@ -289,10 +337,25 @@ export const uzApp: AppCopy = {
   },
   adminUsers: {
     title: "Foydalanuvchilar",
-    lead: "Rollar va balans.",
+    lead: "Rollar va kredit balansini boshqarish.",
     role: "Rol",
     balance: "Balans",
     adjust: "Kredit qoʻshish",
+    roleAdmin: "Administrator",
+    roleUser: "Foydalanuvchi",
+    searchPlaceholder: "Foydalanuvchini qidirish",
+    allRoles: "Barcha rollar",
+    allStatuses: "Barcha holatlar",
+    colUser: "Foydalanuvchi",
+    status: "Holat",
+    statusActive: "Faol",
+    actions: "Amallar",
+    shown: "{shown} / {total} foydalanuvchi koʻrsatilgan",
+    statTotal: "Jami foydalanuvchilar",
+    statActive: "Faol",
+    statBalance: "Umumiy balans",
+    addUser: "Foydalanuvchi qoʻshish",
+    userId: "Foydalanuvchi ID",
   },
   adminPayments: {
     title: "Toʻlovlar",
@@ -312,9 +375,32 @@ export const uzApp: AppCopy = {
   },
   adminRegistry: {
     title: "Tovar belgilari reestri",
-    lead: "Adliya nusxasi holati.",
+    lead: "Adliya nusxasi — qidiruv va import holati.",
     count: "Yozuvlar",
     importStatus: "Import holati",
+    search: "Qidirish",
+    searchPlaceholder: "Nom, raqam, egasi…",
+    showing: "Koʻrsatilmoqda",
+    empty: "Yozuv topilmadi.",
+  },
+  adminAttorneys: {
+    title: "Patent vakillari",
+    lead: "Rasmiy roʻyxat (im.adliya.uz) — saytdagi katalog.",
+    count: "Jami",
+  },
+  adminLedger: {
+    title: "Kredit harakatlari",
+    lead: "Barcha ledger yozuvlari.",
+  },
+  adminNotifications: {
+    title: "Bildirishnomalar",
+    lead: "SMS / email / Telegram yuborish logi.",
+  },
+  adminSessions: {
+    title: "Sessiyalar",
+    lead: "Foydalanuvchi sessiyalari (BFF cookie).",
+    active: "Faol",
+    revoked: "Yopilgan",
   },
   adminSettings: {
     title: "Sozlamalar",
@@ -478,6 +564,10 @@ export const ruApp: AppCopy = {
     checks: "Проверки",
     leads: "Заявки",
     registry: "Реестр",
+    attorneys: "Патентные поверенные",
+    ledger: "Леджер",
+    notifications: "Уведомления",
+    sessions: "Сессии",
     settings: "Настройки",
     integrations: "Интеграции",
   },
@@ -488,6 +578,7 @@ export const ruApp: AppCopy = {
     recent: "Последние проверки",
     emptyChecks: "Проверок пока нет.",
     topUp: "Пополнить",
+    totalChecks: "Проверки",
   },
   history: {
     title: "История проверок",
@@ -545,10 +636,25 @@ export const ruApp: AppCopy = {
   },
   adminUsers: {
     title: "Пользователи",
-    lead: "Роли и баланс.",
+    lead: "Управление ролями и кредитным балансом.",
     role: "Роль",
     balance: "Баланс",
     adjust: "Начислить кредиты",
+    roleAdmin: "Администратор",
+    roleUser: "Пользователь",
+    searchPlaceholder: "Поиск пользователя",
+    allRoles: "Все роли",
+    allStatuses: "Все статусы",
+    colUser: "Пользователь",
+    status: "Статус",
+    statusActive: "Активен",
+    actions: "Действия",
+    shown: "Показано {shown} из {total} пользователей",
+    statTotal: "Всего пользователей",
+    statActive: "Активные",
+    statBalance: "Общий баланс",
+    addUser: "Добавить пользователя",
+    userId: "ID пользователя",
   },
   adminPayments: {
     title: "Платежи",
@@ -568,9 +674,32 @@ export const ruApp: AppCopy = {
   },
   adminRegistry: {
     title: "Реестр товарных знаков",
-    lead: "Состояние зеркала Adliya.",
+    lead: "Копия Adliya — поиск и статус импорта.",
     count: "Записей",
     importStatus: "Статус импорта",
+    search: "Искать",
+    searchPlaceholder: "Название, номер, владелец…",
+    showing: "Показано",
+    empty: "Записей не найдено.",
+  },
+  adminAttorneys: {
+    title: "Патентные поверенные",
+    lead: "Официальный список (im.adliya.uz) — каталог на сайте.",
+    count: "Всего",
+  },
+  adminLedger: {
+    title: "Движения кредитов",
+    lead: "Все записи ledger.",
+  },
+  adminNotifications: {
+    title: "Уведомления",
+    lead: "Лог SMS / email / Telegram.",
+  },
+  adminSessions: {
+    title: "Сессии",
+    lead: "Пользовательские сессии (BFF cookie).",
+    active: "Активна",
+    revoked: "Закрыта",
   },
   adminSettings: {
     title: "Настройки",

@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
-import { localeLabels } from "@/i18n/config";
+import { localeLabels, localeLabelsShort } from "@/i18n/config";
 import { switchLocalePath } from "@/i18n/paths";
 import { cn } from "@/lib/cn";
 
@@ -33,7 +33,8 @@ function LanguageSwitcherInner({
         className,
       )}
     >
-      {localeLabels[nextLocale]}
+      <span className="sm:hidden">{localeLabelsShort[nextLocale]}</span>
+      <span className="hidden sm:inline">{localeLabels[nextLocale]}</span>
     </Link>
   );
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { localePath } from "@/i18n/paths";
 import type { SiteCopy } from "@/data/types";
-import { footerLegalDocs } from "@/data/legal/catalog";
+import { footerLegalGroups } from "@/data/legal/catalog";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { SITE_CONFIG } from "@/utils/consts";
 
@@ -13,7 +13,7 @@ export function SiteFooter({
   locale: Locale;
   content: SiteCopy;
 }) {
-  const legal = footerLegalDocs();
+  const legalGroups = footerLegalGroups();
 
   return (
     <footer className="border-t border-white/10 bg-primary text-white">
@@ -40,20 +40,23 @@ export function SiteFooter({
             ))}
           </div>
           <div className="flex flex-col gap-1">
-            {legal.map((doc) => (
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-white/50">
+              {locale === "ru" ? "Документы" : "Hujjatlar"}
+            </p>
+            {legalGroups.map(({ group, href }) => (
               <Link
-                key={doc.slug}
-                href={localePath(locale, `/legal/${doc.slug}/`)}
+                key={group.id}
+                href={localePath(locale, href)}
                 className="min-h-[var(--tap-min)] py-2 text-sm text-white/85 hover:text-white sm:min-h-0 sm:py-1"
               >
-                {doc.footerLabel[locale]}
+                {group.footerLabel[locale]}
               </Link>
             ))}
             <Link
               href={localePath(locale, "/legal/")}
               className="min-h-[var(--tap-min)] py-2 text-sm text-white/85 hover:text-white sm:min-h-0 sm:py-1"
             >
-              {locale === "ru" ? "Все документы" : "Barcha hujjatlar"}
+              {locale === "ru" ? "Все разделы" : "Barcha boʻlimlar"}
             </Link>
           </div>
         </div>

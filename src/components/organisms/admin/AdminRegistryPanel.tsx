@@ -98,6 +98,7 @@ export function AdminRegistryPanel({
   dbUnavailable,
   sort = "updated_at",
   dir = "desc",
+  statusValues = [],
 }: {
   locale: Locale;
   rows: AdminRegistryRow[];
@@ -110,6 +111,7 @@ export function AdminRegistryPanel({
   dbUnavailable?: boolean;
   sort?: string;
   dir?: string;
+  statusValues?: string[];
 }) {
   const copy = getAppCopy(locale);
   const router = useRouter();
@@ -504,11 +506,7 @@ export function AdminRegistryPanel({
               clearLabel={copy.adminUi.clearFilters}
               statusOptions={[
                 { value: "", label: copy.adminRegistry.allStatuses },
-                { value: "EXPERTISE", label: "EXPERTISE" },
-                { value: "REGISTERED", label: "REGISTERED" },
-                { value: "DRAFT", label: "DRAFT" },
-                { value: "REJECTED", label: "REJECTED" },
-                { value: "WITHDRAWN", label: "WITHDRAWN" },
+                ...statusValues.map((s) => ({ value: s, label: s })),
               ]}
               extraFilters={[
                 {
@@ -794,9 +792,14 @@ export function AdminRegistryPanel({
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value })}
             >
-              <option value="DRAFT">DRAFT</option>
-              <option value="EXPERTISE">EXPERTISE</option>
-              <option value="REGISTERED">REGISTERED</option>
+              {(statusValues.length
+                ? statusValues
+                : ["DRAFT", "EXPERTISE", "REGISTERED"]
+              ).map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </AdminSelect>
           </AdminField>
           <AdminField label={copy.adminRegistry.colOwner}>

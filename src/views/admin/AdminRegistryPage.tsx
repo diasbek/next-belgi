@@ -36,6 +36,7 @@ export async function AdminRegistryPage({
   let importStatus = "—";
   let syncRunning = false;
   let rows: AdminRegistryRow[] = [];
+  let statusValues: string[] = [];
 
   if (db) {
     const countReq = db
@@ -47,6 +48,7 @@ export async function AdminRegistryPage({
       .select("*")
       .eq("id", 1)
       .maybeSingle();
+    const statusesReq = db.rpc("list_trademark_statuses");
 
     let listReq = db
       .from("trademarks")
@@ -75,13 +77,56 @@ export async function AdminRegistryPage({
     if (active === "1") listReq = listReq.eq("active", true);
     if (active === "0") listReq = listReq.eq("active", false);
 
-    const [{ count: c }, { data: s }, { data, count: listCount }] =
-      await Promise.all([countReq, stateReq, listReq]);
+    const [
+      { count: c },
+      { data: s },
+      { data, count: listCount },
+      { data: statusData, error: statusErr },
+    ] = await Promise.all([countReq, stateReq, listReq, statusesReq]);
     registryCount = c ?? 0;
     listTotal = listCount ?? 0;
     rows = (data || []) as AdminRegistryRow[];
     syncRunning = s?.status === "running";
     importStatus = `${String(s?.status ?? "—")} · page ${String(s?.last_page ?? "—")} / ${String(s?.total_pages ?? "—")} · ${String(s?.imported_count ?? 0)}`;
+
+    if (!statusErr && Array.isArray(statusData)) {
+      statusValues = statusData
+        .map((v) => (typeof v === "string" ? v : String(v ?? "")).trim())
+        .filter(Boolean);
+    } else {
+      // Fallback: sample status column in chunks until we collect uniques.
+      const found = new Set<string>();
+      if (status) found.add(status);
+      for (const r of rows) {
+        const sVal = (r.status || "").trim();
+        if (sVal) found.add(sVal);
+      }
+      try {
+        for (let offset = 0; offset < 10_000 && found.size < 80; offset += 1000) {
+          const { data: sample } = await db
+            .from("trademarks")
+            .select("status")
+            .not("status", "is", null)
+            .neq("status", "")
+            .order("id", { ascending: true })
+            .range(offset, offset + 999);
+          if (!sample?.length) break;
+          for (const row of sample) {
+            const sVal = String(
+              (row as { status?: string | null }).status || "",
+            ).trim();
+            if (sVal) found.add(sVal);
+          }
+          if (sample.length < 1000) break;
+        }
+      } catch (e) {
+        console.warn("[admin:registry:statuses:fallback]", e);
+      }
+      statusValues = [...found].sort((a, b) => a.localeCompare(b));
+      if (statusErr) {
+        console.warn("[admin:registry:statuses]", statusErr.message);
+      }
+    }
   }
 
   return (
@@ -98,6 +143,7 @@ export async function AdminRegistryPage({
         dbUnavailable={!db}
         sort={sort}
         dir={dir}
+        statusValues={statusValues}
       />
     </AppShell>
   );

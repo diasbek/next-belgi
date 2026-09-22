@@ -205,7 +205,7 @@ export function NiceGoodsPicker({
                 </span>
                 {opt.kind === "term" && opt.classNumber ? (
                   <span className="shrink-0 text-xs text-ink-muted">
-                    {classLabel(locale, opt.classNumber, s.classRow)}
+                    {classLabel(opt.classNumber, s.classRow)}
                   </span>
                 ) : null}
               </label>

@@ -59,10 +59,14 @@ const indexable = isIndexableDeployment();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   trailingSlash: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
+  outputFileTracingIncludes: {
+    "/*": ["./content/legal/**/*"],
+  },
   experimental: {
     cpus: 2,
     webpackMemoryOptimizations: true,

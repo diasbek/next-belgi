@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/config";
 import type { ActivityClassification } from "@/lib/classify";
 import {
   classRisksFromClassification,
@@ -5,20 +6,63 @@ import {
 } from "@/lib/classify";
 import type { TrademarkReport } from "./types";
 
+const copy = {
+  uz: {
+    defaultActivity: "Bolalar tagliklari",
+    markType: "soʻzli",
+    registryUz: "Oʻzbekiston reestri",
+    wipo: "WIPO",
+    internet: "Internet",
+    emptyText: "Mavjud maʼlumotlarga koʻra, oʻxshash belgi topilmadi",
+    statusPending: "Kutish muddatida",
+    statusExam: "Ekspertizada",
+    conclusionTitle: "Xulosa",
+    conclusionLead:
+      "Ekspertiza natijalari ushbu nomni roʻyxatga olish uchun ijobiy javob berishi kerak:",
+    recommendationsTitle: "Tovar belgini roʻyxatga olish boʻyicha tavsiyalar",
+    replaceHint: "Boshqa nomga almashtiring",
+    lawyerRole: "Yurist",
+    disclaimer:
+      "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan oʻxshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, roʻyxatga olish toʻgʻrisida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi.",
+  },
+  ru: {
+    defaultActivity: "Детские подгузники",
+    markType: "словесный",
+    registryUz: "Реестр УЗ",
+    wipo: "WIPO",
+    internet: "Интернет",
+    emptyText: "По имеющимся данным, подобных признаков нет",
+    statusPending: "В период ожидания",
+    statusExam: "В экспертизе",
+    conclusionTitle: "Заключение",
+    conclusionLead:
+      "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",
+    recommendationsTitle: "Рекомендации по регистрации товарного знака",
+    replaceHint: "Замените на другое название",
+    lawyerRole: "Юрист",
+    disclaimer:
+      "Belgi.ai выполняет автоматизированный поиск и информационную оценку сходства обозначения с товарными знаками и заявками, содержащимися в доступных источниках. Результат проверки не является юридическим заключением, решением о регистрации или гарантией предоставления правовой охраны. Окончательное решение принимается уполномоченным государственным органом.",
+  },
+} as const;
+
 export function buildMockReport(
   query: string,
   activity: string,
   classification?: ActivityClassification,
+  locale: Locale = "uz",
 ): TrademarkReport {
+  const t = copy[locale] ?? copy.uz;
   const q = query.trim() || "Kiroko";
   const act =
     classification?.activityNormalized?.trim() ||
     activity.trim() ||
-    "Детские подгузники";
+    t.defaultActivity;
 
   const niceClasses = classification
     ? niceClassesFromClassification(classification)
-    : ["[3] подгузник", "[5] влажный салфетка"];
+    : locale === "ru"
+      ? ["[3] подгузник", "[5] влажный салфетка"]
+      : ["[3] taglik", "[5] nam salfetka"];
 
   const classRisks = classification
     ? classRisksFromClassification(classification)
@@ -30,12 +74,12 @@ export function buildMockReport(
   return {
     query: q,
     activity: act,
-    markType: "словесный",
+    markType: t.markType,
     niceClasses,
     sources: [
       {
         id: "uz",
-        title: "Реестр УЗ",
+        title: t.registryUz,
         matches: [
           {
             id: "kiko",
@@ -45,81 +89,86 @@ export function buildMockReport(
             registeredTo: "14.06.2034",
             similarity: 60,
             classesText:
-              "[5] подгузники детские; трусы-подгузники детские; прокладки гигиенические; трусы гигиенические женские.",
+              locale === "ru"
+                ? "[5] подгузники детские; трусы-подгузники детские; прокладки гигиенические; трусы гигиенические женские."
+                : "[5] bolalar tagliklari; bolalar taglik-shimlari; gigiyenik prokladkalar.",
           },
           {
             id: "icoco",
             name: "iCOCO",
             owner: 'OOO "BABY PRO INTERNATIONAL"',
             registeredFrom: "26.03.2026",
-            status: "В период ожидания",
+            status: t.statusPending,
             similarity: 32,
-            classesText: "[3] все продукты\n[5] все продукты",
+            classesText:
+              locale === "ru"
+                ? "[3] все продукты\n[5] все продукты"
+                : "[3] barcha mahsulotlar\n[5] barcha mahsulotlar",
           },
           {
             id: "koko",
             name: "KOKO",
             owner: 'OOO "PAXTAOBOD COSMETIK"',
             registeredFrom: "16.09.2025",
-            status: "В экспертизе",
+            status: t.statusExam,
             similarity: 21,
-            classesText: "[3] все продукты",
+            classesText:
+              locale === "ru" ? "[3] все продукты" : "[3] barcha mahsulotlar",
           },
         ],
       },
       {
         id: "wipo",
-        title: "WIPO",
+        title: t.wipo,
         empty: true,
-        emptyText: "По имеющимся данным, подобных признаков нет",
+        emptyText: t.emptyText,
         matches: [],
       },
       {
         id: "internet",
-        title: "Интернет",
+        title: t.internet,
         empty: true,
-        emptyText: "По имеющимся данным, подобных признаков нет",
+        emptyText: t.emptyText,
         matches: [],
       },
     ],
     conclusion: {
-      title: "Заключение",
-      lead: "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",
+      title: t.conclusionTitle,
+      lead: t.conclusionLead,
       positive: true,
     },
     classRisks,
     recommendations: {
-      title: "Рекомендации по регистрации товарного знака",
-      replaceHint: "Замените на другое название",
+      title: t.recommendationsTitle,
+      replaceHint: t.replaceHint,
       alternatives: ["KAMI", "KAMO", "KUMI"],
     },
     lawyers: [
       {
         id: "dildora",
-        name: "Нишанова Дилдора",
-        role: "Юрист",
+        name: "Nishanova Dildora",
+        role: t.lawyerRole,
         rating: 5,
       },
       {
         id: "jasur",
-        name: "Эркинов Жасур",
-        role: "Юрист",
+        name: "Erkinov Jasur",
+        role: t.lawyerRole,
         rating: 5,
       },
       {
         id: "dilorom",
-        name: "Нишанова Дилором",
-        role: "Юрист",
+        name: "Nishanova Dilorom",
+        role: t.lawyerRole,
         rating: 4,
       },
       {
         id: "jonibek",
-        name: "Эркинов Жонибек",
-        role: "Юрист",
+        name: "Erkinov Jonibek",
+        role: t.lawyerRole,
         rating: 4,
       },
     ],
-    disclaimer:
-      "* Министерство юстиции может не согласиться с этим заключением эксперта, а также с заключением, содержащимся в настоящем отчете, принимая во внимание тот факт, что вышеупомянутые базы товарных знаков регулярно обновляются.",
+    disclaimer: t.disclaimer,
   };
 }

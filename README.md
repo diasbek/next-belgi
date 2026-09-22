@@ -36,6 +36,22 @@ Eskiz / Resend / OpenAI / Payme / Click / Google / Telegram — в **Admin → I
 - Site URL: `https://belgi.nocode.uz`
 - Redirect URLs: `https://belgi.nocode.uz/**`
 
+### Деплой архивом (standalone)
+
+Локально собирает Node-standalone и пакует zip/tar.gz:
+
+```bash
+npm run build:archive
+# → dist/belgi-deploy-YYYYMMDD-HHMMSS.zip
+# → dist/belgi-deploy-YYYYMMDD-HHMMSS.tar.gz
+```
+
+1. Загрузите zip в корень Node-приложения Hostinger и распакуйте.
+2. Пропишите env из `.env.hostinger.example`.
+3. Start command: `node server.js` (или `npm start`).
+
+Локали: **UZ** без префикса (`/`), **RU** — `/ru/`.
+
 ## Импорт реестра товарных знаков (Adliya)
 
 Источник: `https://im.adliya.uz/register/TRADEMARK` (~110 111 записей).  

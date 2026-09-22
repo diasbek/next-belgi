@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/config";
 import { classifyActivity } from "@/lib/classify";
 import {
   classRisksFromClassification,
@@ -7,6 +8,10 @@ import type { ActivityClassification } from "@/lib/classify";
 import { insertTrademarkCheck } from "@/lib/db";
 import { buildMockReport } from "./mock";
 import type { CheckRequest, CheckResponse, TrademarkReport } from "./types";
+
+function resolveLocale(locale?: string): Locale {
+  return locale === "ru" ? "ru" : "uz";
+}
 
 function applyClassificationToReport(
   report: TrademarkReport,
@@ -24,9 +29,15 @@ function normalizeUpstream(
   raw: unknown,
   fallback: CheckRequest,
   classification: ActivityClassification,
+  locale: Locale,
 ): TrademarkReport {
   if (!raw || typeof raw !== "object") {
-    return buildMockReport(fallback.query, fallback.activity, classification);
+    return buildMockReport(
+      fallback.query,
+      fallback.activity,
+      classification,
+      locale,
+    );
   }
 
   const data = raw as Partial<TrademarkReport> & Record<string, unknown>;
@@ -34,6 +45,7 @@ function normalizeUpstream(
     fallback.query,
     fallback.activity,
     classification,
+    locale,
   );
 
   const merged: TrademarkReport = {
@@ -112,18 +124,19 @@ export async function runTrademarkCheck(
     return { ok: false, error: "missing_fields" };
   }
 
+  const locale = resolveLocale(input.locale);
   const classification = await classifyActivity({
     activity,
-    locale: input.locale,
+    locale,
   });
 
   const upstream = process.env.BELGI_CHECK_API_URL?.trim();
   if (!upstream) {
-    const report = buildMockReport(query, activity, classification);
+    const report = buildMockReport(query, activity, classification, locale);
     const checkId = await persistCheck({
       query,
       activity,
-      locale: input.locale,
+      locale,
       userId: input.userId,
       classification,
       report,
@@ -150,7 +163,7 @@ export async function runTrademarkCheck(
       body: JSON.stringify({
         query,
         activity,
-        locale: input.locale ?? "uz",
+        locale,
         niceClasses: classification.classes,
         primaryClassNumbers: classification.primaryClassNumbers,
         activityNormalized: classification.activityNormalized,
@@ -172,11 +185,12 @@ export async function runTrademarkCheck(
       payload,
       { query, activity },
       classification,
+      locale,
     );
     const checkId = await persistCheck({
       query,
       activity,
-      locale: input.locale,
+      locale,
       userId: input.userId,
       classification,
       report,

@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
+    "build:archive": "bash scripts/build-deploy-archive.sh",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

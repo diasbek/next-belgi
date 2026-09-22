@@ -14,9 +14,12 @@
 # next.js
 /.next/
 /out/
+/dist/
 
 # production
 /build
+/belgi-deploy-*.zip
+/belgi-deploy-*.tar.gz
 
 # misc
 .DS_Store

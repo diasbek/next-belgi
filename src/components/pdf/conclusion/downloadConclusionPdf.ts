@@ -6,16 +6,19 @@ import {
   ConclusionPdfDocument,
   ensureConclusionPdfFonts,
 } from "./ConclusionPdfDocument";
+import { hydrateConclusionImages } from "./hydrateConclusionImages";
 
 export async function downloadConclusionPdf(
   data: ConclusionDocument,
 ): Promise<void> {
   ensureConclusionPdfFonts();
 
+  const withImages = await hydrateConclusionImages(data);
+
   let qrDataUrl: string | null = null;
-  if (!data.preview && data.verification?.url) {
+  if (!withImages.preview && withImages.verification?.url) {
     try {
-      qrDataUrl = await QRCode.toDataURL(data.verification.url, {
+      qrDataUrl = await QRCode.toDataURL(withImages.verification.url, {
         margin: 1,
         width: 256,
         errorCorrectionLevel: "M",
@@ -26,11 +29,11 @@ export async function downloadConclusionPdf(
   }
 
   const doc = createElement(ConclusionPdfDocument, {
-    data,
+    data: withImages,
     qrDataUrl,
   });
   const blob = await pdf(doc as Parameters<typeof pdf>[0]).toBlob();
-  const safeNumber = (data.docNumber || "BELGI").replace(
+  const safeNumber = (withImages.docNumber || "BELGI").replace(
     /[^\w\-./а-яА-ЯёЁ]+/gi,
     "_",
   );

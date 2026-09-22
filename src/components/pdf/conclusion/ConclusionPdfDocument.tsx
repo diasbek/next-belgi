@@ -12,161 +12,227 @@ import { ensureConclusionPdfFonts } from "./pdfFonts";
 
 export { ensureConclusionPdfFonts };
 
+const BLUE = "#c5daf5";
+const BORDER = "#222";
+
 const styles = StyleSheet.create({
   page: {
     fontFamily: "DejaVu",
     fontSize: 9,
-    paddingTop: 36,
-    paddingBottom: 40,
-    paddingHorizontal: 40,
+    paddingTop: 28,
+    paddingBottom: 32,
+    paddingHorizontal: 32,
     color: "#111",
   },
   agency: {
-    fontSize: 8,
+    fontSize: 7.5,
     color: "#444",
-    marginBottom: 10,
+    marginBottom: 4,
   },
   title: {
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 700,
-    marginBottom: 12,
-    letterSpacing: 0.5,
+    marginBottom: 6,
+    letterSpacing: 0.3,
   },
   metaRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 6,
     fontSize: 8,
   },
   subjectTable: {
     borderWidth: 1,
-    borderColor: "#222",
-    marginBottom: 12,
+    borderColor: BORDER,
+    marginBottom: 6,
   },
   subjectHeader: {
     flexDirection: "row",
-    backgroundColor: "#f3f3f3",
+    backgroundColor: BLUE,
     borderBottomWidth: 1,
-    borderBottomColor: "#222",
+    borderBottomColor: BORDER,
   },
   subjectRow: {
     flexDirection: "row",
   },
   cell: {
-    paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
     fontSize: 8,
     borderRightWidth: 1,
-    borderRightColor: "#222",
+    borderRightColor: BORDER,
   },
   cellLast: {
     borderRightWidth: 0,
   },
-  cAppear: { width: "28%" },
-  cMark: { width: "44%" },
-  cClass: { width: "28%" },
+  cAppear: { width: "34%" },
+  cMark: { width: "33%" },
+  cClass: { width: "33%" },
   intro: {
-    fontSize: 8,
-    lineHeight: 1.35,
+    fontSize: 7.5,
+    lineHeight: 1.25,
     textAlign: "justify",
-    marginBottom: 8,
+    marginBottom: 3,
   },
   excludedTitle: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontWeight: 700,
-    marginBottom: 2,
+    marginBottom: 1,
+    marginTop: 2,
   },
   excludedItem: {
-    fontSize: 8,
-    marginLeft: 8,
-    marginBottom: 1,
+    fontSize: 7.5,
+    marginLeft: 6,
+    marginBottom: 0,
+    lineHeight: 1.2,
   },
-  sectionTitle: {
-    fontSize: 10,
+  sectionBar: {
+    backgroundColor: BLUE,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    marginTop: 8,
+    marginBottom: 0,
+  },
+  sectionBarText: {
+    fontSize: 9,
     fontWeight: 700,
-    marginTop: 12,
-    marginBottom: 6,
   },
-  matchCard: {
+  matchTable: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    marginBottom: 8,
+    borderColor: BORDER,
+    borderTopWidth: 0,
+    marginBottom: 4,
   },
-  matchRow: {
+  matchHead: {
     flexDirection: "row",
-    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: BORDER,
+    backgroundColor: "#f7f7f7",
+  },
+  matchBody: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: BORDER,
+    minHeight: 56,
+  },
+  matchFoot: {
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    fontSize: 7.5,
+  },
+  colImg: {
+    width: "32%",
+    borderRightWidth: 1,
+    borderRightColor: BORDER,
+    padding: 4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  colOwner: {
+    width: "40%",
+    borderRightWidth: 1,
+    borderRightColor: BORDER,
+    padding: 5,
+    justifyContent: "center",
+  },
+  colTerm: {
+    width: "28%",
+    padding: 5,
+    justifyContent: "center",
+  },
+  headCell: {
+    fontSize: 7,
+    fontWeight: 700,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
   },
   logo: {
-    width: 48,
+    width: 64,
     height: 48,
     objectFit: "contain",
   },
-  matchName: {
-    fontSize: 10,
+  logoFallback: {
+    fontSize: 9,
     fontWeight: 700,
+    textAlign: "center",
   },
   matchMeta: {
-    fontSize: 8,
-    color: "#333",
-    marginTop: 2,
-  },
-  note: {
     fontSize: 7.5,
-    marginTop: 4,
-    color: "#444",
+    color: "#222",
+    marginBottom: 1,
+  },
+  statusPill: {
+    marginTop: 3,
+    alignSelf: "flex-start",
+    backgroundColor: "#ececec",
+    paddingVertical: 1,
+    paddingHorizontal: 4,
+    fontSize: 6.5,
+  },
+  emptyBox: {
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderTopWidth: 0,
+    paddingVertical: 5,
+    paddingHorizontal: 6,
+    marginBottom: 4,
   },
   empty: {
     fontSize: 8,
-    marginBottom: 6,
     color: "#333",
   },
-  verdictTitle: {
-    fontSize: 10,
-    fontWeight: 700,
-    marginTop: 14,
+  note: {
+    fontSize: 7,
+    marginTop: 2,
+    color: "#444",
+  },
+  verdictBox: {
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderTopWidth: 0,
+    padding: 6,
     marginBottom: 4,
   },
   verdictLead: {
     fontSize: 8,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   verdictLine: {
     fontSize: 9,
     fontWeight: 700,
-    marginBottom: 2,
+    marginBottom: 1,
   },
   disclaimer: {
-    fontSize: 7.5,
-    lineHeight: 1.35,
-    marginTop: 10,
+    fontSize: 7,
+    lineHeight: 1.25,
+    marginTop: 6,
     color: "#333",
     textAlign: "justify",
   },
   qrBlock: {
-    marginTop: 16,
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
-    paddingTop: 10,
+    paddingTop: 6,
   },
   qrImage: {
-    width: 72,
-    height: 72,
+    width: 56,
+    height: 56,
+    marginRight: 10,
   },
   qrText: {
-    fontSize: 8,
-    lineHeight: 1.35,
+    fontSize: 7.5,
+    lineHeight: 1.3,
     flex: 1,
   },
   qrCode: {
     fontFamily: "DejaVu",
     fontWeight: 700,
-    fontSize: 9,
-    marginTop: 2,
+    fontSize: 8,
+    marginTop: 1,
   },
   watermark: {
     position: "absolute",
@@ -179,9 +245,9 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 18,
-    left: 40,
-    right: 40,
+    bottom: 14,
+    left: 32,
+    right: 32,
     fontSize: 7,
     color: "#888",
     flexDirection: "row",
@@ -189,53 +255,79 @@ const styles = StyleSheet.create({
   },
 });
 
+function SectionBar({ title }: { title: string }) {
+  return (
+    <View style={styles.sectionBar} wrap={false}>
+      <Text style={styles.sectionBarText}>{title}</Text>
+    </View>
+  );
+}
+
 function MatchCards({
   cards,
   empty,
   ownerLabel,
   termLabel,
+  viewColLabel,
 }: {
   cards: ConclusionDocument["sections"]["adliya"];
   empty: string;
   ownerLabel: string;
   termLabel: string;
+  viewColLabel: string;
 }) {
   if (!cards.length) {
-    return <Text style={styles.empty}>{empty}</Text>;
+    return (
+      <View style={styles.emptyBox}>
+        <Text style={styles.empty}>{empty}</Text>
+      </View>
+    );
   }
   return (
     <>
       {cards.map((m) => (
-        <View key={m.id} style={styles.matchCard} wrap={false}>
-          <View style={styles.matchRow}>
-            {m.imageUrl ? (
-              // eslint-disable-next-line jsx-a11y/alt-text
-              <Image src={m.imageUrl} style={styles.logo} />
-            ) : null}
-            <View style={{ flex: 1 }}>
-              <Text style={styles.matchName}>{m.name}</Text>
-              {m.owner ? (
-                <Text style={styles.matchMeta}>
-                  {ownerLabel}: {m.owner}
-                </Text>
-              ) : null}
-              {m.term ? (
-                <Text style={styles.matchMeta}>
-                  {termLabel}: {m.term}
-                </Text>
-              ) : null}
-              {m.status ? (
-                <Text style={styles.matchMeta}>[{m.status}]</Text>
-              ) : null}
-              {m.classesText ? (
-                <Text style={styles.matchMeta}>{m.classesText}</Text>
-              ) : null}
+        <View key={m.id} style={styles.matchTable} wrap={false}>
+          <View style={styles.matchHead}>
+            <View style={[styles.colImg, { paddingVertical: 3 }]}>
+              <Text style={styles.headCell}>{viewColLabel}</Text>
+            </View>
+            <View style={[styles.colOwner, { paddingVertical: 3 }]}>
+              <Text style={styles.headCell}>{ownerLabel}</Text>
+            </View>
+            <View style={[styles.colTerm, { paddingVertical: 3 }]}>
+              <Text style={styles.headCell}>{termLabel}</Text>
+            </View>
+          </View>
+          <View style={styles.matchBody}>
+            <View style={styles.colImg}>
+              {m.imageUrl ? (
+                // eslint-disable-next-line jsx-a11y/alt-text
+                <Image src={m.imageUrl} style={styles.logo} />
+              ) : (
+                <Text style={styles.logoFallback}>{m.name}</Text>
+              )}
+            </View>
+            <View style={styles.colOwner}>
+              <Text style={styles.matchMeta}>{m.owner || "—"}</Text>
               {m.similarity != null ? (
                 <Text style={styles.matchMeta}>{m.similarity}%</Text>
               ) : null}
-              {m.note ? <Text style={styles.note}>{m.note}</Text> : null}
+            </View>
+            <View style={styles.colTerm}>
+              <Text style={styles.matchMeta}>{m.term || "—"}</Text>
+              {m.status ? (
+                <Text style={styles.statusPill}>{m.status}</Text>
+              ) : null}
             </View>
           </View>
+          {m.classesText || m.note ? (
+            <View style={styles.matchFoot}>
+              {m.classesText ? (
+                <Text style={styles.matchMeta}>{m.classesText}</Text>
+              ) : null}
+              {m.note ? <Text style={styles.note}>{m.note}</Text> : null}
+            </View>
+          ) : null}
         </View>
       ))}
     </>
@@ -259,7 +351,7 @@ export function ConclusionPdfDocument({
       author="Belgi.ai"
       subject={data.subject.mark}
     >
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={styles.page} wrap>
         {data.preview ? (
           <Text style={styles.watermark}>{copy.previewWatermark}</Text>
         ) : null}
@@ -296,10 +388,12 @@ export function ConclusionPdfDocument({
             </Text>
           </View>
           <View style={styles.subjectRow}>
-            <Text style={[styles.cell, styles.cAppear]}>
-              {data.subject.appearance}
+            <Text style={[styles.cell, styles.cAppear, { fontWeight: 700 }]}>
+              {data.subject.mark}
             </Text>
-            <Text style={[styles.cell, styles.cMark]}>{data.subject.mark}</Text>
+            <Text style={[styles.cell, styles.cMark]}>
+              {data.subject.markType || data.subject.appearance}
+            </Text>
             <Text style={[styles.cell, styles.cClass, styles.cellLast]}>
               {data.subject.niceClasses.join(", ") || "—"}
             </Text>
@@ -312,68 +406,61 @@ export function ConclusionPdfDocument({
         </Text>
         {data.methodology.excluded.map((line) => (
           <Text key={line} style={styles.excludedItem}>
-            - {line}
+            — {line}
           </Text>
         ))}
 
-        <Text style={styles.sectionTitle}>{data.sections.adliyaTitle}</Text>
+        <SectionBar title={data.sections.adliyaTitle} />
         <MatchCards
           cards={data.sections.adliya}
           empty={data.sections.adliyaEmpty}
           ownerLabel={copy.ownerLabel}
           termLabel={copy.termLabel}
+          viewColLabel={copy.viewLabel}
         />
 
-        <Text style={styles.footer}>
-          <Text>{data.docNumber}</Text>
-          <Text>1</Text>
-        </Text>
-      </Page>
-
-      <Page size="A4" style={styles.page}>
-        {data.preview ? (
-          <Text style={styles.watermark}>{copy.previewWatermark}</Text>
-        ) : null}
-
-        <Text style={styles.agency}>{data.agencyName}</Text>
-
-        <Text style={styles.sectionTitle}>{data.sections.madridTitle}</Text>
+        <SectionBar title={data.sections.madridTitle} />
         <MatchCards
           cards={data.sections.madrid}
           empty={data.sections.madridEmpty}
           ownerLabel={copy.ownerLabel}
           termLabel={copy.termLabel}
+          viewColLabel={copy.viewLabel}
         />
 
-        <Text style={styles.sectionTitle}>{data.sections.internetTitle}</Text>
-        <Text style={[styles.empty, { marginBottom: 4 }]}>
-          {data.sections.internetSubtitle}
-        </Text>
-        {data.sections.internet.length === 0 ? (
-          <Text style={styles.empty}>{data.sections.internetEmpty}</Text>
-        ) : (
-          data.sections.internet.map((item, i) => (
-            <View key={`${item.title}-${i}`} style={{ marginBottom: 6 }}>
-              <Text style={{ fontSize: 9, fontWeight: 700 }}>
-                {i + 1}. {item.title}
-              </Text>
-              {item.note ? (
-                <Text style={styles.matchMeta}>{item.note}</Text>
-              ) : null}
-              {item.url ? (
-                <Text style={styles.matchMeta}>{item.url}</Text>
-              ) : null}
-            </View>
-          ))
-        )}
-
-        <Text style={styles.verdictTitle}>{data.verdict.title}</Text>
-        <Text style={styles.verdictLead}>{data.verdict.lead}</Text>
-        {data.verdict.byClass.map((v) => (
-          <Text key={v.classNumber} style={styles.verdictLine}>
-            {copy.classLabel} {v.classNumber} — {v.chanceLabel}
+        <SectionBar title={data.sections.internetTitle} />
+        <View style={styles.emptyBox}>
+          <Text style={[styles.empty, { marginBottom: 2 }]}>
+            {data.sections.internetSubtitle}
           </Text>
-        ))}
+          {data.sections.internet.length === 0 ? (
+            <Text style={styles.empty}>{data.sections.internetEmpty}</Text>
+          ) : (
+            data.sections.internet.map((item, i) => (
+              <View key={`${item.title}-${i}`} style={{ marginBottom: 2 }}>
+                <Text style={{ fontSize: 8, fontWeight: 700 }}>
+                  {i + 1}. {item.title}
+                </Text>
+                {item.note ? (
+                  <Text style={styles.matchMeta}>{item.note}</Text>
+                ) : null}
+                {item.url ? (
+                  <Text style={styles.matchMeta}>{item.url}</Text>
+                ) : null}
+              </View>
+            ))
+          )}
+        </View>
+
+        <SectionBar title={data.verdict.title} />
+        <View style={styles.verdictBox}>
+          <Text style={styles.verdictLead}>{data.verdict.lead}</Text>
+          {data.verdict.byClass.map((v) => (
+            <Text key={v.classNumber} style={styles.verdictLine}>
+              {copy.classLabel} {v.classNumber} — {v.chanceLabel}
+            </Text>
+          ))}
+        </View>
 
         <Text style={styles.disclaimer}>{data.disclaimer}</Text>
 
@@ -389,10 +476,14 @@ export function ConclusionPdfDocument({
           </View>
         ) : null}
 
-        <Text style={styles.footer}>
+        <View style={styles.footer} fixed>
           <Text>{data.docNumber}</Text>
-          <Text>2</Text>
-        </Text>
+          <Text
+            render={({ pageNumber, totalPages }) =>
+              `${pageNumber} / ${totalPages}`
+            }
+          />
+        </View>
       </Page>
     </Document>
   );

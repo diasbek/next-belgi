@@ -112,101 +112,119 @@ export function Header({ locale, content }: HeaderProps) {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-black/5 bg-lime/90 backdrop-blur-md">
-      <div
-        className={cn(
-          pageContainer,
-          "flex min-h-[var(--header-height)] items-center justify-between gap-3 sm:gap-4",
-        )}
-      >
-        <Link
-          href={homeHref}
-          className="font-display text-xl font-semibold tracking-tight text-ink md:text-2xl"
+    <>
+      <header className="sticky top-0 z-[60] border-b border-black/5 bg-lime/90 backdrop-blur-md">
+        <div
+          className={cn(
+            pageContainer,
+            "flex min-h-[var(--header-height)] items-center justify-between gap-3 sm:gap-4",
+          )}
         >
-          Belgi.ai
-        </Link>
+          <Link
+            href={homeHref}
+            className="font-display text-xl font-semibold tracking-tight text-ink md:text-2xl"
+          >
+            Belgi.ai
+          </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
-          {content.nav.map((item) => {
-            const href = localePath(locale, item.href);
-            const active = isActivePath(currentPath, item.href);
-            return (
-              <Link
-                key={item.href}
-                href={href}
-                className={cn(
-                  "text-sm font-medium transition-opacity hover:opacity-70",
-                  active ? "text-ink" : "text-ink/80",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+            {content.nav.map((item) => {
+              const href = localePath(locale, item.href);
+              const active = isActivePath(currentPath, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={href}
+                  className={cn(
+                    "text-sm font-medium transition-opacity hover:opacity-70",
+                    active ? "text-ink" : "text-ink/80",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <LanguageSwitcher locale={locale} />
-          {isAdmin ? (
-            <Button href={adminHref} variant="ghost" className="px-4">
-              {appCopy.admin}
-            </Button>
-          ) : null}
-          {ctaButton}
+          <div className="hidden items-center gap-3 lg:flex">
+            <LanguageSwitcher locale={locale} />
+            {isAdmin ? (
+              <Button href={adminHref} variant="ghost" className="px-4">
+                {appCopy.admin}
+              </Button>
+            ) : null}
+            {ctaButton}
+          </div>
+
+          <button
+            type="button"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white/70 lg:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className="sr-only">
+              {open ? content.ui.close : content.ui.menu}
+            </span>
+            <span aria-hidden className="text-lg leading-none">
+              {open ? "×" : "☰"}
+            </span>
+          </button>
         </div>
-
-        <button
-          type="button"
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white/70 lg:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sr-only">
-            {open ? content.ui.close : content.ui.menu}
-          </span>
-          <span aria-hidden className="text-lg leading-none">
-            {open ? "×" : "☰"}
-          </span>
-        </button>
-      </div>
+      </header>
 
       {open ? (
         <div
           id="mobile-nav"
-          className="border-t border-black/5 bg-lime pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden"
+          className="fixed inset-0 z-50 flex flex-col bg-lime lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label={content.ui.menu}
         >
+          <div
+            className="shrink-0"
+            style={{ height: "var(--header-height)" }}
+            aria-hidden
+          />
           <nav
-            className={cn(pageContainer, "flex flex-col gap-2 py-4")}
+            className={cn(
+              pageContainer,
+              "flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2",
+            )}
             aria-label="Mobile"
           >
-            {content.nav.map((item) => (
-              <Link
-                key={item.href}
-                href={localePath(locale, item.href)}
-                className="rounded-xl px-3 py-3 text-base font-medium text-ink hover:bg-white/50"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-              <LanguageSwitcher locale={locale} className="w-full sm:w-auto" />
-              {isAdmin ? (
-                <Button
-                  href={adminHref}
-                  variant="secondary"
-                  className="w-full sm:w-auto"
+            {content.nav.map((item) => {
+              const href = localePath(locale, item.href);
+              const active = isActivePath(currentPath, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={href}
+                  className={cn(
+                    "rounded-2xl px-4 py-3.5 text-lg font-medium text-ink transition-colors hover:bg-white/50",
+                    active && "bg-white/40",
+                  )}
                 >
+                  {item.label}
+                </Link>
+              );
+            })}
+            <div className="mt-2 px-1">
+              <LanguageSwitcher locale={locale} className="w-full" />
+            </div>
+            <div className="mt-auto flex flex-col gap-3 border-t border-black/10 pt-5">
+              {isAdmin ? (
+                <Button href={adminHref} variant="secondary" className="w-full">
                   {appCopy.admin}
                 </Button>
               ) : null}
-              <Button href={ctaHref} className="w-full sm:w-auto">
+              <Button href={ctaHref} className="w-full">
                 {auth.status === "loading" ? "…" : ctaLabel}
               </Button>
             </div>
           </nav>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }

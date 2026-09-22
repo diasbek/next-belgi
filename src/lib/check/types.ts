@@ -66,4 +66,6 @@ export interface CheckResponse {
   report?: TrademarkReport;
   error?: string;
   source?: "upstream" | "mock";
+  /** Guest teaser — full check requires auth + credit */
+  preview?: boolean;
 }

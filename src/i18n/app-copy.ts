@@ -260,6 +260,10 @@ export type AppCopy = {
     needLogin: string;
     needCredits: string;
     balance: string;
+    unlockTitle: string;
+    unlockLead: string;
+    signIn: string;
+    signUp: string;
   };
 };
 
@@ -579,6 +583,11 @@ export const uzApp: AppCopy = {
     needLogin: "Tekshirish uchun tizimga kiring",
     needCredits: "Kredit yetarli emas — toʻldiring",
     balance: "Balans",
+    unlockTitle: "Toʻliq hisobotni oching",
+    unlockLead:
+      "Bu dastlabki natija. Kirish yoki roʻyxatdan oʻting — toʻliq AI-hisobot va kreditlar kabinetda.",
+    signIn: "Kirish",
+    signUp: "Roʻyxatdan oʻtish",
   },
 };
 
@@ -898,6 +907,11 @@ export const ruApp: AppCopy = {
     needLogin: "Войдите, чтобы проверить знак",
     needCredits: "Недостаточно кредитов — пополните баланс",
     balance: "Баланс",
+    unlockTitle: "Откройте полный отчёт",
+    unlockLead:
+      "Это предварительный результат. Войдите или зарегистрируйтесь — полный AI-отчёт и кредиты в кабинете.",
+    signIn: "Войти",
+    signUp: "Регистрация",
   },
 };
 
@@ -1217,6 +1231,11 @@ export const enApp: AppCopy = {
     needLogin: "Sign in to check a mark",
     needCredits: "Not enough credits — top up your balance",
     balance: "Balance",
+    unlockTitle: "Unlock the full report",
+    unlockLead:
+      "This is a preview. Sign in or create an account — full AI report and credits live in your cabinet.",
+    signIn: "Sign in",
+    signUp: "Create account",
   },
 };
 

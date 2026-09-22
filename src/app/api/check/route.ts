@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { runTrademarkCheck } from "@/lib/check/client";
+import { buildMockReport } from "@/lib/check/mock";
+import { classifyActivity } from "@/lib/classify";
 import { requireUserApi } from "@/lib/auth/session";
 import {
   debitCheckCredit,
@@ -23,14 +25,14 @@ function clientKey(request: Request) {
   );
 }
 
-function checkRateLimit(key: string) {
+function checkRateLimit(key: string, limit: number) {
   const now = Date.now();
   const entry = rateMap.get(key);
   if (!entry || entry.resetAt < now) {
     rateMap.set(key, { count: 1, resetAt: now + 60_000 });
     return true;
   }
-  if (entry.count >= 12) return false;
+  if (entry.count >= limit) return false;
   entry.count += 1;
   return true;
 }
@@ -57,20 +59,36 @@ export async function POST(request: Request) {
       ? checkResumePath(locale, query, activity, actionPath)
       : localePath(locale, actionPath);
 
-  const appUser = await requireUserApi();
-  if (!appUser) {
+  if (!query || !activity) {
     return NextResponse.json(
-      {
-        ok: false,
-        error: "unauthorized",
-        redirect: `${localePath(locale, "/login/")}?next=${encodeURIComponent(resume)}`,
-      },
-      { status: 401 },
+      { ok: false, error: "missing_fields" },
+      { status: 400 },
     );
   }
 
   const ip = clientKey(request);
-  if (!checkRateLimit(`${appUser.id}:${ip}`)) {
+  const appUser = await requireUserApi();
+
+  // Guest: soft preview (mock only, no debit) — client shows blurred result + auth CTA
+  if (!appUser) {
+    if (!checkRateLimit(`guest:${ip}`, 8)) {
+      return NextResponse.json(
+        { ok: false, error: "rate_limited" },
+        { status: 429 },
+      );
+    }
+    const classification = await classifyActivity({ activity, locale });
+    const report = buildMockReport(query, activity, classification, locale);
+    return NextResponse.json({
+      ok: true,
+      preview: true,
+      source: "mock",
+      report,
+      loginRedirect: `${localePath(locale, "/login/")}?next=${encodeURIComponent(resume)}`,
+    });
+  }
+
+  if (!checkRateLimit(`${appUser.id}:${ip}`, 12)) {
     return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
 
@@ -110,6 +128,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ...result,
+    preview: false,
     balanceAfter: appUser.balance - 1,
   });
 }

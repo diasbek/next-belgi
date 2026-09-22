@@ -25,7 +25,10 @@ function LanguageSwitcherInner({
     <div className={cn("relative", className)}>
       <button
         type="button"
-        className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-pill)] border border-black/10 bg-white/70 px-4 text-sm font-medium text-ink backdrop-blur transition-colors hover:bg-white"
+        className={cn(
+          "inline-flex min-h-12 items-center justify-center rounded-[var(--radius-pill)] border border-black/10 bg-white/70 px-4 text-sm font-medium text-ink backdrop-blur transition-colors hover:bg-white",
+          className?.includes("w-full") && "w-full",
+        )}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}

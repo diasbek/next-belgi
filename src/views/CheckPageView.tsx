@@ -10,7 +10,6 @@ import { storeReport } from "@/lib/check/storage";
 import { trackEvent } from "@/lib/analytics/events";
 import {
   checkResumePath,
-  loginWithNext,
 } from "@/lib/navigation/safe-next";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
@@ -62,13 +61,10 @@ export function CheckPageView({
         const json = (await res.json()) as CheckResponse & {
           error?: string;
           redirect?: string;
+          preview?: boolean;
         };
         if (cancelled) return;
         const resume = checkResumePath(locale, query, activity, actionPath);
-        if (res.status === 401) {
-          router.replace(loginWithNext(locale, resume));
-          return;
-        }
         if (res.status === 402 || res.status === 503) {
           router.replace(
             `${localePath(locale, "/account/billing/")}?next=${encodeURIComponent(resume)}`,
@@ -81,8 +77,11 @@ export function CheckPageView({
           trackEvent("check_error");
           return;
         }
-        storeReport(json.report);
-        trackEvent("check_success", { source: json.source });
+        storeReport(json.report, Boolean(json.preview));
+        trackEvent("check_success", {
+          source: json.source,
+          preview: Boolean(json.preview),
+        });
         const params = new URLSearchParams({ q: query, activity });
         router.replace(
           `${localePath(locale, "/check/result/")}?${params.toString()}`,

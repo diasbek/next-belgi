@@ -70,7 +70,7 @@ export interface CheckResponse {
   ok: boolean;
   report?: TrademarkReport;
   error?: string;
-  source?: "upstream" | "mock";
+  source?: "upstream" | "mock" | "registry";
   /** Guest teaser — full check requires auth + credit */
   preview?: boolean;
 }

@@ -24,11 +24,20 @@ export function ProfileForm({
   phone: string;
   hasPassword: boolean;
   googleLinked: boolean;
-  initial: { full_name: string | null; phone: string | null };
+  initial: {
+    full_name: string | null;
+    phone: string | null;
+    company_name?: string | null;
+    job_title?: string | null;
+    user_intent?: string | null;
+  };
 }) {
   const copy = getAppCopy(locale);
   const router = useRouter();
   const [name, setName] = useState(initial.full_name || "");
+  const [company, setCompany] = useState(initial.company_name || "");
+  const [jobTitle, setJobTitle] = useState(initial.job_title || "");
+  const [intent, setIntent] = useState(initial.user_intent || "");
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailDest, setEmailDest] = useState("");
@@ -53,7 +62,13 @@ export function ProfileForm({
       const res = await fetch("/api/account/profile/", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ full_name: name, locale }),
+        body: JSON.stringify({
+          full_name: name,
+          company_name: company,
+          job_title: jobTitle,
+          user_intent: intent || undefined,
+          locale,
+        }),
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok || !json.ok) {
@@ -288,6 +303,41 @@ export function ProfileForm({
               onChange={(e) => setName(e.target.value)}
               autoComplete="name"
             />
+          </label>
+          <label className="text-sm font-medium">
+            {copy.profile.company}
+            <input
+              className={`${fieldInput} mt-1`}
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              autoComplete="organization"
+            />
+          </label>
+          <label className="text-sm font-medium">
+            {copy.profile.jobTitle}
+            <input
+              className={`${fieldInput} mt-1`}
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+              autoComplete="organization-title"
+            />
+          </label>
+          <label className="text-sm font-medium">
+            {copy.profile.intent}
+            <select
+              className={`${fieldInput} mt-1`}
+              value={intent}
+              onChange={(e) => setIntent(e.target.value)}
+            >
+              <option value="">—</option>
+              {(
+                ["own_brand", "agency", "lawyer", "other"] as const
+              ).map((key) => (
+                <option key={key} value={key}>
+                  {copy.onboarding.intents[key]}
+                </option>
+              ))}
+            </select>
           </label>
           <Button type="submit" disabled={loading}>
             {copy.profile.save}

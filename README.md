@@ -52,23 +52,25 @@ npm run build:archive
 
 Локали: **UZ** без префикса (`/`), **RU** — `/ru/`, **EN** — `/en/`.
 
-## Импорт реестра товарных знаков (Adliya)
+## Импорт / синк реестра (локальный SoT + Adliya)
 
-Источник: `https://im.adliya.uz/register/TRADEMARK` (~110 111 записей).  
-Логотипы: `https://api-ip.adliya.uz/v1/file/application/open-source/{logoId}` (без авторизации).
+Локальные таблицы `trademarks` / `trademark_mgs` — **источник правды** для check и admin.  
+Adliya (`api-ip.adliya.uz`) — внешний provider для sync (public API сейчас; официальный — позже через `ADLIYA_PROVIDER`).
 
-API списка/деталей требует Bearer-токен (иначе 401). После входа на portal:
+Логотипы: `https://api-ip.adliya.uz/v1/file/application/open-source/{logoId}`.
 
-1. DevTools → Network → любой запрос к `api-ip.adliya.uz`
-2. Скопируйте `Authorization: Bearer …` в `.env.local` как `ADLIYA_ACCESS_TOKEN`
-3. Нужен также `SUPABASE_SERVICE_ROLE_KEY`
+1. DevTools → Network → `api-ip.adliya.uz` → скопируйте Bearer в `ADLIYA_ACCESS_TOKEN`
+2. Нужен `SUPABASE_SERVICE_ROLE_KEY` (или anon + `BELGI_IMPORT_SECRET`)
+3. Примените миграцию `20260922230000_registry_sot_uuid.sql`
 
 ```bash
-npm install
-npm run import:trademarks                 # полный импорт (резюмируется)
+npm run import:trademarks                 # resume sync (pages)
 npm run import:trademarks -- --max-pages=2
-npm run import:trademarks -- --reset      # очистить и начать заново
+npm run import:trademarks -- --list-only  # без detail enrich
+npm run import:trademarks -- --enrich-only
+npm run import:trademarks -- --start-page=10
 ```
 
-Таблицы: `trademarks`, `trademark_mgs`, `trademark_import_state`.
+Admin: `/admin/registry/` — CRUD (manual), Sync now, field locks, soft-delete.  
+Merge: sync не перезаписывает `source=manual` и поля из `field_locks`.
 

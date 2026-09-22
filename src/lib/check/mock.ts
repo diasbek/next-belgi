@@ -4,7 +4,7 @@ import {
   classRisksFromClassification,
   niceClassesFromClassification,
 } from "@/lib/classify";
-import type { TrademarkReport } from "./types";
+import type { TrademarkMatch, TrademarkReport } from "./types";
 
 const copy = {
   uz: {
@@ -14,8 +14,6 @@ const copy = {
     wipo: "WIPO",
     internet: "Internet",
     emptyText: "Mavjud maʼlumotlarga koʻra, oʻxshash belgi topilmadi",
-    statusPending: "Kutish muddatida",
-    statusExam: "Ekspertizada",
     conclusionTitle: "Xulosa",
     conclusionLead:
       "Ekspertiza natijalari ushbu nomni roʻyxatga olish uchun ijobiy javob berishi kerak:",
@@ -25,20 +23,14 @@ const copy = {
     disclaimer:
       "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan oʻxshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, roʻyxatga olish toʻgʻrisida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi.",
     niceFallback: ["[3] taglik", "[5] nam salfetka"],
-    kikoClasses:
-      "[5] bolalar tagliklari; bolalar taglik-shimlari; gigiyenik prokladkalar.",
-    allProducts: "[3] barcha mahsulotlar\n[5] barcha mahsulotlar",
-    allProductsOne: "[3] barcha mahsulotlar",
   },
   ru: {
     defaultActivity: "Детские подгузники",
     markType: "словесный",
     registryUz: "Реестр УЗ",
     wipo: "WIPO",
-    internet: "Интернет",
+    internet: "Internet",
     emptyText: "По имеющимся данным, подобных признаков нет",
-    statusPending: "В период ожидания",
-    statusExam: "В экспертизе",
     conclusionTitle: "Заключение",
     conclusionLead:
       "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",
@@ -48,10 +40,6 @@ const copy = {
     disclaimer:
       "Belgi.ai выполняет автоматизированный поиск и информационную оценку сходства обозначения с товарными знаками и заявками, содержащимися в доступных источниках. Результат проверки не является юридическим заключением, решением о регистрации или гарантией предоставления правовой охраны. Окончательное решение принимается уполномоченным государственным органом.",
     niceFallback: ["[3] подгузник", "[5] влажный салфетка"],
-    kikoClasses:
-      "[5] подгузники детские; трусы-подгузники детские; прокладки гигиенические; трусы гигиенические женские.",
-    allProducts: "[3] все продукты\n[5] все продукты",
-    allProductsOne: "[3] все продукты",
   },
   en: {
     defaultActivity: "Baby diapers",
@@ -60,8 +48,6 @@ const copy = {
     wipo: "WIPO",
     internet: "Internet",
     emptyText: "Based on available data, no similar marks were found",
-    statusPending: "Pending period",
-    statusExam: "Under examination",
     conclusionTitle: "Conclusion",
     conclusionLead:
       "Examination results should support registration of this name:",
@@ -71,36 +57,34 @@ const copy = {
     disclaimer:
       "Belgi.ai performs automated search and an informational assessment of similarity between the designation and trademarks and applications in available sources. The check result is not a legal opinion, a registration decision, or a guarantee of legal protection. The final decision is made by the competent state authority.",
     niceFallback: ["[3] diapers", "[5] wet wipes"],
-    kikoClasses:
-      "[5] baby diapers; baby pant diapers; sanitary pads; women's sanitary pants.",
-    allProducts: "[3] all products\n[5] all products",
-    allProductsOne: "[3] all products",
   },
 } as const;
 
-export function buildMockReport(
-  query: string,
-  activity: string,
-  classification?: ActivityClassification,
-  locale: Locale = "uz",
-): TrademarkReport {
+export function buildReportFromMatches(params: {
+  query: string;
+  activity: string;
+  classification?: ActivityClassification;
+  locale?: Locale;
+  matches: TrademarkMatch[];
+}): TrademarkReport {
+  const locale = params.locale ?? "uz";
   const t = copy[locale] ?? copy.uz;
-  const q = query.trim() || "Kiroko";
+  const q = params.query.trim() || "Mark";
   const act =
-    classification?.activityNormalized?.trim() ||
-    activity.trim() ||
+    params.classification?.activityNormalized?.trim() ||
+    params.activity.trim() ||
     t.defaultActivity;
 
-  const niceClasses = classification
-    ? niceClassesFromClassification(classification)
+  const niceClasses = params.classification
+    ? niceClassesFromClassification(params.classification)
     : [...t.niceFallback];
 
-  const classRisks = classification
-    ? classRisksFromClassification(classification)
-    : [
-        { classNumber: 3, percent: 60 },
-        { classNumber: 5, percent: 55 },
-      ];
+  const classRisks = params.classification
+    ? classRisksFromClassification(params.classification)
+    : [];
+
+  const topSim = params.matches[0]?.similarity ?? 0;
+  const positive = topSim < 45;
 
   return {
     query: q,
@@ -111,35 +95,9 @@ export function buildMockReport(
       {
         id: "uz",
         title: t.registryUz,
-        matches: [
-          {
-            id: "kiko",
-            name: "KIKO",
-            owner: 'OOO "SMART HYGIENE FACILITIES"',
-            registeredFrom: "14.06.2024",
-            registeredTo: "14.06.2034",
-            similarity: 60,
-            classesText: t.kikoClasses,
-          },
-          {
-            id: "icoco",
-            name: "iCOCO",
-            owner: 'OOO "BABY PRO INTERNATIONAL"',
-            registeredFrom: "26.03.2026",
-            status: t.statusPending,
-            similarity: 32,
-            classesText: t.allProducts,
-          },
-          {
-            id: "koko",
-            name: "KOKO",
-            owner: 'OOO "PAXTAOBOD COSMETIK"',
-            registeredFrom: "16.09.2025",
-            status: t.statusExam,
-            similarity: 21,
-            classesText: t.allProductsOne,
-          },
-        ],
+        empty: params.matches.length === 0,
+        emptyText: t.emptyText,
+        matches: params.matches,
       },
       {
         id: "wipo",
@@ -159,40 +117,66 @@ export function buildMockReport(
     conclusion: {
       title: t.conclusionTitle,
       lead: t.conclusionLead,
-      positive: true,
+      positive,
     },
-    classRisks,
+    classRisks:
+      classRisks.length > 0
+        ? classRisks.map((c) => ({
+            ...c,
+            percent: Math.min(
+              95,
+              Math.round(c.percent * (0.4 + topSim / 100)),
+            ),
+          }))
+        : niceClasses.slice(0, 3).map((_, i) => ({
+            classNumber: Number(String(niceClasses[i]).match(/\d+/)?.[0] || 1),
+            percent: Math.round(topSim * (1 - i * 0.15)),
+          })),
     recommendations: {
       title: t.recommendationsTitle,
       replaceHint: t.replaceHint,
-      alternatives: ["KAMI", "KAMO", "KUMI"],
+      alternatives: [],
     },
-    lawyers: [
-      {
-        id: "dildora",
-        name: "Nishanova Dildora",
-        role: t.lawyerRole,
-        rating: 5,
-      },
-      {
-        id: "jasur",
-        name: "Erkinov Jasur",
-        role: t.lawyerRole,
-        rating: 5,
-      },
-      {
-        id: "dilorom",
-        name: "Nishanova Dilorom",
-        role: t.lawyerRole,
-        rating: 4,
-      },
-      {
-        id: "jonibek",
-        name: "Erkinov Jonibek",
-        role: t.lawyerRole,
-        rating: 4,
-      },
-    ],
+    lawyers: [],
     disclaimer: t.disclaimer,
   };
+}
+
+/** @deprecated use buildReportFromMatches — kept for preview/demo */
+export function buildMockReport(
+  query: string,
+  activity: string,
+  classification?: ActivityClassification,
+  locale: Locale = "uz",
+): TrademarkReport {
+  return buildReportFromMatches({
+    query,
+    activity,
+    classification,
+    locale,
+    matches: [
+      {
+        id: "kiko",
+        name: "KIKO",
+        owner: 'OOO "SMART HYGIENE FACILITIES"',
+        registeredFrom: "14.06.2024",
+        registeredTo: "14.06.2034",
+        similarity: 60,
+      },
+      {
+        id: "icoco",
+        name: "iCOCO",
+        owner: 'OOO "BABY PRO INTERNATIONAL"',
+        registeredFrom: "26.03.2026",
+        similarity: 32,
+      },
+      {
+        id: "koko",
+        name: "KOKO",
+        owner: 'OOO "PAXTAOBOD COSMETIK"',
+        registeredFrom: "16.09.2025",
+        similarity: 21,
+      },
+    ],
+  });
 }

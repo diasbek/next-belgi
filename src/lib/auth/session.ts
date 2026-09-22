@@ -21,6 +21,11 @@ export interface AppUser {
     avatar_url: string | null;
     role: ProfileRole;
     has_password: boolean;
+    company_name: string | null;
+    job_title: string | null;
+    user_intent: string | null;
+    onboarding_completed_at: string | null;
+    created_at?: string | null;
   };
   balance: number;
   providers: {
@@ -42,7 +47,9 @@ export async function getAppUser(): Promise<AppUser | null> {
 
   const { data: profile } = await db
     .from("profiles")
-    .select("id, full_name, phone, locale, avatar_url, role, has_password")
+    .select(
+      "id, full_name, phone, locale, avatar_url, role, has_password, company_name, job_title, user_intent, onboarding_completed_at, created_at",
+    )
     .eq("id", userId)
     .maybeSingle();
 
@@ -78,6 +85,11 @@ export async function getAppUser(): Promise<AppUser | null> {
       avatar_url: profile.avatar_url,
       role: (profile.role as ProfileRole) || "user",
       has_password: Boolean(profile.has_password),
+      company_name: profile.company_name ?? null,
+      job_title: profile.job_title ?? null,
+      user_intent: profile.user_intent ?? null,
+      onboarding_completed_at: profile.onboarding_completed_at ?? null,
+      created_at: profile.created_at ?? null,
     },
     balance: wallet?.balance ?? 0,
     providers: {

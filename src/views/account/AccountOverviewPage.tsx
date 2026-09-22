@@ -15,6 +15,7 @@ import {
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
+import { OnboardingCard } from "@/components/organisms/OnboardingCard";
 import { Button } from "@/components/atoms/Button";
 import Link from "next/link";
 
@@ -24,6 +25,7 @@ export async function AccountOverviewPage({ locale }: { locale: Locale }) {
   );
   const copy = getAppCopy(locale);
   const db = getServiceDb();
+  const needsOnboarding = !appUser.profile.onboarding_completed_at;
 
   const { data: checks } = db
     ? await db
@@ -58,6 +60,18 @@ export async function AccountOverviewPage({ locale }: { locale: Locale }) {
           </Button>
         }
       />
+
+      {needsOnboarding ? (
+        <OnboardingCard
+          locale={locale}
+          initial={{
+            full_name: appUser.profile.full_name,
+            company_name: appUser.profile.company_name,
+            job_title: appUser.profile.job_title,
+            user_intent: appUser.profile.user_intent,
+          }}
+        />
+      ) : null}
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
         <DashStatCard

@@ -135,7 +135,31 @@ export type AppCopy = {
     linkDone: string;
     changeDone: string;
     cancel: string;
+    company: string;
+    jobTitle: string;
+    intent: string;
   };
+  onboarding: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    fullName: string;
+    fullNamePlaceholder: string;
+    company: string;
+    companyPlaceholder: string;
+    jobTitle: string;
+    jobTitlePlaceholder: string;
+    intent: string;
+    intents: {
+      own_brand: string;
+      agency: string;
+      lawyer: string;
+      other: string;
+    };
+    submit: string;
+    required: string;
+  };
+
   adminDash: {
     title: string;
     lead: string;
@@ -172,6 +196,18 @@ export type AppCopy = {
     confirmRole: string;
     confirmRoleLead: string;
     statusUnknown: string;
+    company: string;
+    jobTitle: string;
+    intent: string;
+    checks: string;
+    lastSeen: string;
+    joined: string;
+    contact: string;
+    onboarding: string;
+    onboardingDone: string;
+    onboardingPending: string;
+    colCompany: string;
+    statusInactive: string;
   };
   adminPayments: {
     title: string;
@@ -247,6 +283,26 @@ export type AppCopy = {
     searchPlaceholder: string;
     showing: string;
     empty: string;
+    emptyLead: string;
+    create: string;
+    syncNow: string;
+    syncDone: string;
+    detailTitle: string;
+    colName: string;
+    colNumber: string;
+    colStatus: string;
+    colOwner: string;
+    colSource: string;
+    colActive: string;
+    allSources: string;
+    allActive: string;
+    activeOnly: string;
+    inactiveOnly: string;
+    fetchAdliya: string;
+    deactivate: string;
+    deactivateConfirm: string;
+    deactivateLead: string;
+    fieldLocks: string;
   };
   adminAttorneys: {
     title: string;
@@ -536,7 +592,32 @@ export const uzApp: AppCopy = {
     linkDone: "Muvaffaqiyatli bogʻlandi",
     changeDone: "Muvaffaqiyatli oʻzgartirildi",
     cancel: "Bekor qilish",
+    company: "Kompaniya",
+    jobTitle: "Lavozim",
+    intent: "Maqsad",
   },
+  
+  onboarding: {
+    eyebrow: "Boshlash",
+    title: "Profilingizni toʻldiring",
+    lead: "Bir necha savol — tekshiruvlar va hisobotlar shaxsiylashtiriladi.",
+    fullName: "F.I.Sh.",
+    fullNamePlaceholder: "Ism Familiya",
+    company: "Kompaniya",
+    companyPlaceholder: "Kompaniya nomi",
+    jobTitle: "Lavozim",
+    jobTitlePlaceholder: "Masalan, marketing menejeri",
+    intent: "Nima uchun Belgi?",
+    intents: {
+      own_brand: "Oʻz brendimni himoya qilaman",
+      agency: "Agentlik / brending",
+      lawyer: "Yurist / patent vakili",
+      other: "Boshqa",
+    },
+    submit: "Davom etish",
+    required: "F.I.Sh. va kompaniya majburiy.",
+  },
+
   adminDash: {
     title: "Boshqaruv paneli",
     lead: "Tizim koʻrsatkichlari.",
@@ -573,6 +654,18 @@ export const uzApp: AppCopy = {
     confirmRole: "Rolni o‘zgartirasizmi?",
     confirmRoleLead: "Foydalanuvchi admin huquqlariga ega bo‘ladi yoki yo‘qotadi.",
     statusUnknown: "Noma’lum",
+    company: "Kompaniya",
+    jobTitle: "Lavozim",
+    intent: "Maqsad",
+    checks: "Tekshiruvlar",
+    lastSeen: "Oxirgi faollik",
+    joined: "Roʻyxatdan oʻtgan",
+    contact: "Aloqa",
+    onboarding: "Onboarding",
+    onboardingDone: "Toʻldirilgan",
+    onboardingPending: "Kutilmoqda",
+    colCompany: "Kompaniya",
+    statusInactive: "Nofaol",
   },
   adminPayments: {
     title: "Toʻlovlar",
@@ -641,13 +734,33 @@ export const uzApp: AppCopy = {
   },
   adminRegistry: {
     title: "Tovar belgilari reestri",
-    lead: "Adliya nusxasi — qidiruv va import holati.",
+    lead: "Mahalliy reestr (SoT) — CRUD, sync Adliya, qidiruv.",
     count: "Yozuvlar",
     importStatus: "Import holati",
     search: "Qidirish",
     searchPlaceholder: "Nom, raqam, egasi…",
     showing: "Koʻrsatilmoqda",
     empty: "Yozuv topilmadi.",
+    emptyLead: "Yangi yozuv yarating yoki sinkronizatsiyani ishga tushiring.",
+    create: "Qoʻshish",
+    syncNow: "Sinkronlash",
+    syncDone: "Import",
+    detailTitle: "Tovar belgisi",
+    colName: "Nom",
+    colNumber: "Raqam",
+    colStatus: "Holat",
+    colOwner: "Egasi",
+    colSource: "Manba",
+    colActive: "Faol",
+    allSources: "Barcha manbalar",
+    allActive: "Barchasi",
+    activeOnly: "Faol",
+    inactiveOnly: "Nofaol",
+    fetchAdliya: "Adliyadan yuklash",
+    deactivate: "Oʻchirish",
+    deactivateConfirm: "Yozuvni nofaol qilish?",
+    deactivateLead: "Yumshoq oʻchirish — qidiruvda koʻrinmaydi.",
+    fieldLocks: "Sync lock maydonlari",
   },
   adminAttorneys: {
     title: "Patent vakillari",
@@ -996,7 +1109,32 @@ export const ruApp: AppCopy = {
     linkDone: "Успешно привязано",
     changeDone: "Успешно изменено",
     cancel: "Отмена",
+    company: "Компания",
+    jobTitle: "Должность",
+    intent: "Цель",
   },
+  
+  onboarding: {
+    eyebrow: "Онбординг",
+    title: "Заполните профиль",
+    lead: "Несколько вопросов — отчёты и кабинет станут персональнее.",
+    fullName: "ФИО",
+    fullNamePlaceholder: "Имя Фамилия",
+    company: "Компания",
+    companyPlaceholder: "Название компании",
+    jobTitle: "Должность",
+    jobTitlePlaceholder: "Например, маркетолог",
+    intent: "Зачем вам Belgi?",
+    intents: {
+      own_brand: "Защищаю свой бренд",
+      agency: "Агентство / брендинг",
+      lawyer: "Юрист / патентный поверенный",
+      other: "Другое",
+    },
+    submit: "Продолжить",
+    required: "ФИО и компания обязательны.",
+  },
+
   adminDash: {
     title: "Панель управления",
     lead: "Показатели системы.",
@@ -1033,6 +1171,18 @@ export const ruApp: AppCopy = {
     confirmRole: "Сменить роль?",
     confirmRoleLead: "Пользователь получит или потеряет права администратора.",
     statusUnknown: "Неизвестно",
+    company: "Компания",
+    jobTitle: "Должность",
+    intent: "Цель",
+    checks: "Проверки",
+    lastSeen: "Был в сети",
+    joined: "Регистрация",
+    contact: "Контакты",
+    onboarding: "Онбординг",
+    onboardingDone: "Заполнен",
+    onboardingPending: "Не заполнен",
+    colCompany: "Компания",
+    statusInactive: "Неактивен",
   },
   adminPayments: {
     title: "Платежи",
@@ -1101,13 +1251,33 @@ export const ruApp: AppCopy = {
   },
   adminRegistry: {
     title: "Реестр товарных знаков",
-    lead: "Копия Adliya — поиск и статус импорта.",
+    lead: "Локальный реестр (SoT) — CRUD, sync Adliya, поиск.",
     count: "Записей",
     importStatus: "Статус импорта",
     search: "Искать",
     searchPlaceholder: "Название, номер, владелец…",
     showing: "Показано",
     empty: "Записей не найдено.",
+    emptyLead: "Создайте запись или запустите синхронизацию.",
+    create: "Добавить",
+    syncNow: "Синхронизировать",
+    syncDone: "Импорт",
+    detailTitle: "Товарный знак",
+    colName: "Название",
+    colNumber: "Номер",
+    colStatus: "Статус",
+    colOwner: "Владелец",
+    colSource: "Источник",
+    colActive: "Активен",
+    allSources: "Все источники",
+    allActive: "Все",
+    activeOnly: "Активные",
+    inactiveOnly: "Неактивные",
+    fetchAdliya: "Загрузить из Adliya",
+    deactivate: "Деактивировать",
+    deactivateConfirm: "Деактивировать запись?",
+    deactivateLead: "Мягкое удаление — не показывается в поиске.",
+    fieldLocks: "Поля, защищённые от sync",
   },
   adminAttorneys: {
     title: "Патентные поверенные",
@@ -1456,6 +1626,29 @@ export const enApp: AppCopy = {
     linkDone: "Linked successfully",
     changeDone: "Changed successfully",
     cancel: "Cancel",
+    company: "Company",
+    jobTitle: "Job title",
+    intent: "Intent",
+  },
+  onboarding: {
+    eyebrow: "Get started",
+    title: "Complete your profile",
+    lead: "A few questions so checks and reports feel personal.",
+    fullName: "Full name",
+    fullNamePlaceholder: "First Last",
+    company: "Company",
+    companyPlaceholder: "Company name",
+    jobTitle: "Job title",
+    jobTitlePlaceholder: "e.g. Marketing manager",
+    intent: "Why Belgi?",
+    intents: {
+      own_brand: "Protecting my own brand",
+      agency: "Agency / branding",
+      lawyer: "Lawyer / patent attorney",
+      other: "Other",
+    },
+    submit: "Continue",
+    required: "Full name and company are required.",
   },
   adminDash: {
     title: "Control panel",
@@ -1493,6 +1686,18 @@ export const enApp: AppCopy = {
     confirmRole: "Change role?",
     confirmRoleLead: "The user will gain or lose admin access.",
     statusUnknown: "Unknown",
+    company: "Company",
+    jobTitle: "Job title",
+    intent: "Intent",
+    checks: "Checks",
+    lastSeen: "Last seen",
+    joined: "Joined",
+    contact: "Contact",
+    onboarding: "Onboarding",
+    onboardingDone: "Complete",
+    onboardingPending: "Pending",
+    colCompany: "Company",
+    statusInactive: "Inactive",
   },
   adminPayments: {
     title: "Payments",
@@ -1561,13 +1766,33 @@ export const enApp: AppCopy = {
   },
   adminRegistry: {
     title: "Trademark registry",
-    lead: "Adliya copy — search and import status.",
+    lead: "Local registry (SoT) — CRUD, Adliya sync, search.",
     count: "Records",
     importStatus: "Import status",
     search: "Search",
     searchPlaceholder: "Name, number, owner…",
     showing: "Showing",
     empty: "No records found.",
+    emptyLead: "Create a record or run sync.",
+    create: "Add",
+    syncNow: "Sync now",
+    syncDone: "Imported",
+    detailTitle: "Trademark",
+    colName: "Name",
+    colNumber: "Number",
+    colStatus: "Status",
+    colOwner: "Owner",
+    colSource: "Source",
+    colActive: "Active",
+    allSources: "All sources",
+    allActive: "All",
+    activeOnly: "Active",
+    inactiveOnly: "Inactive",
+    fetchAdliya: "Fetch from Adliya",
+    deactivate: "Deactivate",
+    deactivateConfirm: "Deactivate this record?",
+    deactivateLead: "Soft delete — hidden from search.",
+    fieldLocks: "Sync-locked fields",
   },
   adminAttorneys: {
     title: "Patent attorneys",

@@ -60,9 +60,40 @@ export async function POST(_request: Request, ctx: Ctx) {
     case "click":
       if (mode === "dev") return NextResponse.json({ ok: true, mode: "dev" });
       return NextResponse.json({ ok: true, mode });
-    case "adliya":
+    case "adliya": {
       if (mode !== "live") return NextResponse.json({ ok: true, mode });
-      return NextResponse.json({ ok: true, mode });
+      try {
+        const { createRegistryProvider } = await import(
+          "@/lib/registry/provider"
+        );
+        const token =
+          (cfg as { access_token?: string }).access_token ||
+          process.env.ADLIYA_ACCESS_TOKEN ||
+          "";
+        if (!token) {
+          return NextResponse.json({
+            ok: false,
+            error: "provider_not_configured",
+          });
+        }
+        const provider = createRegistryProvider({
+          token,
+          apiBase: (cfg as { api_base?: string }).api_base,
+        });
+        const page = await provider.listPage({ page: 0, size: 1 });
+        return NextResponse.json({
+          ok: true,
+          mode,
+          total: page.totalElements,
+          sample: page.content[0]?.adliyaId ?? null,
+        });
+      } catch (e) {
+        return NextResponse.json({
+          ok: false,
+          error: e instanceof Error ? e.message : "adliya_ping_failed",
+        });
+      }
+    }
     default:
       return NextResponse.json({ ok: false, error: "unsupported" }, { status: 400 });
   }

@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { AdminListPage } from "@/components/templates/AdminListPage";
@@ -13,10 +14,30 @@ import {
   AdminCardList,
   type AdminColumn,
 } from "@/components/organisms/admin/AdminDataTable";
-import { formatAdminDate } from "@/lib/admin/list-params";
+import { AdminDetailDrawer } from "@/components/organisms/admin/AdminDetailDrawer";
+import {
+  AdminDetailRows,
+  AdminJsonBlock,
+} from "@/components/atoms/admin/AdminDetail";
+import {
+  AdminField,
+  AdminInput,
+  AdminSelect,
+  AdminTextarea,
+} from "@/components/atoms/admin/AdminField";
+import { AdminEntityForm } from "@/components/organisms/admin/AdminEntityForm";
+import {
+  StatusBadge,
+  statusToneFromValue,
+} from "@/components/atoms/admin/StatusBadge";
+import { Button } from "@/components/atoms/Button";
+import { ConfirmDialog } from "@/components/molecules/admin/ConfirmDialog";
+import { adliyaLogoUrl } from "@/lib/adliya/types";
+import { formatAdminDate, shortId } from "@/lib/admin/list-params";
 
 export type AdminRegistryRow = {
-  id: number;
+  id: string;
+  adliya_id: number | null;
   number: string | null;
   transliteration: string | null;
   trademark_type: string | null;
@@ -24,10 +45,37 @@ export type AdminRegistryRow = {
   owner: string | null;
   applicant: string | null;
   registration_number: string | null;
+  logo: string | null;
+  source: string;
+  active: boolean;
+  field_locks: string[] | null;
   updated_at: string;
 };
 
-type RegistryTableRow = Omit<AdminRegistryRow, "id"> & { id: string; numericId: number };
+type DetailState = AdminRegistryRow & {
+  colors?: string | null;
+  address?: string | null;
+  owner_address?: string | null;
+  application_date?: string | null;
+  registration_date?: string | null;
+  expired?: string | null;
+  publication_date?: string | null;
+  vienna_classification?: string | null;
+  unprotected_element?: string | null;
+  raw?: unknown;
+  mgs?: Array<{
+    id: string;
+    class_number: number;
+    text_uz: string | null;
+    text_ru: string | null;
+  }>;
+};
+
+function thumbUrl(logo: string | null): string | null {
+  if (!logo) return null;
+  if (logo.startsWith("http")) return logo;
+  return adliyaLogoUrl(logo);
+}
 
 export function AdminRegistryPanel({
   locale,
@@ -37,6 +85,7 @@ export function AdminRegistryPanel({
   pageSize,
   registryCount,
   importStatus,
+  syncRunning,
   dbUnavailable,
 }: {
   locale: Locale;
@@ -46,28 +95,250 @@ export function AdminRegistryPanel({
   pageSize: number;
   registryCount: number;
   importStatus: string;
+  syncRunning?: boolean;
   dbUnavailable?: boolean;
 }) {
   const copy = getAppCopy(locale);
+  const router = useRouter();
+  const [selected, setSelected] = useState<DetailState | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [form, setForm] = useState({
+    transliteration: "",
+    number: "",
+    status: "DRAFT",
+    trademark_type: "WORD",
+    applicant: "",
+    owner: "",
+    logo: "",
+    mgsClasses: "35",
+  });
 
-  const columns: AdminColumn<RegistryTableRow>[] = [
+  async function openDetail(row: AdminRegistryRow) {
+    setMsg(null);
+    setSelected({ ...row, mgs: [] });
+    try {
+      const res = await fetch(`/api/admin/registry/${row.id}/`);
+      const json = (await res.json()) as {
+        ok?: boolean;
+        row?: DetailState;
+        mgs?: DetailState["mgs"];
+      };
+      if (json.ok && json.row) {
+        setSelected({ ...json.row, mgs: json.mgs || [] });
+      }
+    } catch {
+      // keep list row
+    }
+  }
+
+  async function syncNow() {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/registry/sync/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "page", maxPages: 1 }),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        imported?: number;
+        error?: string;
+      };
+      if (json.ok) {
+        setMsg(`${copy.adminRegistry.syncDone}: +${json.imported ?? 0}`);
+        router.refresh();
+      } else {
+        setMsg(json.error || copy.adminUi.error);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function createTrademark(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setMsg(null);
+    try {
+      const mgs = form.mgsClasses
+        .split(/[,\s]+/)
+        .map((n) => Number(n))
+        .filter((n) => n >= 1 && n <= 45)
+        .map((class_number) => ({ class_number }));
+      const res = await fetch("/api/admin/registry/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transliteration: form.transliteration,
+          number: form.number,
+          status: form.status,
+          trademark_type: form.trademark_type,
+          applicant: form.applicant,
+          owner: form.owner,
+          logo: form.logo,
+          mgs,
+        }),
+      });
+      const json = (await res.json()) as { ok?: boolean; error?: string };
+      if (json.ok) {
+        setCreateOpen(false);
+        setForm({
+          transliteration: "",
+          number: "",
+          status: "DRAFT",
+          trademark_type: "WORD",
+          applicant: "",
+          owner: "",
+          logo: "",
+          mgsClasses: "35",
+        });
+        router.refresh();
+      } else {
+        setMsg(json.error || copy.adminUi.error);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveSelected(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selected) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch(`/api/admin/registry/${selected.id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transliteration: selected.transliteration,
+          number: selected.number,
+          status: selected.status,
+          trademark_type: selected.trademark_type,
+          applicant: selected.applicant,
+          owner: selected.owner,
+          logo: selected.logo,
+          address: selected.address,
+          colors: selected.colors,
+        }),
+      });
+      const json = (await res.json()) as { ok?: boolean; error?: string };
+      if (json.ok) {
+        setMsg(copy.adminUi.save);
+        router.refresh();
+      } else {
+        setMsg(json.error || copy.adminUi.error);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function softDelete() {
+    if (!selected) return;
+    setBusy(true);
+    try {
+      await fetch(`/api/admin/registry/${selected.id}/`, { method: "DELETE" });
+      setSelected(null);
+      router.refresh();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function fetchAdliya() {
+    if (!selected) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch(`/api/admin/registry/${selected.id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fetchFromAdliya: true }),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        row?: DetailState;
+        error?: string;
+      };
+      if (json.ok && json.row) {
+        await openDetail({ ...selected, ...json.row });
+        router.refresh();
+      } else {
+        setMsg(json.error || copy.adminUi.error);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function toggleLock(field: string) {
+    if (!selected) return;
+    const locks = new Set(selected.field_locks || []);
+    if (locks.has(field)) locks.delete(field);
+    else locks.add(field);
+    const next = [...locks];
+    setSelected({ ...selected, field_locks: next });
+    await fetch(`/api/admin/registry/${selected.id}/lock/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ field_locks: next }),
+    });
+  }
+
+  const columns: AdminColumn<AdminRegistryRow>[] = [
+    {
+      id: "logo",
+      header: "",
+      cell: (r) => {
+        const url = thumbUrl(r.logo);
+        return url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={url}
+            alt=""
+            className="h-9 w-9 rounded-md object-contain bg-[#f3f4f1]"
+          />
+        ) : (
+          <span className="inline-block h-9 w-9 rounded-md bg-[#f3f4f1]" />
+        );
+      },
+      className: "w-12",
+    },
     {
       id: "name",
-      header: copy.adminChecks.colQuery,
+      header: copy.adminRegistry.colName,
       cell: (r) => (
         <span className="font-medium">
-          {r.transliteration || r.number || `#${r.numericId}`}
+          {r.transliteration || r.number || shortId(r.id)}
         </span>
       ),
     },
     {
+      id: "source",
+      header: copy.adminRegistry.colSource,
+      cell: (r) => (
+        <StatusBadge tone={r.source === "manual" ? "info" : "neutral"}>
+          {r.source}
+        </StatusBadge>
+      ),
+    },
+    {
       id: "status",
-      header: copy.adminPayments.colStatus,
-      cell: (r) => r.status || "—",
+      header: copy.adminRegistry.colStatus,
+      cell: (r) => (
+        <StatusBadge tone={statusToneFromValue(r.status || "")}>
+          {r.status || "—"}
+        </StatusBadge>
+      ),
     },
     {
       id: "owner",
-      header: copy.adminPayments.colUser,
+      header: copy.adminRegistry.colOwner,
       cell: (r) => r.owner || r.applicant || "—",
       hideOnMobile: true,
     },
@@ -79,47 +350,74 @@ export function AdminRegistryPanel({
     },
   ];
 
-  const mapped: RegistryTableRow[] = rows.map((r) => ({
-    ...r,
-    id: String(r.id),
-    numericId: r.id,
-  }));
-
   const empty =
     !dbUnavailable && rows.length === 0
-      ? { title: copy.adminRegistry.empty }
+      ? {
+          title: copy.adminRegistry.empty,
+          lead: copy.adminRegistry.emptyLead,
+        }
       : null;
 
   return (
-    <AdminListPage
-      title={copy.adminRegistry.title}
-      lead={copy.adminRegistry.lead}
-      badge={registryCount || undefined}
-      dbUnavailable={dbUnavailable}
-      dbUnavailableMessage={copy.adminUi.dbUnavailable}
-      empty={empty}
-      stats={
-        <dl className="mb-5 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="flex justify-between rounded-xl border border-black/5 bg-white px-4 py-3">
-            <dt className="text-ink-muted">{copy.adminRegistry.count}</dt>
-            <dd className="m-0 font-semibold">{registryCount.toLocaleString()}</dd>
+    <>
+      <AdminListPage
+        title={copy.adminRegistry.title}
+        lead={copy.adminRegistry.lead}
+        badge={registryCount || undefined}
+        action={
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy || syncRunning}
+              onClick={() => void syncNow()}
+            >
+              {busy || syncRunning
+                ? copy.adminUi.loading
+                : copy.adminRegistry.syncNow}
+            </Button>
+            <Button type="button" onClick={() => setCreateOpen(true)}>
+              {copy.adminRegistry.create}
+            </Button>
           </div>
-          <div className="flex justify-between rounded-xl border border-black/5 bg-white px-4 py-3">
-            <dt className="text-ink-muted">{copy.adminRegistry.importStatus}</dt>
-            <dd className="m-0 font-semibold">{importStatus}</dd>
-          </div>
-        </dl>
-      }
-      filters={
-        <Suspense fallback={null}>
-          <AdminUrlFilters
-            searchPlaceholder={copy.adminRegistry.searchPlaceholder}
-            clearLabel={copy.adminUi.clearFilters}
-          />
-        </Suspense>
-      }
-      footer={
-        total > 0 ? (
+        }
+        dbUnavailable={dbUnavailable}
+        dbUnavailableMessage={copy.adminUi.dbUnavailable}
+        empty={empty}
+        filters={
+          <Suspense fallback={null}>
+            <AdminUrlFilters
+              searchPlaceholder={copy.adminRegistry.searchPlaceholder}
+              clearLabel={copy.adminUi.clearFilters}
+              extraFilters={[
+                {
+                  id: "source",
+                  options: [
+                    { value: "", label: copy.adminRegistry.allSources },
+                    { value: "adliya", label: "adliya" },
+                    { value: "manual", label: "manual" },
+                    { value: "seed", label: "seed" },
+                  ],
+                },
+                {
+                  id: "active",
+                  options: [
+                    { value: "", label: copy.adminRegistry.allActive },
+                    { value: "1", label: copy.adminRegistry.activeOnly },
+                    { value: "0", label: copy.adminRegistry.inactiveOnly },
+                  ],
+                },
+              ]}
+            />
+          </Suspense>
+        }
+        stats={
+          <p className="mb-3 text-xs text-ink-muted">
+            {copy.adminRegistry.importStatus}: {importStatus}
+            {msg ? ` · ${msg}` : ""}
+          </p>
+        }
+        footer={
           <Suspense fallback={null}>
             <AdminPageLink
               page={page}
@@ -128,30 +426,237 @@ export function AdminRegistryPanel({
               shownLabel={copy.adminUi.shown}
             />
           </Suspense>
-        ) : null
-      }
-    >
-      <AdminDataTable columns={columns} rows={mapped} />
-      <AdminCardList
-        rows={mapped}
-        renderCard={(r) => (
-          <div>
-            <p className="m-0 font-medium text-ink">
-              {r.transliteration || r.number || `#${r.numericId}`}
-            </p>
-            <p className="m-0 mt-1 text-xs text-ink-muted">
-              {[r.number, r.registration_number, r.status, r.trademark_type]
-                .filter(Boolean)
-                .join(" · ")}
-            </p>
-            <p className="m-0 mt-0.5 text-xs text-ink-muted">
-              {[r.owner || r.applicant, formatAdminDate(r.updated_at, locale)]
-                .filter(Boolean)
-                .join(" · ")}
-            </p>
-          </div>
-        )}
+        }
+      >
+        <AdminDataTable
+          columns={columns}
+          rows={rows}
+          onRowClick={(r) => void openDetail(r)}
+          selectedId={selected?.id}
+        />
+        <AdminCardList
+          rows={rows}
+          selectedId={selected?.id}
+          onRowClick={(r) => void openDetail(r)}
+          renderCard={(r) => (
+            <div className="flex gap-3">
+              {thumbUrl(r.logo) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={thumbUrl(r.logo)!}
+                  alt=""
+                  className="h-12 w-12 rounded-md object-contain bg-[#f3f4f1]"
+                />
+              ) : null}
+              <div>
+                <p className="m-0 font-medium text-ink">
+                  {r.transliteration || r.number || shortId(r.id)}
+                </p>
+                <p className="m-0 text-xs text-ink-muted">
+                  {r.source} · {r.status || "—"}
+                </p>
+              </div>
+            </div>
+          )}
+        />
+      </AdminListPage>
+
+      <AdminDetailDrawer
+        open={Boolean(selected)}
+        onOpenChange={(open) => {
+          if (!open) setSelected(null);
+        }}
+        title={
+          selected?.transliteration ||
+          selected?.number ||
+          copy.adminRegistry.detailTitle
+        }
+        footer={
+          selected ? (
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy}
+                onClick={() => void fetchAdliya()}
+              >
+                {copy.adminRegistry.fetchAdliya}
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="!text-danger"
+                disabled={busy}
+                onClick={() => setConfirmDelete(true)}
+              >
+                {copy.adminRegistry.deactivate}
+              </Button>
+            </div>
+          ) : null
+        }
+      >
+        {selected ? (
+          <AdminEntityForm
+            onSubmit={(e) => void saveSelected(e)}
+            submitLabel={copy.adminUi.save}
+            busy={busy}
+          >
+            {thumbUrl(selected.logo) ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={thumbUrl(selected.logo)!}
+                alt=""
+                className="mb-3 max-h-32 rounded-xl object-contain bg-[#f3f4f1] p-2"
+              />
+            ) : null}
+            <AdminField label={copy.adminRegistry.colName}>
+              <AdminInput
+                value={selected.transliteration || ""}
+                onChange={(e) =>
+                  setSelected({ ...selected, transliteration: e.target.value })
+                }
+              />
+            </AdminField>
+            <AdminField label={copy.adminRegistry.colNumber}>
+              <AdminInput
+                value={selected.number || ""}
+                onChange={(e) =>
+                  setSelected({ ...selected, number: e.target.value })
+                }
+              />
+            </AdminField>
+            <AdminField label={copy.adminRegistry.colStatus}>
+              <AdminInput
+                value={selected.status || ""}
+                onChange={(e) =>
+                  setSelected({ ...selected, status: e.target.value })
+                }
+              />
+            </AdminField>
+            <AdminField label={copy.adminRegistry.colOwner}>
+              <AdminTextarea
+                value={selected.owner || selected.applicant || ""}
+                onChange={(e) =>
+                  setSelected({ ...selected, owner: e.target.value })
+                }
+              />
+            </AdminField>
+            <AdminDetailRows
+              rows={[
+                { label: "ID", value: selected.id },
+                {
+                  label: "Adliya ID",
+                  value: selected.adliya_id ?? "—",
+                },
+                { label: copy.adminRegistry.colSource, value: selected.source },
+                {
+                  label: copy.adminRegistry.colActive,
+                  value: selected.active ? "yes" : "no",
+                },
+              ]}
+            />
+            <div className="space-y-1">
+              <p className="m-0 text-xs text-ink-muted">
+                {copy.adminRegistry.fieldLocks}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {["transliteration", "status", "owner", "logo"].map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => void toggleLock(f)}
+                    className={`rounded-lg px-2 py-1 text-xs ${
+                      (selected.field_locks || []).includes(f)
+                        ? "bg-lime text-ink"
+                        : "bg-[#f3f4f1] text-ink-muted"
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {(selected.mgs || []).length > 0 ? (
+              <div>
+                <p className="mb-1 text-xs text-ink-muted">MGS</p>
+                <ul className="m-0 list-none space-y-1 p-0 text-sm">
+                  {selected.mgs!.map((m) => (
+                    <li key={m.id}>
+                      [{m.class_number}] {m.text_uz || m.text_ru || ""}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            {selected.raw ? <AdminJsonBlock value={selected.raw} /> : null}
+            {msg ? <p className="text-sm text-ink-muted">{msg}</p> : null}
+          </AdminEntityForm>
+        ) : null}
+      </AdminDetailDrawer>
+
+      <AdminDetailDrawer
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        title={copy.adminRegistry.create}
+      >
+        <AdminEntityForm
+          onSubmit={(e) => void createTrademark(e)}
+          onCancel={() => setCreateOpen(false)}
+          cancelLabel={copy.adminUi.cancel}
+          submitLabel={copy.adminRegistry.create}
+          busy={busy}
+        >
+          <AdminField label={copy.adminRegistry.colName}>
+            <AdminInput
+              value={form.transliteration}
+              onChange={(e) =>
+                setForm({ ...form, transliteration: e.target.value })
+              }
+              required
+            />
+          </AdminField>
+          <AdminField label={copy.adminRegistry.colNumber}>
+            <AdminInput
+              value={form.number}
+              onChange={(e) => setForm({ ...form, number: e.target.value })}
+            />
+          </AdminField>
+          <AdminField label={copy.adminRegistry.colStatus}>
+            <AdminSelect
+              value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value })}
+            >
+              <option value="DRAFT">DRAFT</option>
+              <option value="EXPERTISE">EXPERTISE</option>
+              <option value="REGISTERED">REGISTERED</option>
+            </AdminSelect>
+          </AdminField>
+          <AdminField label={copy.adminRegistry.colOwner}>
+            <AdminInput
+              value={form.owner}
+              onChange={(e) => setForm({ ...form, owner: e.target.value })}
+            />
+          </AdminField>
+          <AdminField label="MGS (1-45)">
+            <AdminInput
+              value={form.mgsClasses}
+              onChange={(e) => setForm({ ...form, mgsClasses: e.target.value })}
+              placeholder="35, 42"
+            />
+          </AdminField>
+        </AdminEntityForm>
+      </AdminDetailDrawer>
+
+      <ConfirmDialog
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title={copy.adminRegistry.deactivateConfirm}
+        lead={copy.adminRegistry.deactivateLead}
+        confirmLabel={copy.adminRegistry.deactivate}
+        cancelLabel={copy.adminUi.cancel}
+        danger
+        onConfirm={() => void softDelete()}
       />
-    </AdminListPage>
+    </>
   );
 }

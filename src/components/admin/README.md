@@ -29,3 +29,7 @@ Shared dash primitives: `DashPageHeader`, `DashPanel`, `DashStatCard` in `molecu
 ## Mutations
 
 Admin APIs live under `/api/admin/*` and must call `requireAdminApi()`.
+
+## Registry
+
+Local SoT (`trademarks` uuid PK + `adliya_id`). Sync via `TrademarkRegistryProvider` (`src/lib/registry/`). Admin CRUD + sync at `/admin/registry/`. Checks use `search_trademarks_similar` when no upstream.

@@ -15,6 +15,7 @@ export function AdminUrlFilters({
   statusParam = "status",
   reasonOptions,
   reasonParam = "reason",
+  extraFilters,
 }: {
   searchPlaceholder?: string;
   clearLabel?: string;
@@ -22,6 +23,11 @@ export function AdminUrlFilters({
   statusParam?: string;
   reasonOptions?: FilterOption[];
   reasonParam?: string;
+  extraFilters?: Array<{
+    id: string;
+    options: FilterOption[];
+    "aria-label"?: string;
+  }>;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -71,7 +77,18 @@ export function AdminUrlFilters({
           },
         ]
       : []),
+    ...(extraFilters || []).map((f) => ({
+      id: f.id,
+      value: searchParams.get(f.id) ?? "",
+      options: f.options,
+      onChange: (v: string) => push({ [f.id]: v || null }),
+      "aria-label": f["aria-label"] || f.id,
+    })),
   ];
+
+  const extraActive = (extraFilters || []).some(
+    (f) => searchParams.get(f.id),
+  );
 
   return (
     <FilterBar
@@ -80,13 +97,16 @@ export function AdminUrlFilters({
       searchPlaceholder={searchPlaceholder}
       filters={filters}
       onClear={
-        q || status || reason
-          ? () =>
-              push({
+        q || status || reason || extraActive
+          ? () => {
+              const patch: Record<string, string | null> = {
                 q: null,
                 [statusParam]: null,
                 [reasonParam]: null,
-              })
+              };
+              for (const f of extraFilters || []) patch[f.id] = null;
+              push(patch);
+            }
           : undefined
       }
       clearLabel={clearLabel}

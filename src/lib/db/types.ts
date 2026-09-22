@@ -7,7 +7,7 @@ export type ClassificationSource =
   | "fallback"
   | "catalog"
   | "catalog+openai";
-export type CheckSource = "mock" | "upstream";
+export type CheckSource = "mock" | "upstream" | "registry";
 
 export type NotificationProvider = "resend" | "eskiz" | "telegram";
 export type NotificationKind = "lead" | "otp" | "report" | "system";

@@ -30,6 +30,9 @@ export async function AccountProfilePage({ locale }: { locale: Locale }) {
         initial={{
           full_name: appUser.profile.full_name,
           phone: appUser.profile.phone,
+          company_name: appUser.profile.company_name,
+          job_title: appUser.profile.job_title,
+          user_intent: appUser.profile.user_intent,
         }}
       />
     </AppShell>

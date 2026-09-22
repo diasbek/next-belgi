@@ -5,6 +5,8 @@ export type AdminListSearchParams = {
   q?: string | string[];
   status?: string | string[];
   reason?: string | string[];
+  source?: string | string[];
+  active?: string | string[];
 };
 
 function first(v: string | string[] | undefined): string {
@@ -17,10 +19,12 @@ export function parseAdminListParams(sp: AdminListSearchParams = {}) {
   const q = first(sp.q).trim();
   const status = first(sp.status).trim();
   const reason = first(sp.reason).trim();
+  const source = first(sp.source).trim();
+  const active = first(sp.active).trim();
   const pageSize = ADMIN_PAGE_SIZE;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
-  return { page, q, status, reason, from, to, pageSize };
+  return { page, q, status, reason, source, active, from, to, pageSize };
 }
 
 export function shortId(id: string, len = 8): string {

@@ -9,7 +9,8 @@ import {
 } from "@/lib/classify";
 import type { ActivityClassification } from "@/lib/classify";
 import { insertTrademarkCheck } from "@/lib/db";
-import { buildMockReport } from "./mock";
+import { buildMockReport, buildReportFromMatches } from "./mock";
+import { searchLocalRegistry } from "./registry-search";
 import type { CheckRequest, CheckResponse, TrademarkReport } from "./types";
 
 function resolveLocale(locale?: string): Locale {
@@ -106,7 +107,7 @@ async function persistCheck(params: {
   userId?: string | null;
   classification: ActivityClassification;
   report: TrademarkReport;
-  source: "mock" | "upstream";
+  source: "mock" | "upstream" | "registry";
 }): Promise<string | null> {
   try {
     return await insertTrademarkCheck({
@@ -129,7 +130,7 @@ async function persistCheck(params: {
 /**
  * Server-side check client.
  * 1) Classify activity → Nice classes (catalog selection and/or OpenAI / cache / fallback)
- * 2) When BELGI_CHECK_API_URL is set, proxies to upstream; otherwise mock.
+ * 2) When BELGI_CHECK_API_URL is set, proxies to upstream; otherwise local registry search.
  * 3) Persist check row when Supabase service role is configured.
  */
 export async function runTrademarkCheck(
@@ -147,7 +148,20 @@ export async function runTrademarkCheck(
 
   const upstream = process.env.BELGI_CHECK_API_URL?.trim();
   if (!upstream) {
-    const report = buildMockReport(query, activity, classification, locale);
+    const matches = await searchLocalRegistry({
+      query,
+      niceClasses:
+        classification.primaryClassNumbers.length > 0
+          ? classification.primaryClassNumbers
+          : classification.classes.map((c) => c.classNumber),
+    });
+    const report = buildReportFromMatches({
+      query,
+      activity,
+      classification,
+      locale,
+      matches,
+    });
     const checkId = await persistCheck({
       query,
       activity,
@@ -155,11 +169,11 @@ export async function runTrademarkCheck(
       userId: input.userId,
       classification,
       report,
-      source: "mock",
+      source: "registry",
     });
     return {
       ok: true,
-      source: "mock",
+      source: "registry",
       report,
       checkId,
     };

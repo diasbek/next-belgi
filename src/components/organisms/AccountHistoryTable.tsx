@@ -19,20 +19,53 @@ export type HistoryCheckRow = {
 
 function formatClasses(raw: unknown, emptyLabel: string): string {
   if (!Array.isArray(raw) || raw.length === 0) return emptyLabel;
-  return raw.map(String).slice(0, 8).join(", ");
+  const parts: string[] = [];
+  for (const item of raw) {
+    if (typeof item === "number" || typeof item === "string") {
+      parts.push(String(item));
+      continue;
+    }
+    if (item && typeof item === "object") {
+      const rec = item as Record<string, unknown>;
+      if (typeof rec.classNumber === "number") {
+        parts.push(String(rec.classNumber));
+        continue;
+      }
+      if (typeof rec.label === "string" && rec.label.trim()) {
+        parts.push(rec.label.trim());
+      }
+    }
+  }
+  return parts.length ? parts.slice(0, 8).join(", ") : emptyLabel;
 }
 
-function formatDateParts(iso: string, locale: Locale) {
+function formatDateParts(iso: string) {
   const d = new Date(iso);
-  const date = d.toLocaleDateString(
-    locale === "ru" ? "ru-RU" : locale === "en" ? "en-GB" : "uz-UZ",
-    { day: "2-digit", month: "short", year: "numeric" },
-  );
-  const time = d.toLocaleTimeString(
-    locale === "ru" ? "ru-RU" : locale === "en" ? "en-GB" : "uz-UZ",
-    { hour: "2-digit", minute: "2-digit" },
-  );
+  if (Number.isNaN(d.getTime())) return { date: "—", time: "" };
+  const pad = (n: number) => String(n).padStart(2, "0");
+  // UTC — identical on SSR and client (avoids React #418 hydration mismatch).
+  const date = `${pad(d.getUTCDate())}.${pad(d.getUTCMonth() + 1)}.${d.getUTCFullYear()}`;
+  const time = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
   return { date, time };
+}
+
+function classOptionValues(checks: HistoryCheckRow[]): string[] {
+  const set = new Set<string>();
+  for (const c of checks) {
+    if (!Array.isArray(c.nice_classes)) continue;
+    for (const item of c.nice_classes) {
+      if (typeof item === "number" || typeof item === "string") {
+        const s = String(item).trim();
+        if (s) set.add(s);
+        continue;
+      }
+      if (item && typeof item === "object") {
+        const n = (item as { classNumber?: unknown }).classNumber;
+        if (typeof n === "number") set.add(String(n));
+      }
+    }
+  }
+  return [...set].sort((a, b) => Number(a) - Number(b) || a.localeCompare(b));
 }
 
 export function AccountHistoryTable({
@@ -48,23 +81,14 @@ export function AccountHistoryTable({
   const [dateFilter, setDateFilter] = useState("all");
   const [nowMs] = useState(() => Date.now());
 
-  const classOptions = useMemo(() => {
-    const set = new Set<string>();
-    for (const c of checks) {
-      if (!Array.isArray(c.nice_classes)) continue;
-      for (const n of c.nice_classes) set.add(String(n));
-    }
-    return [...set].sort((a, b) => Number(a) - Number(b));
-  }, [checks]);
+  const classOptions = useMemo(() => classOptionValues(checks), [checks]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
     return checks.filter((c) => {
       if (query && !c.query.toLowerCase().includes(query)) return false;
       if (classFilter !== "all") {
-        const classes = Array.isArray(c.nice_classes)
-          ? c.nice_classes.map(String)
-          : [];
+        const classes = classOptionValues([c]);
         if (!classes.includes(classFilter)) return false;
       }
       if (dateFilter !== "all") {
@@ -146,7 +170,7 @@ export function AccountHistoryTable({
             <tbody>
               {filtered.map((c) => {
                 const letter = (c.query.trim().charAt(0) || "?").toUpperCase();
-                const { date, time } = formatDateParts(c.created_at, locale);
+                const { date, time } = formatDateParts(c.created_at);
                 const classes = formatClasses(
                   c.nice_classes,
                   copy.history.noClasses,
@@ -175,7 +199,7 @@ export function AccountHistoryTable({
                     >
                       {classes}
                     </td>
-                    <td className="px-4 py-3.5 sm:px-5">
+                    <td className="px-4 py-3.5 sm:px-5" suppressHydrationWarning>
                       <span className="block text-ink">{date}</span>
                       <span className="block text-xs text-ink-muted">{time}</span>
                     </td>

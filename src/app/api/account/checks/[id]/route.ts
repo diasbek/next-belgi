@@ -1,9 +1,26 @@
 import { NextResponse } from "next/server";
 import { requireUserApi } from "@/lib/auth/session";
 import { getServiceDb } from "@/lib/db/client";
-import type { ConclusionDocument } from "@/lib/conclusion";
+import { parseLocale } from "@/i18n/config";
+import {
+  buildConclusionDocument,
+  generateVerificationCode,
+  hashConclusionPayload,
+  type ConclusionDocument,
+} from "@/lib/conclusion";
+import type { TrademarkReport } from "@/lib/check/types";
 
 type RouteContext = { params: Promise<{ id: string }> };
+
+function isConclusionDoc(value: unknown): value is ConclusionDocument {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      "verdict" in value &&
+      "subject" in value &&
+      "verification" in value,
+  );
+}
 
 export async function GET(_request: Request, context: RouteContext) {
   const user = await requireUserApi();
@@ -24,7 +41,7 @@ export async function GET(_request: Request, context: RouteContext) {
   const { data, error } = await db
     .from("trademark_checks")
     .select(
-      "id, user_id, query, verification_code, conclusion_doc, verification_revoked_at, created_at",
+      "id, user_id, query, activity_raw, locale, verification_code, conclusion_doc, verification_revoked_at, created_at, report",
     )
     .eq("id", id)
     .maybeSingle();
@@ -37,13 +54,55 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
   }
 
+  let conclusion = isConclusionDoc(data.conclusion_doc)
+    ? data.conclusion_doc
+    : null;
+  let verificationCode =
+    typeof data.verification_code === "string" && data.verification_code
+      ? data.verification_code
+      : null;
+
+  // Older checks predate conclusion_doc — rebuild from stored report.
+  if (!conclusion && data.report && typeof data.report === "object") {
+    const locale = parseLocale(
+      typeof data.locale === "string" ? data.locale : "uz",
+    );
+    verificationCode = verificationCode || generateVerificationCode();
+    conclusion = buildConclusionDocument({
+      report: data.report as TrademarkReport,
+      locale,
+      verificationCode,
+    });
+
+    // Best-effort persist so next download is instant.
+    const payloadHash = hashConclusionPayload(conclusion);
+    void db
+      .from("trademark_checks")
+      .update({
+        verification_code: verificationCode,
+        payload_hash: payloadHash,
+        conclusion_doc: conclusion,
+      })
+      .eq("id", data.id)
+      .then(({ error: upErr }) => {
+        if (upErr) console.warn("[checks:backfill-conclusion]", upErr.message);
+      });
+  }
+
+  if (!conclusion) {
+    return NextResponse.json(
+      { ok: false, error: "missing_conclusion" },
+      { status: 404 },
+    );
+  }
+
   return NextResponse.json({
     ok: true,
     checkId: data.id,
     query: data.query,
-    verificationCode: data.verification_code,
+    verificationCode,
     revoked: Boolean(data.verification_revoked_at),
-    conclusion: data.conclusion_doc as ConclusionDocument | null,
+    conclusion,
     createdAt: data.created_at,
   });
 }

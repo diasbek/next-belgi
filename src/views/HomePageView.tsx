@@ -4,17 +4,41 @@ import { localePath } from "@/i18n/paths";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { CheckForm } from "@/components/molecules/CheckForm";
 import {
-  cardLimeCompact,
   contentBand,
-  gridSpanThird,
   section,
-  sectionDense,
-  sectionGrid,
   sectionLead,
   sectionTitle,
 } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 import type { AnalysisStep } from "@/data/types";
+
+const PROCESS_ICONS: Record<string, { png: string; webp: string }> = {
+  search: {
+    png: "/images/process/search.png",
+    webp: "/images/process/search.webp",
+  },
+  docs: {
+    png: "/images/process/docs.png",
+    webp: "/images/process/docs.webp",
+  },
+  submit: {
+    png: "/images/process/submit.png",
+    webp: "/images/process/submit.webp",
+  },
+  wait: {
+    png: "/images/process/wait.png",
+    webp: "/images/process/wait.webp",
+  },
+  reply: {
+    png: "/images/process/reply.png",
+    webp: "/images/process/reply.webp",
+  },
+  cert: {
+    png: "/images/process/cert.png",
+    webp: "/images/process/cert.webp",
+  },
+};
+
 /** Figma assets: ibm-cloud--citrix-daas, time, condition--wait-point */
 const FEATURE_ICONS = [
   <path
@@ -48,25 +72,21 @@ function FeatureIcon({ index }: { index: number }) {
   );
 }
 
-function ProcessIcon({ id }: { id: string }) {
-  const map: Record<string, string> = {
-    search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.35-4.35",
-    docs: "M7 3h7l5 5v13H7V3Zm7 0v5h5",
-    submit: "M12 3v12m0 0 4-4m-4 4-4-4M5 21h14",
-    wait: "M12 7v5l3 2M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z",
-    reply: "M12 18h.01M9 9a3 3 0 1 1 4.5 2.6c-.7.5-1.5 1-1.5 2.4",
-    cert: "M9 12l2 2 4-4M7 4h10v16H7z",
-  };
+function ProcessStepIcon({ id }: { id: string }) {
+  const asset = PROCESS_ICONS[id] ?? PROCESS_ICONS.search;
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d={map[id] ?? map.search}
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+    <picture>
+      <source srcSet={asset.webp} type="image/webp" />
+      <img
+        src={asset.png}
+        alt=""
+        width={160}
+        height={160}
+        decoding="async"
+        loading="lazy"
+        className="h-[4.5rem] w-[4.5rem] object-contain sm:h-[5.5rem] sm:w-[5.5rem] lg:h-[7rem] lg:w-[7rem]"
       />
-    </svg>
+    </picture>
   );
 }
 
@@ -286,32 +306,42 @@ export function HomePageView({ locale }: { locale: Locale }) {
         </PageContainer>
       </section>
 
-      <section className={`${sectionDense} bg-primary text-white`}>
+      <section className={`${section} bg-[#30352F] text-white`}>
         <PageContainer>
-          <h2 className="m-0 mb-2 font-display text-[clamp(1.5rem,4.5vw,3rem)] font-semibold leading-tight tracking-[-0.03em] sm:mb-3">
+          <h2 className="m-0 mb-2 max-w-[40rem] font-display text-[clamp(1.5rem,4.5vw,3rem)] font-semibold leading-tight tracking-[-0.03em] sm:mb-3">
             {copy.home.processTitle}
           </h2>
-          <p className="m-0 mb-6 max-w-[var(--content-copy)] text-sm text-white/70 sm:mb-8 md:text-base">
+          <p className="m-0 mb-8 max-w-[var(--content-copy)] text-sm text-white/65 sm:mb-10 sm:text-base md:text-lg">
             {copy.home.processLead}
           </p>
-          <div className={cn(sectionGrid, gridSpanThird)}>
-            {copy.home.processSteps.map((step) => (
-              <article
-                key={step.id}
-                className={cn(cardLimeCompact, "flex h-full flex-col")}
-              >
-                <ProcessIcon id={step.id} />
-                <h3 className="mb-1.5 mt-3 text-sm font-semibold sm:mb-2 sm:mt-4 sm:text-base">
-                  {step.title}
-                </h3>
-                <p className="m-0 flex-1 text-xs leading-relaxed text-ink/75 sm:text-sm">
-                  {step.text}
-                </p>
-                <p className="mb-0 mt-3 text-xs font-medium text-ink/55">
-                  {step.duration}
-                </p>
-              </article>
-            ))}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-5">
+            {copy.home.processSteps.map((step, index) => {
+              const isLast = index === copy.home.processSteps.length - 1;
+              const num = String(index + 1).padStart(2, "0");
+              return (
+                <article
+                  key={step.id}
+                  className={cn(
+                    "flex min-h-[16rem] flex-col rounded-[1.5rem] p-5 text-ink sm:min-h-[17.5rem] sm:rounded-[1.75rem] sm:p-6 lg:min-h-[19rem] lg:p-7",
+                    isLast ? "bg-lime" : "bg-[#F5F5EF]",
+                  )}
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3 sm:mb-4">
+                    <span className="pt-1 text-sm tabular-nums text-ink/40 sm:text-base">
+                      {num}
+                    </span>
+                    <ProcessStepIcon id={step.id} />
+                  </div>
+                  <h3 className="m-0 text-base font-semibold leading-snug sm:text-lg">
+                    {step.title}
+                  </h3>
+                  <p className="mb-0 mt-2 flex-1 text-sm leading-relaxed text-ink/75">
+                    {step.text}
+                  </p>
+                  <p className="mb-0 mt-4 text-sm text-ink/45">{step.duration}</p>
+                </article>
+              );
+            })}
           </div>
         </PageContainer>
       </section>

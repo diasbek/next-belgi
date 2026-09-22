@@ -11,6 +11,7 @@ import { trackEvent } from "@/lib/analytics/events";
 import {
   checkResumePath,
 } from "@/lib/navigation/safe-next";
+import { readNiceSelection } from "@/lib/nice";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
 import { CheckForm } from "@/components/molecules/CheckForm";
@@ -50,11 +51,18 @@ export function CheckPageView({
 
     (async () => {
       try {
+        const niceSelection = readNiceSelection() ?? undefined;
         const [res] = await Promise.all([
           fetch("/api/check/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query, activity, locale, actionPath }),
+            body: JSON.stringify({
+              query,
+              activity,
+              locale,
+              actionPath,
+              niceSelection,
+            }),
           }),
           minDelay,
         ]);
@@ -83,8 +91,12 @@ export function CheckPageView({
           preview: Boolean(json.preview),
         });
         const params = new URLSearchParams({ q: query, activity });
+        const resultPath =
+          actionPath === "/account/check/"
+            ? "/account/check/result/"
+            : "/check/result/";
         router.replace(
-          `${localePath(locale, "/check/result/")}?${params.toString()}`,
+          `${localePath(locale, resultPath)}?${params.toString()}`,
         );
       } catch {
         if (!cancelled) {

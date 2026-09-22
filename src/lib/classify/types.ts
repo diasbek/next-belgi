@@ -1,6 +1,11 @@
 export type ClassifyLocale = "uz" | "ru" | "en";
 
-export type ClassificationSource = "openai" | "cache" | "fallback";
+export type ClassificationSource =
+  | "openai"
+  | "cache"
+  | "fallback"
+  | "catalog"
+  | "catalog+openai";
 
 export interface NiceClassSuggestion {
   classNumber: number;

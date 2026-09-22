@@ -1,0 +1,211 @@
+"use client";
+
+import { useCallback, useMemo, useRef } from "react";
+import AsyncCreatableSelect from "react-select/async-creatable";
+import type { GroupBase, StylesConfig } from "react-select";
+import type { Locale } from "@/i18n/config";
+import {
+  customOptionValue,
+  parseCustomOptionValue,
+  searchNiceTerms,
+  type ActivityOption,
+} from "@/lib/nice";
+
+type SelectOption = {
+  value: string;
+  label: string;
+  classNumber?: number;
+  kind: "term" | "custom";
+};
+
+function toSelectOption(opt: ActivityOption): SelectOption {
+  if (opt.kind === "term") {
+    return {
+      value: opt.value,
+      label: opt.label,
+      classNumber: opt.classNumber,
+      kind: "term",
+    };
+  }
+  return {
+    value: opt.value,
+    label: opt.label,
+    kind: "custom",
+  };
+}
+
+function fromSelectOption(opt: SelectOption): ActivityOption {
+  if (opt.kind === "custom" || parseCustomOptionValue(opt.value)) {
+    return {
+      kind: "custom",
+      value: opt.value.startsWith("__custom__:")
+        ? opt.value
+        : customOptionValue(opt.label),
+      label: opt.label,
+    };
+  }
+  return {
+    kind: "term",
+    value: opt.value,
+    label: opt.label,
+    classNumber: opt.classNumber ?? 0,
+  };
+}
+
+const selectStyles: StylesConfig<SelectOption, true, GroupBase<SelectOption>> = {
+  control: (base, state) => ({
+    ...base,
+    minHeight: "var(--tap-min)",
+    borderRadius: "var(--radius-md)",
+    borderColor: state.isFocused ? "rgb(26 28 24 / 0.25)" : "rgb(26 28 24 / 0.1)",
+    boxShadow: "none",
+    backgroundColor: "#fff",
+    ":hover": { borderColor: "rgb(26 28 24 / 0.25)" },
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    padding: "6px 12px",
+    gap: 4,
+  }),
+  multiValue: (base) => ({
+    ...base,
+    backgroundColor: "#f4fbe6",
+    borderRadius: 8,
+    border: "1px solid #b8d96a",
+  }),
+  multiValueLabel: (base) => ({
+    ...base,
+    color: "var(--color-ink, #1a1c18)",
+    fontSize: "0.8125rem",
+    padding: "2px 6px",
+  }),
+  multiValueRemove: (base) => ({
+    ...base,
+    color: "rgb(26 28 24 / 0.55)",
+    ":hover": { backgroundColor: "#dfff9e", color: "#1a1c18" },
+  }),
+  placeholder: (base) => ({
+    ...base,
+    color: "rgb(26 28 24 / 0.45)",
+    fontSize: "0.9375rem",
+  }),
+  input: (base) => ({ ...base, margin: 0, padding: 0 }),
+  menu: (base) => ({
+    ...base,
+    borderRadius: 12,
+    overflow: "hidden",
+    zIndex: 40,
+    border: "1px solid rgb(26 28 24 / 0.08)",
+    boxShadow: "0 8px 24px rgb(26 28 24 / 0.08)",
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "#f4fbe6" : "#fff",
+    color: "#1a1c18",
+    fontSize: "0.875rem",
+    cursor: "pointer",
+  }),
+  indicatorSeparator: () => ({ display: "none" }),
+  dropdownIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.4)" }),
+  clearIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.4)" }),
+};
+
+export function NiceActivityField({
+  locale,
+  value,
+  onChange,
+  placeholder,
+  createLabel,
+  noOptionsMessage,
+  loadingMessage,
+  inputId,
+  instanceId,
+}: {
+  locale: Locale;
+  value: ActivityOption[];
+  onChange: (next: ActivityOption[]) => void;
+  placeholder: string;
+  createLabel: string;
+  noOptionsMessage: string;
+  loadingMessage: string;
+  inputId?: string;
+  instanceId?: string;
+}) {
+  const selectValue = useMemo(() => value.map(toSelectOption), [value]);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const loadOptions = useCallback(
+    (input: string): Promise<SelectOption[]> => {
+      const q = input.trim();
+      if (q.length < 2) return Promise.resolve([]);
+      return new Promise((resolve) => {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+          void searchNiceTerms(locale, q, 40).then((terms) => {
+            resolve(
+              terms.map((t) => ({
+                value: t.id,
+                label: t.label,
+                classNumber: t.classNumber,
+                kind: "term" as const,
+              })),
+            );
+          });
+        }, 150);
+      });
+    },
+    [locale],
+  );
+
+  return (
+    <AsyncCreatableSelect<SelectOption, true>
+      inputId={inputId}
+      instanceId={instanceId}
+      isMulti
+      cacheOptions
+      defaultOptions={false}
+      loadOptions={loadOptions}
+      value={selectValue}
+      onChange={(next) => {
+        const list = (next ? [...next] : []).map(fromSelectOption);
+        onChange(list);
+      }}
+      placeholder={placeholder}
+      styles={selectStyles}
+      classNamePrefix="nice-activity"
+      formatCreateLabel={(input) =>
+        createLabel.replace("{input}", input.trim())
+      }
+      isValidNewOption={(input) => input.trim().length >= 2}
+      getNewOptionData={(input, label) => ({
+        value: customOptionValue(input.trim()),
+        label: typeof label === "string" ? label : input.trim(),
+        kind: "custom",
+      })}
+      noOptionsMessage={({ inputValue }) =>
+        inputValue.trim().length < 2 ? null : noOptionsMessage
+      }
+      loadingMessage={() => loadingMessage}
+      formatOptionLabel={(opt) =>
+        opt.kind === "term" && opt.classNumber ? (
+          <span className="flex items-baseline justify-between gap-3">
+            <span className="min-w-0">{opt.label}</span>
+            <span className="shrink-0 text-xs font-medium text-ink-muted">
+              {locale === "en"
+                ? `Cl. ${opt.classNumber}`
+                : locale === "uz"
+                  ? `Sinf ${opt.classNumber}`
+                  : `Кл. ${opt.classNumber}`}
+            </span>
+          </span>
+        ) : (
+          opt.label
+        )
+      }
+      filterOption={() => true}
+      components={{
+        DropdownIndicator: null,
+      }}
+    />
+  );
+}

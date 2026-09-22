@@ -40,7 +40,15 @@ export const enCopy: SiteCopy = {
     cookieDecline: "Decline",
     required: "Required field",
     brandPlaceholder: "Brand name",
-    activityPlaceholder: "Activity / goods",
+    activityPlaceholder: "Goods or services (Nice)",
+    activitySearchHint: "Search the Nice list or type your own…",
+    activityCreateLabel: "Custom: \"{input}\"",
+    activityNoOptions: "No matches — type your own text",
+    activityLoading: "Loading classifier…",
+    affectedClassesTitle: "This filing will cover classes",
+    affectedClassesEmpty:
+      "Pick goods/services from the classifier — classes appear here",
+    affectedClassChip: "Class {n}",
     contactLawyer: "Contact",
   },
   nav: [

@@ -27,6 +27,8 @@ export {
   niceClassesFromClassification,
 };
 
+export { resolveActivityClassification } from "./from-selection";
+
 /**
  * Classify free-text company activity into Nice (МКТУ) classes.
  * Order: cache → OpenAI → deterministic fallback.

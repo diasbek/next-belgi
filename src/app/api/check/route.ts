@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { runTrademarkCheck } from "@/lib/check/client";
 import { buildMockReport } from "@/lib/check/mock";
-import { classifyActivity } from "@/lib/classify";
+import {
+  classifyActivity,
+  resolveActivityClassification,
+} from "@/lib/classify";
 import { requireUserApi } from "@/lib/auth/session";
 import {
   debitCheckCredit,
@@ -14,6 +17,7 @@ import {
   checkResumePath,
   parseCheckActionPath,
 } from "@/lib/navigation/safe-next";
+import type { CheckRequest } from "@/lib/check/types";
 
 const rateMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -43,6 +47,7 @@ export async function POST(request: Request) {
     activity?: string;
     locale?: string;
     actionPath?: string;
+    niceSelection?: CheckRequest["niceSelection"];
   } = {};
   try {
     body = (await request.json()) as typeof body;
@@ -54,6 +59,7 @@ export async function POST(request: Request) {
   const query = (body.query ?? "").trim();
   const activity = (body.activity ?? "").trim();
   const actionPath = parseCheckActionPath(body.actionPath);
+  const niceSelection = body.niceSelection;
   const resume =
     query && activity
       ? checkResumePath(locale, query, activity, actionPath)
@@ -77,7 +83,13 @@ export async function POST(request: Request) {
         { status: 429 },
       );
     }
-    const classification = await classifyActivity({ activity, locale });
+    const fromSelection = await resolveActivityClassification({
+      activity,
+      locale,
+      niceSelection,
+    });
+    const classification =
+      fromSelection ?? (await classifyActivity({ activity, locale }));
     const report = buildMockReport(query, activity, classification, locale);
     return NextResponse.json({
       ok: true,
@@ -109,6 +121,7 @@ export async function POST(request: Request) {
     query,
     activity,
     locale: body.locale,
+    niceSelection,
     userId: appUser.id,
   });
 

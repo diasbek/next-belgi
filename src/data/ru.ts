@@ -40,7 +40,15 @@ export const ruCopy: SiteCopy = {
     cookieDecline: "Отклонить",
     required: "Обязательное поле",
     brandPlaceholder: "Название бренда",
-    activityPlaceholder: "Вид деятельности",
+    activityPlaceholder: "Товар или услуга (МКТУ)",
+    activitySearchHint: "Ищите в МКТУ или введите свой вариант…",
+    activityCreateLabel: "Свой вариант: «{input}»",
+    activityNoOptions: "Ничего не найдено — введите свой текст",
+    activityLoading: "Загрузка классификатора…",
+    affectedClassesTitle: "Заявка затронет классы",
+    affectedClassesEmpty:
+      "Выберите товары/услуги из классификатора — здесь появятся классы",
+    affectedClassChip: "Класс {n}",
     contactLawyer: "Связаться",
   },
   nav: [

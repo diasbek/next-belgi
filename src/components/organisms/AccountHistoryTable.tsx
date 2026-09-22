@@ -150,7 +150,7 @@ export function AccountHistoryTable({
                   c.nice_classes,
                   copy.history.noClasses,
                 );
-                const reportHref = `${localePath(locale, "/check/result/")}?${new URLSearchParams({ q: c.query }).toString()}`;
+                const reportHref = `${localePath(locale, "/account/check/result/")}?${new URLSearchParams({ q: c.query }).toString()}`;
                 return (
                   <tr
                     key={c.id}

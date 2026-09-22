@@ -1,7 +1,12 @@
 export type LeadType = "contact" | "lawyer" | "check";
 export type LeadStatus = "new" | "sent" | "failed";
 
-export type ClassificationSource = "openai" | "cache" | "fallback";
+export type ClassificationSource =
+  | "openai"
+  | "cache"
+  | "fallback"
+  | "catalog"
+  | "catalog+openai";
 export type CheckSource = "mock" | "upstream";
 
 export type NotificationProvider = "resend" | "eskiz" | "telegram";

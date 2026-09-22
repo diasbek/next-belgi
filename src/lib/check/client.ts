@@ -1,5 +1,8 @@
 import { parseLocale, type Locale } from "@/i18n/config";
-import { classifyActivity } from "@/lib/classify";
+import {
+  classifyActivity,
+  resolveActivityClassification,
+} from "@/lib/classify";
 import {
   classRisksFromClassification,
   niceClassesFromClassification,
@@ -11,6 +14,21 @@ import type { CheckRequest, CheckResponse, TrademarkReport } from "./types";
 
 function resolveLocale(locale?: string): Locale {
   return parseLocale(locale);
+}
+
+async function resolveClassification(
+  input: CheckRequest,
+): Promise<ActivityClassification> {
+  const fromSelection = await resolveActivityClassification({
+    activity: input.activity,
+    locale: input.locale,
+    niceSelection: input.niceSelection,
+  });
+  if (fromSelection) return fromSelection;
+  return classifyActivity({
+    activity: input.activity,
+    locale: input.locale,
+  });
 }
 
 function applyClassificationToReport(
@@ -110,7 +128,7 @@ async function persistCheck(params: {
 
 /**
  * Server-side check client.
- * 1) Classify activity → Nice classes (OpenAI / cache / fallback)
+ * 1) Classify activity → Nice classes (catalog selection and/or OpenAI / cache / fallback)
  * 2) When BELGI_CHECK_API_URL is set, proxies to upstream; otherwise mock.
  * 3) Persist check row when Supabase service role is configured.
  */
@@ -125,10 +143,7 @@ export async function runTrademarkCheck(
   }
 
   const locale = resolveLocale(input.locale);
-  const classification = await classifyActivity({
-    activity,
-    locale,
-  });
+  const classification = await resolveClassification(input);
 
   const upstream = process.env.BELGI_CHECK_API_URL?.trim();
   if (!upstream) {

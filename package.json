@@ -15,16 +15,19 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "import:trademarks": "tsx --env-file=.env.local scripts/import-trademarks.ts"
+    "import:trademarks": "tsx --env-file=.env.local scripts/import-trademarks.ts",
+    "build:nice": "tsx scripts/build-nice-catalog.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",
+    "flexsearch": "^0.8.212",
     "formik": "^2.4.9",
     "next": "16.3.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
+    "react-select": "^5.10.2",
     "react-toastify": "^11.1.0",
     "resend": "^6.20.0",
     "tailwind-merge": "^3.6.0",
@@ -32,6 +35,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/flexsearch": "^0.7.6",
     "@types/node": "^22",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

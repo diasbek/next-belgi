@@ -59,6 +59,11 @@ export interface CheckRequest {
   query: string;
   activity: string;
   locale?: string;
+  niceSelection?: {
+    terms: { id?: string; classNumber: number; term: string }[];
+    customText?: string;
+    classNumbers: number[];
+  };
 }
 
 export interface CheckResponse {

@@ -61,6 +61,13 @@ export interface SiteCopy {
     required: string;
     brandPlaceholder: string;
     activityPlaceholder: string;
+    activitySearchHint: string;
+    activityCreateLabel: string;
+    activityNoOptions: string;
+    activityLoading: string;
+    affectedClassesTitle: string;
+    affectedClassesEmpty: string;
+    affectedClassChip: string;
     contactLawyer: string;
   };
   nav: NavItem[];

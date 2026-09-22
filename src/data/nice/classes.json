@@ -1,0 +1,407 @@
+[
+  {
+    "classNumber": 1,
+    "kind": "goods",
+    "titles": {
+      "uz": "Sanoat, fan va fotografiya, qishloq xoʻjaligi uchun kimyoviy moddalar; plastmassalar; yongʻinga qarshi vositalar; yelimlar; oʻgʻitlar.",
+      "ru": "Вещества химические, предназначенные для использования в промышленности, науке и фотографии, а также в сельском хозяйстве, садоводстве и лесоводстве; смолы искусственные необработанные, материалы пластические необрабо…",
+      "en": "Chemicals for industry, science and photography, agriculture; unprocessed plastics; fire extinguishing; adhesives; fertilizers; biological preparations."
+    }
+  },
+  {
+    "classNumber": 2,
+    "kind": "goods",
+    "titles": {
+      "uz": "Boʻyoqlar, laklar; zang va yogʻochdan himoya; pigmentlar; tabiiy smolalar.",
+      "ru": "Краски, политуры, лаки; средства защитные, предохраняющие металлы от коррозии и древесину от разрушения; красители, вещества окрашивающие; чернила для печати, маркировки и гравировки; смолы природные необработанные; ф…",
+      "en": "Paints, varnishes, lacquers; preservatives against rust and wood deterioration; colorants; mordants; raw natural resins; metals in foil/powder for painting."
+    }
+  },
+  {
+    "classNumber": 3,
+    "kind": "goods",
+    "titles": {
+      "uz": "Kosmetika va gigiyena vositalari; atir-upa; tozalash vositalari.",
+      "ru": "Средства косметические и туалетные немедицинские; средства для чистки зубов немедикаментозные; изделия парфюмерные; препараты для отбеливания и прочие вещества для стирки; средства чистящие, полирующие и абразивные",
+      "en": "Non-medicated cosmetics and toiletries; non-medicated dentifrices; perfumery; bleaching and cleaning preparations."
+    }
+  },
+  {
+    "classNumber": 4,
+    "kind": "goods",
+    "titles": {
+      "uz": "Sanoat moylari; moylash materiallari; yoqilgʻilar; shamlar.",
+      "ru": "Масла, смазки и воски промышленные; материалы смазочные; составы для поглощения, смачивания и связывания пыли; топлива и материалы осветительные; свечи и фитили для освещения",
+      "en": "Industrial oils and greases; lubricants; dust absorbing compositions; fuels; candles and wicks."
+    }
+  },
+  {
+    "classNumber": 5,
+    "kind": "goods",
+    "titles": {
+      "uz": "Farmatsevtika; gigiyena; dietik oziq-ovqat; dezinfeksiya; fungitsidlar.",
+      "ru": "Препараты фармацевтические, медицинские и ветеринарные; средства гигиенические для медицинских целей; питание диетическое и вещества, предназначенные для медицинских или ветеринарных целей, питание для детей; добавки…",
+      "en": "Pharmaceuticals, medical and veterinary preparations; sanitary preparations; dietetic food; baby food; plasters; disinfectants; fungicides, herbicides."
+    }
+  },
+  {
+    "classNumber": 6,
+    "kind": "goods",
+    "titles": {
+      "uz": "Oddiy metallar; metall qurilish materiallari; seyf lar.",
+      "ru": "Металлы обычные и их сплавы, руды; материалы металлические строительные; сооружения передвижные металлические; тросы и проволока из обычных металлов неэлектрические; мелкие металлические изделия в виде скобяных издели…",
+      "en": "Common metals and their alloys; metal building materials; metal containers; safes."
+    }
+  },
+  {
+    "classNumber": 7,
+    "kind": "goods",
+    "titles": {
+      "uz": "Mashinalar va asboblar; motorlar; qishloq inventari; savdo avtomatlari.",
+      "ru": "Машины, станки, электроинструменты; двигатели и моторы, за исключением предназначенных для наземных транспортных средств; соединения и элементы передач, за исключением предназначенных для наземных транспортных средств…",
+      "en": "Machines, machine tools, power tools; motors and engines; machine coupling and transmission; agricultural implements; incubators; vending machines."
+    }
+  },
+  {
+    "classNumber": 8,
+    "kind": "goods",
+    "titles": {
+      "uz": "Qoʻl asboblari; pichoq-vilka; ustara.",
+      "ru": "Орудия и инструменты ручные; приборы столовые; оружие холодное; бритвы",
+      "en": "Hand tools and implements, hand-operated; cutlery; side arms; razors."
+    }
+  },
+  {
+    "classNumber": 9,
+    "kind": "goods",
+    "titles": {
+      "uz": "Ilmiy va optik asboblar; kompyuterlar; dasturiy taʼminot.",
+      "ru": "Приборы и инструменты научные, исследовательские, навигационные, геодезические, фотографические, кинематографические, аудиовизуальные, оптические, для взвешивания, измерения, сигнализации, обнаружения, тестирования, с…",
+      "en": "Scientific, research, navigation, photographic, audiovisual, optical apparatus; computers; software; fire-extinguishing apparatus."
+    }
+  },
+  {
+    "classNumber": 10,
+    "kind": "goods",
+    "titles": {
+      "uz": "Tibbiy va stomatologik asboblar; ortopediya; tikuv materiallari.",
+      "ru": "Приборы и инструменты хирургические, медицинские, стоматологические и ветеринарные; протезы конечностей, протезы глазные и зубные; очки, контактные линзы и солнцезащитные очки; изделия ортопедические; материалы шовные…",
+      "en": "Surgical, medical, dental and veterinary apparatus; artificial limbs; orthopedic articles; suture materials."
+    }
+  },
+  {
+    "classNumber": 11,
+    "kind": "goods",
+    "titles": {
+      "uz": "Yoritish, isitish, sovutish, pishirish, ventilyatsiya, suv taʼminoti.",
+      "ru": "Устройства и установки для освещения, отопления, охлаждения, получения пара, приготовления пищи, сушки, вентиляции, водоснабжения и санитарно-технические",
+      "en": "Apparatus for lighting, heating, cooling, cooking, drying, ventilating, water supply and sanitary purposes."
+    }
+  },
+  {
+    "classNumber": 12,
+    "kind": "goods",
+    "titles": {
+      "uz": "Transport vositalari; quruqlik, havo va suv transporti.",
+      "ru": "Средства транспортные; аппараты, перемещающиеся по земле, воздуху или воде",
+      "en": "Vehicles; apparatus for locomotion by land, air or water."
+    }
+  },
+  {
+    "classNumber": 13,
+    "kind": "goods",
+    "titles": {
+      "uz": "Oʻqotar qurollar; oʻq-dorilar; portlovchi moddalar; pirotexnika.",
+      "ru": "Оружие огнестрельное; боеприпасы и снаряды; вещества взрывчатые; фейерверки",
+      "en": "Firearms; ammunition and projectiles; explosives; fireworks."
+    }
+  },
+  {
+    "classNumber": 14,
+    "kind": "goods",
+    "titles": {
+      "uz": "Qimmatbaho metallar; zargarlik; soatlar.",
+      "ru": "Металлы благородные и их сплавы; изделия ювелирные, камни драгоценные и полудрагоценные; приборы часовые и хронометрические",
+      "en": "Precious metals; jewellery, precious stones; horological instruments."
+    }
+  },
+  {
+    "classNumber": 15,
+    "kind": "goods",
+    "titles": {
+      "uz": "Musiqa asboblari.",
+      "ru": "Инструменты музыкальные; пюпитры и подставки для музыкальных инструментов; палочки дирижерские",
+      "en": "Musical instruments; music stands and stands for musical instruments; conductors' batons."
+    }
+  },
+  {
+    "classNumber": 16,
+    "kind": "goods",
+    "titles": {
+      "uz": "Qogʻoz; bosma mahsulotlar; kantselyariya; rasm ashyolari.",
+      "ru": "Бумага, картон; продукция печатная; материалы переплетные; фотографии; принадлежности канцелярские и офисные, за исключением мебели; клеи для канцелярских и бытовых целей; материалы для рисования и принадлежности для…",
+      "en": "Paper and cardboard; printed matter; bookbinding; photographs; stationery; adhesives for stationery; artists' materials; paintbrushes; instructional material; plastic sheets; printing blocks."
+    }
+  },
+  {
+    "classNumber": 17,
+    "kind": "goods",
+    "titles": {
+      "uz": "Kauchuk, plastmassa; izolyatsiya; egiluvchan quvurlar.",
+      "ru": "Каучук, гуттаперча, резина, асбест, слюда необработанные и частично обработанные и заменители этих материалов; пластмассы и смолы в экструдированной форме, используемые в производстве; материалы для конопачения, уплот…",
+      "en": "Rubber, gutta-percha, gum, asbestos, mica; plastics in extruded form; packing, stopping and insulating materials; flexible pipes."
+    }
+  },
+  {
+    "classNumber": 18,
+    "kind": "goods",
+    "titles": {
+      "uz": "Charm; sumkalar; soyabonlar; egar ashyolari.",
+      "ru": "Кожа и имитация кожи; шкуры животных и кожсырье; изделия багажные и сумки для переноски; зонты от дождя и солнца; трости; кнуты, сбруя конская и изделия шорные; ошейники, поводки и одежда для животных",
+      "en": "Leather and imitations; animal skins; luggage and carrying bags; umbrellas; walking sticks; whips, harness and saddlery."
+    }
+  },
+  {
+    "classNumber": 19,
+    "kind": "goods",
+    "titles": {
+      "uz": "Nommetall qurilish materiallari; asfalt; koʻchma binolar.",
+      "ru": "Материалы неметаллические для строительства; трубы жесткие неметаллические для строительства; асфальт, материалы строительные вязкие, гудрон и битум; конструкции и сооружения передвижные неметаллические; памятники нем…",
+      "en": "Materials for building and construction, non-metallic; rigid pipes; asphalt, pitch, bitumen; non-metallic transportable buildings; monuments."
+    }
+  },
+  {
+    "classNumber": 20,
+    "kind": "goods",
+    "titles": {
+      "uz": "Mebel; oynalar; idishlar (nommetall).",
+      "ru": "Мебель, зеркала, рамы для картин; контейнеры неметаллические для хранения или транспортировки; рог, кость, китовый ус или перламутр необработанные или частично обработанные; ракушки, пенка морская, янтарь желтый",
+      "en": "Furniture, mirrors, picture frames; containers not of metal; bone, horn, whalebone or mother-of-pearl; shells; meerschaum; yellow amber."
+    }
+  },
+  {
+    "classNumber": 21,
+    "kind": "goods",
+    "titles": {
+      "uz": "Uy-roʻzgʻor va oshxona anjomlari; idishlar; choʻtkalar; chinni.",
+      "ru": "Утварь и емкости бытовые или кухонные; посуда кухонная и столовая, за исключением вилок, ножей и ложек; расчески и губки; щетки, за исключением кистей для рисования; материалы для щеточных изделий; принадлежности для…",
+      "en": "Household or kitchen utensils and containers; cookware; combs and sponges; brushes; glassware, porcelain and earthenware."
+    }
+  },
+  {
+    "classNumber": 22,
+    "kind": "goods",
+    "titles": {
+      "uz": "Arqonlar; toʻrlar; chodirlar; yelkanlar; toʻldiruvchi materiallar.",
+      "ru": "Канаты, веревки, бечевки; сети; палатки и навесы; тенты из текстильных или синтетических материалов; паруса; мешки для транспортировки и хранения сыпучих материалов; материалы набивочные, амортизирующие и уплотняющие,…",
+      "en": "Ropes and string; nets; tents and tarpaulins; awnings; sails; sacks; padding and stuffing materials; raw fibrous textile materials."
+    }
+  },
+  {
+    "classNumber": 23,
+    "kind": "goods",
+    "titles": {
+      "uz": "Ip va iplar.",
+      "ru": "Нити текстильные и пряжа",
+      "en": "Yarns and threads for textile use."
+    }
+  },
+  {
+    "classNumber": 24,
+    "kind": "goods",
+    "titles": {
+      "uz": "Toʻqimachilik; uy-roʻzgʻor matolari; parda.",
+      "ru": "Текстиль и его заменители; белье для бытового использования; занавеси из текстильного и пластического материалов",
+      "en": "Textiles and substitutes; household linen; curtains of textile or plastic."
+    }
+  },
+  {
+    "classNumber": 25,
+    "kind": "goods",
+    "titles": {
+      "uz": "Kiyim-kechak; poyabzal; bosh kiyim.",
+      "ru": "Одежда, обувь, головные уборы",
+      "en": "Clothing, footwear, headwear."
+    }
+  },
+  {
+    "classNumber": 26,
+    "kind": "goods",
+    "titles": {
+      "uz": "Dantellar; tugmalar; sunʼiy gullar; soch bezaklari.",
+      "ru": "Кружево и изделия вышитые, ленты галантерейные и банты; пуговицы, кнопки, крючки и петли, булавки и иглы; цветы искусственные; украшения для волос; волосы накладные",
+      "en": "Lace, braid and embroidery; ribbons and bows; buttons, hooks, eyes, pins and needles; artificial flowers; hair decorations; false hair."
+    }
+  },
+  {
+    "classNumber": 27,
+    "kind": "goods",
+    "titles": {
+      "uz": "Gilamlar; linoleum; devor qoplamalari.",
+      "ru": "Ковры, коврики, циновки, маты, линолеум и другие покрытия для полов; материалы драпировочные настенные, нетекстильные",
+      "en": "Carpets, rugs, mats and matting; linoleum; wall hangings, not of textile."
+    }
+  },
+  {
+    "classNumber": 28,
+    "kind": "goods",
+    "titles": {
+      "uz": "Oʻyinlar va oʻyinchoqlar; sport buyumlari; Yangi yil bezaklari.",
+      "ru": "Игры, игрушки; устройства для видеоигр; товары гимнастические и спортивные; украшения для рождественских елок",
+      "en": "Games, toys and playthings; video game apparatus; gymnastic and sporting articles; decorations for Christmas trees."
+    }
+  },
+  {
+    "classNumber": 29,
+    "kind": "goods",
+    "titles": {
+      "uz": "Goʻsht, baliq; konserva meva-sabzavot; sut mahsulotlari; yogʻlar.",
+      "ru": "Мясо, рыба, птица и дичь; экстракты мясные для кулинарных целей; овощи, фрукты и водоросли консервированные, замороженные, сушеные и подвергнутые тепловой обработке; желе, джемы, компоты; яйца; молоко, сыр, масло слив…",
+      "en": "Meat, fish, poultry; preserved, frozen, dried and cooked fruits and vegetables; jellies, jams; eggs; milk products; oils and fats."
+    }
+  },
+  {
+    "classNumber": 30,
+    "kind": "goods",
+    "titles": {
+      "uz": "Qahva, choy, kakao; un; non; shirinliklar; ziravorlar; souslar.",
+      "ru": "Кофе, чай, какао и их заменители; рис, макароны и лапша; тапиока и саго; мука и продукты зерновые; хлеб, изделия кондитерские мучные и изделия кондитерские сахаристые; шоколад; мороженое, сорбеты и другой пищевой лед;…",
+      "en": "Coffee, tea, cocoa; rice, pasta, noodles; flour; bread, pastries; confectionery; chocolate; ice cream; sugar, honey; yeast; salt; spices; vinegar; sauces."
+    }
+  },
+  {
+    "classNumber": 31,
+    "kind": "goods",
+    "titles": {
+      "uz": "Xom qishloq mahsulotlari; jonli hayvonlar; yangi meva-sabzavot; urugʻlar.",
+      "ru": "Продукты сельскохозяйственные, садово-огородные, лесные и аквакультуры сырые и необработанные; зерна и семена сырые и необработанные; фрукты и овощи свежие, травы свежие; растения и цветы живые; луковицы, саженцы и се…",
+      "en": "Raw and unprocessed agricultural, aquacultural, horticultural and forestry products; live animals; fresh fruits and vegetables; seeds; natural plants; foodstuffs for animals; malt."
+    }
+  },
+  {
+    "classNumber": 32,
+    "kind": "goods",
+    "titles": {
+      "uz": "Pivo; alkogolsiz ichimliklar; mineral suvlar; meva sharbatlari.",
+      "ru": "Пиво; напитки безалкогольные; воды минеральные и газированные; напитки фруктовые и соки фруктовые; сиропы и прочие составы для изготовления безалкогольных напитков",
+      "en": "Beers; non-alcoholic beverages; mineral and aerated waters; fruit beverages; syrups."
+    }
+  },
+  {
+    "classNumber": 33,
+    "kind": "goods",
+    "titles": {
+      "uz": "Alkogolli ichimliklar (pivodan tashqari).",
+      "ru": "Напитки алкогольные, кроме пива; составы алкогольные для приготовления напитков",
+      "en": "Alcoholic beverages, except beers; alcoholic preparations for making beverages."
+    }
+  },
+  {
+    "classNumber": 34,
+    "kind": "goods",
+    "titles": {
+      "uz": "Tamaki; sigaretalar; elektron sigaretalar; chekuvchi ashyolari.",
+      "ru": "Табак и заменители табака; сигареты и сигары; сигареты электронные и вапорайзеры для курильщиков; принадлежности курительные; спички",
+      "en": "Tobacco and tobacco substitutes; cigarettes; cigars; electronic cigarettes; smokers' articles; matches."
+    }
+  },
+  {
+    "classNumber": 35,
+    "kind": "services",
+    "titles": {
+      "uz": "Reklama; biznes boshqaruvi; ofis xizmatlari.",
+      "ru": "Реклама, управление бизнесом, организация бизнеса, бизнес-администрирование; служба офисная",
+      "en": "Advertising; business management, organization and administration; office functions."
+    }
+  },
+  {
+    "classNumber": 36,
+    "kind": "services",
+    "titles": {
+      "uz": "Moliyaviy va bank xizmatlari; sugʻurta; koʻchmas mulk.",
+      "ru": "Услуги финансовые, валютные и банковские; услуги страховые; услуги в сфере недвижимости",
+      "en": "Financial, monetary and banking services; insurance; real estate affairs."
+    }
+  },
+  {
+    "classNumber": 37,
+    "kind": "services",
+    "titles": {
+      "uz": "Qurilish; oʻrnatish va taʼmirlash; qazib olish.",
+      "ru": "Услуги строительные; услуги по установке и ремонту; добыча полезных ископаемых, бурение нефтяных и газовых скважин",
+      "en": "Construction services; installation and repair services; mining extraction, oil and gas drilling."
+    }
+  },
+  {
+    "classNumber": 38,
+    "kind": "services",
+    "titles": {
+      "uz": "Telekommunikatsiya xizmatlari.",
+      "ru": "Услуги телекоммуникационные",
+      "en": "Telecommunications services."
+    }
+  },
+  {
+    "classNumber": 39,
+    "kind": "services",
+    "titles": {
+      "uz": "Transport; qadoqlash va saqlash; sayohat tashkil etish.",
+      "ru": "Услуги транспортные; упаковывание и хранение товаров; организация путешествий",
+      "en": "Transport; packaging and storage of goods; travel arrangement."
+    }
+  },
+  {
+    "classNumber": 40,
+    "kind": "services",
+    "titles": {
+      "uz": "Materiallarni qayta ishlash; chiqindilarni qayta ishlash.",
+      "ru": "Обработка материалов; переработка отходов и мусора; очистка воздуха и обработка воды; услуги полиграфические; консервирование пищевых продуктов и напитков",
+      "en": "Treatment of materials; recycling of waste and trash; air purification; water treatment."
+    }
+  },
+  {
+    "classNumber": 41,
+    "kind": "services",
+    "titles": {
+      "uz": "Taʼlim; oʻqitish; koʻngilochar; sport va madaniyat.",
+      "ru": "Образование; обеспечение обучения; развлечения; организация спортивных и культурных мероприятий",
+      "en": "Education; providing of training; entertainment; sporting and cultural activities."
+    }
+  },
+  {
+    "classNumber": 42,
+    "kind": "services",
+    "titles": {
+      "uz": "Ilmiy va texnologik xizmatlar; dasturiy taʼminot ishlab chiqish.",
+      "ru": "Услуги научные и технологические и относящиеся к ним исследования и разработки; услуги по промышленному анализу, промышленным исследованиям и промышленному дизайну; услуги контроля качества и аутентификации; проектиро…",
+      "en": "Scientific and technological services; industrial analysis and research; design and development of computer hardware and software."
+    }
+  },
+  {
+    "classNumber": 43,
+    "kind": "services",
+    "titles": {
+      "uz": "Ovqatlanish xizmatlari; vaqtinchalik turar joy.",
+      "ru": "Услуги по обеспечению пищевыми продуктами и напитками; обеспечение временного проживания",
+      "en": "Services for providing food and drink; temporary accommodation."
+    }
+  },
+  {
+    "classNumber": 44,
+    "kind": "services",
+    "titles": {
+      "uz": "Tibbiy va veterinar xizmatlar; goʻzallik; qishloq xoʻjaligi.",
+      "ru": "Услуги медицинские; услуги ветеринарные; услуги по гигиеническому и косметическому уходу за людьми и животными; услуги в области сельского хозяйства, аквакультуры, садоводства и лесоводства",
+      "en": "Medical services; veterinary services; hygienic and beauty care; agriculture, aquaculture, horticulture and forestry services."
+    }
+  },
+  {
+    "classNumber": 45,
+    "kind": "services",
+    "titles": {
+      "uz": "Yuridik xizmatlar; xavfsizlik; shaxsiy xizmatlar.",
+      "ru": "Услуги юридические; службы безопасности для физической защиты материальных ценностей и людей; услуги службы знакомств, онлайн-сервисы социальных сетей; услуги ритуальные; присмотр за детьми",
+      "en": "Legal services; security services; personal and social services rendered by others."
+    }
+  }
+]

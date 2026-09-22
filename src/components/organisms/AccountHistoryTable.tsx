@@ -45,6 +45,7 @@ export function AccountHistoryTable({
   const [q, setQ] = useState("");
   const [classFilter, setClassFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [nowMs] = useState(() => Date.now());
 
   const classOptions = useMemo(() => {
     const set = new Set<string>();
@@ -57,7 +58,6 @@ export function AccountHistoryTable({
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    const now = Date.now();
     return checks.filter((c) => {
       if (query && !c.query.toLowerCase().includes(query)) return false;
       if (classFilter !== "all") {
@@ -67,14 +67,14 @@ export function AccountHistoryTable({
         if (!classes.includes(classFilter)) return false;
       }
       if (dateFilter !== "all") {
-        const age = now - new Date(c.created_at).getTime();
+        const age = nowMs - new Date(c.created_at).getTime();
         const day = 86_400_000;
         if (dateFilter === "7d" && age > 7 * day) return false;
         if (dateFilter === "30d" && age > 30 * day) return false;
       }
       return true;
     });
-  }, [checks, q, classFilter, dateFilter]);
+  }, [checks, q, classFilter, dateFilter, nowMs]);
 
   if (!checks.length) {
     return (

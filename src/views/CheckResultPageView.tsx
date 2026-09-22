@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getContent } from "@/i18n/get-content";
 import { getAppCopy } from "@/i18n/app-copy";
@@ -53,21 +53,19 @@ export function CheckResultPageView({
 }) {
   const copy = getContent(locale);
   const appCopy = getAppCopy(locale);
-  const [report, setReport] = useState<TrademarkReport | null>(null);
-  const [preview, setPreview] = useState(false);
+  const reportKey = `${query}\0${activity}`;
+  const [report, setReport] = useState<TrademarkReport | null>(() =>
+    readStoredReport(),
+  );
+  const [preview, setPreview] = useState(() => readStoredReportPreview());
+  const [loadedKey, setLoadedKey] = useState(reportKey);
+  if (loadedKey !== reportKey) {
+    setLoadedKey(reportKey);
+    setReport(readStoredReport());
+    setPreview(readStoredReportPreview());
+  }
   const checkFormPath = actionPath;
   const resultEmptyHref = localePath(locale, actionPath);
-
-  useEffect(() => {
-    const stored = readStoredReport();
-    if (stored) {
-      setReport(stored);
-      setPreview(readStoredReportPreview());
-      return;
-    }
-    setReport(null);
-    setPreview(false);
-  }, [query, activity]);
 
   if (!report) {
     const empty = (

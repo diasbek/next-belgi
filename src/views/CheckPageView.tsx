@@ -35,16 +35,20 @@ export function CheckPageView({
   const router = useRouter();
   const [error, setError] = useState(false);
   const [running, setRunning] = useState(Boolean(query && activity));
+  const canRun = Boolean(query && activity);
+  if (!canRun && running) {
+    setRunning(false);
+  }
 
   useEffect(() => {
-    if (!query || !activity) {
-      setRunning(false);
-      return;
-    }
+    if (!canRun) return;
 
     let cancelled = false;
-    setRunning(true);
-    setError(false);
+    const boot = window.setTimeout(() => {
+      if (cancelled) return;
+      setRunning(true);
+      setError(false);
+    }, 0);
     trackEvent("check_start");
 
     const minDelay = new Promise((resolve) => setTimeout(resolve, 1800));
@@ -109,8 +113,9 @@ export function CheckPageView({
 
     return () => {
       cancelled = true;
+      window.clearTimeout(boot);
     };
-  }, [query, activity, locale, router, actionPath]);
+  }, [canRun, query, activity, locale, router, actionPath]);
 
   const form = (
     <>

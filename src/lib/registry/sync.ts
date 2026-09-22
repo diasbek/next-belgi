@@ -238,7 +238,6 @@ export async function runRegistrySync(opts: SyncOptions = {}): Promise<{
   const listOnly = opts.listOnly ?? false;
   const delayMs = Number(process.env.ADLIYA_IMPORT_DELAY_MS || 120);
   const detailDelayMs = Number(process.env.ADLIYA_DETAIL_DELAY_MS || 300);
-  const useRpc = !process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
   // Prefer service path when service client is used
   const serviceMode = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());

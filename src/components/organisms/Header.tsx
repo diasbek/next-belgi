@@ -39,6 +39,11 @@ export function Header({ locale, content }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState<AuthState>({ status: "loading" });
   const pathname = usePathname() || "/";
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (pathname !== menuPath) {
+    setMenuPath(pathname);
+    setOpen(false);
+  }
   const { path: currentPath } = stripLocalePrefix(pathname);
   const appCopy = getAppCopy(locale);
   const loginHref = localePath(locale, "/login/");
@@ -52,12 +57,10 @@ export function Header({ locale, content }: HeaderProps) {
   const ctaLabel = loggedIn ? appCopy.account : content.ui.login;
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     let cancelled = false;
-    setAuth({ status: "loading" });
+    const boot = window.setTimeout(() => {
+      if (!cancelled) setAuth({ status: "loading" });
+    }, 0);
     (async () => {
       try {
         const res = await fetch("/api/auth/me/", { credentials: "include" });
@@ -84,6 +87,7 @@ export function Header({ locale, content }: HeaderProps) {
     })();
     return () => {
       cancelled = true;
+      window.clearTimeout(boot);
     };
   }, [pathname]);
 

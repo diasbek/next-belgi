@@ -57,7 +57,7 @@ export function optionsToSelection(
 
 export function selectionToActivityString(
   selection: NiceSelection,
-  locale: Locale,
+  _locale: Locale,
 ): string {
   const parts = [
     ...selection.terms.map((t) => t.term),

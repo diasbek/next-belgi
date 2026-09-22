@@ -18,10 +18,11 @@ export function SearchField({
   debounceMs?: number;
 }) {
   const [local, setLocal] = useState(value);
-
-  useEffect(() => {
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
     setLocal(value);
-  }, [value]);
+  }
 
   useEffect(() => {
     const t = setTimeout(() => {

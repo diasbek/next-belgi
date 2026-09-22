@@ -19,12 +19,15 @@ export function CookieConsentBanner({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("belgi_cookie_consent");
-      if (!stored) setVisible(true);
-    } catch {
-      setVisible(true);
-    }
+    const id = window.setTimeout(() => {
+      try {
+        const stored = localStorage.getItem("belgi_cookie_consent");
+        if (!stored) setVisible(true);
+      } catch {
+        setVisible(true);
+      }
+    }, 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   if (!visible) return null;

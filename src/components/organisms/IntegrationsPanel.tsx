@@ -59,7 +59,10 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
   }
 
   useEffect(() => {
-    void load();
+    const id = window.setTimeout(() => {
+      void load();
+    }, 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   function openModule(provider: IntegrationProvider) {

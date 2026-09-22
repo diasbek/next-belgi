@@ -74,7 +74,7 @@ async function fallbackIlike(
   niceClasses: number[] | undefined,
   limit: number,
 ): Promise<TrademarkMatch[]> {
-  let q = db
+  const q = db
     .from("trademarks")
     .select(
       "id, number, transliteration, owner, applicant, status, logo, registration_date, expired",

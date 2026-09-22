@@ -81,15 +81,21 @@ export function CheckForm({
   const copy = getContent(locale);
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
-  const [activityOptions, setActivityOptions] = useState<ActivityOption[]>([]);
+  const [activityOptions, setActivityOptions] = useState<ActivityOption[]>(() =>
+    optionsFromSelectionOrActivity(initialActivity),
+  );
+  const [activitySeed, setActivitySeed] = useState(initialActivity);
+  if (initialActivity !== activitySeed) {
+    setActivitySeed(initialActivity);
+    setActivityOptions(optionsFromSelectionOrActivity(initialActivity));
+  }
   const [pending, setPending] = useState(false);
   const brandId = `${idPrefix}-brand`;
   const activityId = `${idPrefix}-activity`;
 
   useEffect(() => {
-    setActivityOptions(optionsFromSelectionOrActivity(initialActivity));
     void import("@/lib/nice").then((m) => m.loadNiceTerms(locale));
-  }, [locale, initialActivity]);
+  }, [locale]);
 
   const selection = useMemo(
     () => optionsToSelection(activityOptions),

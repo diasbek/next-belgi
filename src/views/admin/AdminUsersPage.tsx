@@ -100,13 +100,15 @@ export async function AdminUsersPage({ locale }: { locale: Locale }) {
     }
   }
 
-  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  // Snapshot once for this server render (activity = seen within last 7 days).
+  const weekAgoMs = 7 * 24 * 60 * 60 * 1000;
+  // eslint-disable-next-line react-hooks/purity -- server page wall-clock cutoff
+  const weekAgoCutoff = new Date(Date.now() - weekAgoMs).toISOString();
 
   const users: AdminUserRow[] = (profiles || []).map((p) => {
     const id = p.id as string;
     const lastSeen = lastSeenMap.get(id) || null;
-    const active =
-      Boolean(lastSeen) && new Date(lastSeen!).getTime() >= weekAgo;
+    const active = Boolean(lastSeen) && lastSeen! >= weekAgoCutoff;
     return {
       id,
       full_name: (p.full_name as string | null) ?? null,

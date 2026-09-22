@@ -137,22 +137,24 @@ export function BillingPanel({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!plans.length) return;
-    if (!plans.some((p) => p.id === selectedId)) {
-      setSelectedId(plans[0].id);
-    }
-  }, [plans, selectedId]);
+  const resolvedSelectedId = plans.some((p) => p.id === selectedId)
+    ? selectedId
+    : (plans[0]?.id ?? "");
+  if (resolvedSelectedId !== selectedId) {
+    setSelectedId(resolvedSelectedId);
+  }
 
-  useEffect(() => {
-    if (provider === "payme" && !paymeOk) {
-      setProvider(clickOk ? "click" : null);
-    } else if (provider === "click" && !clickOk) {
-      setProvider(paymeOk ? "payme" : null);
-    } else if (!provider && defaultProvider) {
-      setProvider(defaultProvider);
-    }
-  }, [provider, paymeOk, clickOk, defaultProvider]);
+  let resolvedProvider: "payme" | "click" | null = provider;
+  if (provider === "payme" && !paymeOk) {
+    resolvedProvider = clickOk ? "click" : null;
+  } else if (provider === "click" && !clickOk) {
+    resolvedProvider = paymeOk ? "payme" : null;
+  } else if (!provider && defaultProvider) {
+    resolvedProvider = defaultProvider;
+  }
+  if (resolvedProvider !== provider) {
+    setProvider(resolvedProvider);
+  }
 
   useEffect(() => {
     if (!paidId || !hasResume || !resumeNext) return;
@@ -165,11 +167,12 @@ export function BillingPanel({
     return Math.round(one.price_uzs / one.credits);
   }, [plans]);
 
-  const selected = plans.find((p) => p.id === selectedId) || plans[0] || null;
+  const selected =
+    plans.find((p) => p.id === resolvedSelectedId) || plans[0] || null;
   const balanceAfter = balance + (selected?.credits ?? 0);
 
   async function checkout() {
-    if (!selected || !provider) return;
+    if (!selected || !resolvedProvider) return;
     setBusy(true);
     setError(null);
     try {
@@ -178,7 +181,7 @@ export function BillingPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           planId: selected.id,
-          provider,
+          provider: resolvedProvider,
           locale,
           next: hasResume ? resumeNext : undefined,
         }),
@@ -233,7 +236,7 @@ export function BillingPanel({
     }
   }
 
-  const canPay = Boolean(selected && provider && (paymeOk || clickOk));
+  const canPay = Boolean(selected && resolvedProvider && (paymeOk || clickOk));
 
   return (
     <div>
@@ -405,7 +408,7 @@ export function BillingPanel({
                       onClick={() => setProvider("payme")}
                       className={cn(
                         "rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
-                        provider === "payme"
+                        resolvedProvider === "payme"
                           ? "border-[#b8d96a] bg-[#f4fbe6] text-ink"
                           : "border-black/10 bg-white text-ink-muted hover:border-black/20",
                       )}
@@ -419,7 +422,7 @@ export function BillingPanel({
                       onClick={() => setProvider("click")}
                       className={cn(
                         "rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
-                        provider === "click"
+                        resolvedProvider === "click"
                           ? "border-[#b8d96a] bg-[#f4fbe6] text-ink"
                           : "border-black/10 bg-white text-ink-muted hover:border-black/20",
                       )}

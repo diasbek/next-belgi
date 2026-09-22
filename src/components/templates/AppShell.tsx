@@ -49,6 +49,12 @@ export function AppShell({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [shellPath, setShellPath] = useState(pathname);
+  if (pathname !== shellPath) {
+    setShellPath(pathname);
+    setMenuOpen(false);
+    setMoreOpen(false);
+  }
   const menuRef = useRef<HTMLDivElement>(null);
   const homeHref = localePath(locale, "/");
   const rootHref =
@@ -69,11 +75,6 @@ export function AppShell({
     [variant, nav],
   );
   const moreActive = !isPrimaryMobilePath(variant, path);
-
-  useEffect(() => {
-    setMenuOpen(false);
-    setMoreOpen(false);
-  }, [pathname]);
 
   // Dashboard owns safe-area via tab bar — avoid double body padding on mobile
   useEffect(() => {

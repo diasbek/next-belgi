@@ -296,18 +296,21 @@ export function AdminRegistryPanel({
       header: "",
       cell: (r) => {
         const url = thumbUrl(r.logo);
-        return url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={url}
-            alt=""
-            className="h-9 w-9 rounded-md object-contain bg-[#f3f4f1]"
-          />
-        ) : (
-          <span className="inline-block h-9 w-9 rounded-md bg-[#f3f4f1]" />
+        return (
+          <span className="inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#f3f4f1]">
+            {url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={url}
+                alt=""
+                className="max-h-full max-w-full object-contain"
+                loading="lazy"
+              />
+            ) : null}
+          </span>
         );
       },
-      className: "w-12",
+      className: "w-14 min-w-14 px-3 sm:px-3",
     },
     {
       id: "name",
@@ -440,14 +443,17 @@ export function AdminRegistryPanel({
           onRowClick={(r) => void openDetail(r)}
           renderCard={(r) => (
             <div className="flex gap-3">
-              {thumbUrl(r.logo) ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={thumbUrl(r.logo)!}
-                  alt=""
-                  className="h-12 w-12 rounded-md object-contain bg-[#f3f4f1]"
-                />
-              ) : null}
+              <span className="inline-flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#f3f4f1]">
+                {thumbUrl(r.logo) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={thumbUrl(r.logo)!}
+                    alt=""
+                    className="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                  />
+                ) : null}
+              </span>
               <div>
                 <p className="m-0 font-medium text-ink">
                   {r.transliteration || r.number || shortId(r.id)}
@@ -506,7 +512,7 @@ export function AdminRegistryPanel({
               <img
                 src={thumbUrl(selected.logo)!}
                 alt=""
-                className="mb-3 max-h-32 rounded-xl object-contain bg-[#f3f4f1] p-2"
+                className="mb-3 h-32 w-full max-w-xs rounded-xl object-contain bg-[#f3f4f1] p-2"
               />
             ) : null}
             <AdminField label={copy.adminRegistry.colName}>

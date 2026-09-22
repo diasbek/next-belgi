@@ -18,6 +18,7 @@ import {
 } from "@/components/organisms/admin/AdminDataTable";
 import { AdminDetailDrawer } from "@/components/organisms/admin/AdminDetailDrawer";
 import { AdminDetailRows } from "@/components/atoms/admin/AdminDetail";
+import { TrademarkReportView } from "@/components/organisms/TrademarkReportView";
 import {
   StatusBadge,
   statusToneFromValue,
@@ -138,114 +139,6 @@ function AdminCheckPdfButton({
     >
       {busy ? copy.downloading : copy.downloadPdf}
     </Button>
-  );
-}
-
-function CheckResultPreview({
-  locale,
-  report,
-}: {
-  locale: Locale;
-  report: TrademarkReport;
-}) {
-  const copy = getAppCopy(locale);
-  const conclusionCopy = getConclusionCopy(locale);
-
-  return (
-    <div className="space-y-5">
-      <div>
-        <p className="m-0 text-xs text-ink-muted">{copy.adminChecks.report}</p>
-        <h3 className="m-0 mt-1 text-lg font-semibold text-ink">
-          {report.conclusion?.title || report.query}
-        </h3>
-        {report.conclusion?.lead ? (
-          <p className="m-0 mt-2 text-sm leading-relaxed text-ink">
-            {report.conclusion.lead}
-          </p>
-        ) : null}
-      </div>
-
-      {report.classRisks?.length ? (
-        <div>
-          <p className="m-0 mb-2 text-xs text-ink-muted">
-            {conclusionCopy.verdictTitle}
-          </p>
-          <ul className="m-0 list-none space-y-1.5 p-0">
-            {report.classRisks.map((cr) => (
-              <li
-                key={cr.classNumber}
-                className="flex items-center justify-between rounded-lg bg-[#f3f4f1] px-3 py-2 text-sm"
-              >
-                <span>
-                  {conclusionCopy.classLabel} {cr.classNumber}
-                </span>
-                <span className="font-semibold tabular-nums">{cr.percent}%</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      {report.sources.map((source) => (
-        <div key={source.id}>
-          <p className="m-0 mb-2 text-xs font-medium text-ink-muted">
-            {source.title}
-          </p>
-          {source.empty || source.matches.length === 0 ? (
-            <p className="m-0 text-sm text-ink-muted">
-              {source.emptyText || conclusionCopy.emptyMatches}
-            </p>
-          ) : (
-            <ul className="m-0 list-none divide-y divide-black/5 overflow-hidden rounded-xl border border-black/5 p-0">
-              {source.matches.slice(0, 8).map((m) => (
-                <li key={m.id} className="flex gap-3 px-3 py-2.5">
-                  {m.imageUrl ? (
-                    <span className="inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#f3f4f1]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={m.imageUrl}
-                        alt=""
-                        className="max-h-full max-w-full object-contain"
-                        loading="lazy"
-                      />
-                    </span>
-                  ) : null}
-                  <div className="min-w-0 flex-1">
-                    <p className="m-0 truncate text-sm font-medium text-ink">
-                      {m.name}
-                    </p>
-                    {m.owner ? (
-                      <p className="m-0 truncate text-xs text-ink-muted">
-                        {m.owner}
-                      </p>
-                    ) : null}
-                    {m.classesText ? (
-                      <p className="m-0 mt-0.5 line-clamp-2 text-xs text-ink-muted">
-                        {m.classesText}
-                      </p>
-                    ) : null}
-                  </div>
-                  <span className="shrink-0 self-start rounded-full bg-[#eceee8] px-2 py-0.5 text-xs font-semibold tabular-nums">
-                    {m.similarity}%
-                  </span>
-                </li>
-              ))}
-              {source.matches.length > 8 ? (
-                <li className="px-3 py-2 text-xs text-ink-muted">
-                  +{source.matches.length - 8}
-                </li>
-              ) : null}
-            </ul>
-          )}
-        </div>
-      ))}
-
-      {report.disclaimer ? (
-        <p className="m-0 text-xs leading-relaxed text-ink-muted">
-          {report.disclaimer}
-        </p>
-      ) : null}
-    </div>
   );
 }
 
@@ -397,21 +290,10 @@ export function AdminChecksPanel({
           <div className="space-y-5">
             <AdminDetailRows
               rows={[
-                { label: copy.adminChecks.colQuery, value: selected.query },
-                {
-                  label: copy.adminChecks.colActivity,
-                  value: selected.activity_raw || "—",
-                },
                 { label: copy.adminChecks.colSource, value: selected.source },
                 {
                   label: copy.adminChecks.risk,
                   value: riskFromReport(selected.report) || "—",
-                },
-                {
-                  label: copy.adminChecks.classes,
-                  value:
-                    report?.niceClasses?.join(", ") ||
-                    classesLabel(selected.nice_classes),
                 },
                 {
                   label: copy.adminChecks.colUser,
@@ -424,10 +306,18 @@ export function AdminChecksPanel({
               ]}
             />
             {report ? (
-              <CheckResultPreview locale={locale} report={report} />
+              <TrademarkReportView
+                locale={locale}
+                report={report}
+                density="drawer"
+                showLawyers
+              />
             ) : (
               <p className="m-0 text-sm text-ink-muted">
                 {copy.adminChecks.report}: —
+                {classesLabel(selected.nice_classes) !== "—"
+                  ? ` · ${classesLabel(selected.nice_classes)}`
+                  : ""}
               </p>
             )}
           </div>

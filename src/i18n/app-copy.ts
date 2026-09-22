@@ -12,6 +12,7 @@ export type AppCopy = {
   logout: string;
   credits: string;
   backToSite: string;
+  workspace: string;
   nav: {
     overview: string;
     newCheck: string;
@@ -48,17 +49,51 @@ export type AppCopy = {
     query: string;
     date: string;
     classes: string;
+    report: string;
+    openReport: string;
+    searchPlaceholder: string;
+    filterClasses: string;
+    filterDates: string;
+    allDates: string;
+    noClasses: string;
+    shownOf: string;
+    classesHint: string;
+    newCheck: string;
   };
   billing: {
     title: string;
     lead: string;
     plans: string;
+    choosePackage: string;
+    payPackage: string;
+    yourBalance: string;
+    startCheck: string;
+    perCheck: string;
+    savings: string;
+    selectedPackage: string;
+    willCredit: string;
+    toPay: string;
+    balanceAfter: string;
+    paymentMethod: string;
+    payAmount: string;
     payPayme: string;
     payClick: string;
     payDev: string;
     notConfigured: string;
     ledger: string;
+    colDate: string;
+    colOp: string;
+    colCredits: string;
+    colBalance: string;
+    opPurchase: string;
+    opCheck: string;
+    opRefund: string;
+    opAdjust: string;
+    ledgerEmpty: string;
     creditsLabel: string;
+    creditsOne: string;
+    creditsFew: string;
+    creditsMany: string;
     priceLabel: string;
     resumeHint: string;
     continueCheck: string;
@@ -274,11 +309,12 @@ export const uzApp: AppCopy = {
   logout: "Chiqish",
   credits: "kredit",
   backToSite: "Saytga",
+  workspace: "Ishchi makon",
   nav: {
     overview: "Umumiy",
     newCheck: "Yangi tekshiruv",
-    history: "Tarix",
-    billing: "Toʻlov",
+    history: "Tekshiruvlar tarixi",
+    billing: "Toʻlov va kreditlar",
     profile: "Profil",
     dashboard: "Boshqaruv",
     users: "Foydalanuvchilar",
@@ -305,22 +341,57 @@ export const uzApp: AppCopy = {
   },
   history: {
     title: "Tekshiruvlar tarixi",
-    lead: "Sizning AI hisobotlaringiz.",
+    lead: "Tovar belgilari tahlili saqlangan natijalari.",
     empty: "Tarix boʻsh.",
-    query: "Belgi",
-    date: "Sana",
-    classes: "Sinflar",
+    query: "Tovar belgisi",
+    date: "Tekshiruv sanasi",
+    classes: "MKTU sinflari",
+    report: "Hisobot",
+    openReport: "Hisobotni ochish",
+    searchPlaceholder: "Nom boʻyicha qidirish",
+    filterClasses: "MKTU sinflari",
+    filterDates: "Barcha sanalar",
+    allDates: "Barcha sanalar",
+    noClasses: "Maʼlumot yoʻq",
+    shownOf: "Koʻrsatildi {shown} / {total} tekshiruv",
+    classesHint:
+      "Baʼzi tekshiruvlarda MKTU sinflari koʻrsatilmaydi. Tafsilotlar hisobotda.",
+    newCheck: "+ Yangi tekshiruv",
   },
   billing: {
     title: "Toʻlov va kreditlar",
-    lead: "Har bir tekshiruv — 1 kredit. Payme yoki Click orqali toʻldiring.",
+    lead: "1 tekshiruv = 1 kredit. Paket va toʻlov usulini tanlang.",
     plans: "Paketlar",
+    choosePackage: "Paketni tanlang",
+    payPackage: "Paketni toʻlang",
+    yourBalance: "Balansingiz",
+    startCheck: "Tekshiruvni boshlash",
+    perCheck: "{price} soʻm / 1 tekshiruv",
+    savings: "Tejam {amount} soʻm",
+    selectedPackage: "Tanlangan paket",
+    willCredit: "Hisobga qoʻshiladi",
+    toPay: "Toʻlovga",
+    balanceAfter: "Toʻlovdan keyin balans",
+    paymentMethod: "Toʻlov usuli",
+    payAmount: "Toʻlash {amount} soʻm",
     payPayme: "Payme",
     payClick: "Click",
     payDev: "Sinov toʻlovi",
     notConfigured: "Toʻlov hozircha sozlanmagan. Admin bilan bogʻlaning.",
-    ledger: "Harakatlar",
+    ledger: "Operatsiyalar tarixi",
+    colDate: "Sana",
+    colOp: "Operatsiya",
+    colCredits: "Kreditlar",
+    colBalance: "Balans",
+    opPurchase: "Toʻldirish",
+    opCheck: "Tekshiruv ishga tushirish",
+    opRefund: "Qaytarish",
+    opAdjust: "Admin tuzatishi",
+    ledgerEmpty: "Hali operatsiyalar yoʻq.",
     creditsLabel: "kredit",
+    creditsOne: "kredit",
+    creditsFew: "kredit",
+    creditsMany: "kredit",
     priceLabel: "soʻm",
     resumeHint:
       "Kredit yetarli emas. Toʻldiring — tekshiruv avtomatik davom etadi.",
@@ -330,7 +401,7 @@ export const uzApp: AppCopy = {
     debitMoment:
       "Kredit AI-tekshiruv muvaffaqiyatli ishga tushganda yechib olinadi (odatda 1 kredit).",
     offerLink: "Ommaviy oferta",
-    refundLink: "Qaytarish siyosati",
+    refundLink: "Qaytarish shartlari",
     creditsLink: "Tarif va kreditlar",
   },
   profile: {
@@ -598,11 +669,12 @@ export const ruApp: AppCopy = {
   logout: "Выйти",
   credits: "кредит",
   backToSite: "На сайт",
+  workspace: "Рабочее пространство",
   nav: {
     overview: "Обзор",
     newCheck: "Новая проверка",
-    history: "История",
-    billing: "Оплата",
+    history: "История проверок",
+    billing: "Оплата и кредиты",
     profile: "Профиль",
     dashboard: "Дашборд",
     users: "Пользователи",
@@ -629,22 +701,57 @@ export const ruApp: AppCopy = {
   },
   history: {
     title: "История проверок",
-    lead: "Ваши AI-отчёты.",
+    lead: "Сохранённые результаты анализа товарных знаков.",
     empty: "История пуста.",
-    query: "Знак",
-    date: "Дата",
-    classes: "Классы",
+    query: "Товарный знак",
+    date: "Дата проверки",
+    classes: "Классы МКТУ",
+    report: "Отчёт",
+    openReport: "Открыть отчёт",
+    searchPlaceholder: "Поиск по названию",
+    filterClasses: "Классы МКТУ",
+    filterDates: "Все даты",
+    allDates: "Все даты",
+    noClasses: "Нет данных",
+    shownOf: "Показано {shown} из {total} проверок",
+    classesHint:
+      "Классы МКТУ не отображаются для части проверок. Подробности доступны в отчёте.",
+    newCheck: "+ Новая проверка",
   },
   billing: {
     title: "Оплата и кредиты",
-    lead: "Каждая проверка — 1 кредит. Пополнение через Payme или Click.",
+    lead: "1 проверка = 1 кредит. Выберите пакет и способ оплаты.",
     plans: "Пакеты",
+    choosePackage: "Выберите пакет",
+    payPackage: "Оплатите пакет",
+    yourBalance: "Ваш баланс",
+    startCheck: "Начать проверку",
+    perCheck: "{price} сум / 1 проверка",
+    savings: "Экономия {amount} сум",
+    selectedPackage: "Выбранный пакет",
+    willCredit: "Будет зачислено",
+    toPay: "К оплате",
+    balanceAfter: "Баланс после оплаты",
+    paymentMethod: "Способ оплаты",
+    payAmount: "Оплатить {amount} сум",
     payPayme: "Payme",
     payClick: "Click",
     payDev: "Тестовая оплата",
     notConfigured: "Оплата ещё не настроена. Свяжитесь с администратором.",
-    ledger: "Движения",
+    ledger: "История операций",
+    colDate: "Дата",
+    colOp: "Операция",
+    colCredits: "Кредиты",
+    colBalance: "Баланс",
+    opPurchase: "Пополнение",
+    opCheck: "Запуск проверки",
+    opRefund: "Возврат",
+    opAdjust: "Корректировка",
+    ledgerEmpty: "Операций пока нет.",
     creditsLabel: "кредит",
+    creditsOne: "кредит",
+    creditsFew: "кредита",
+    creditsMany: "кредитов",
     priceLabel: "сум",
     resumeHint:
       "Недостаточно кредитов. Пополните — проверка продолжится автоматически.",
@@ -654,7 +761,7 @@ export const ruApp: AppCopy = {
     debitMoment:
       "Кредит списывается при успешном запуске AI-проверки (как правило, 1 кредит).",
     offerLink: "Публичная оферта",
-    refundLink: "Политика возврата",
+    refundLink: "Условия возврата",
     creditsLink: "Тарифы и кредиты",
   },
   profile: {
@@ -922,11 +1029,12 @@ export const enApp: AppCopy = {
   logout: "Sign out",
   credits: "credit",
   backToSite: "Back to site",
+  workspace: "Workspace",
   nav: {
     overview: "Overview",
     newCheck: "New check",
-    history: "History",
-    billing: "Billing",
+    history: "Check history",
+    billing: "Billing & credits",
     profile: "Profile",
     dashboard: "Dashboard",
     users: "Users",
@@ -953,22 +1061,57 @@ export const enApp: AppCopy = {
   },
   history: {
     title: "Check history",
-    lead: "Your AI reports.",
+    lead: "Saved trademark analysis results.",
     empty: "History is empty.",
-    query: "Mark",
-    date: "Date",
-    classes: "Classes",
+    query: "Trademark",
+    date: "Check date",
+    classes: "Nice classes",
+    report: "Report",
+    openReport: "Open report",
+    searchPlaceholder: "Search by name",
+    filterClasses: "Nice classes",
+    filterDates: "All dates",
+    allDates: "All dates",
+    noClasses: "No data",
+    shownOf: "Showing {shown} of {total} checks",
+    classesHint:
+      "Nice classes are missing for some checks. Details are available in the report.",
+    newCheck: "+ New check",
   },
   billing: {
     title: "Billing and credits",
-    lead: "Each check costs 1 credit. Top up via Payme or Click.",
+    lead: "1 check = 1 credit. Choose a package and payment method.",
     plans: "Packages",
+    choosePackage: "Choose a package",
+    payPackage: "Pay for the package",
+    yourBalance: "Your balance",
+    startCheck: "Start a check",
+    perCheck: "{price} UZS / 1 check",
+    savings: "Save {amount} UZS",
+    selectedPackage: "Selected package",
+    willCredit: "Will be credited",
+    toPay: "Total",
+    balanceAfter: "Balance after payment",
+    paymentMethod: "Payment method",
+    payAmount: "Pay {amount} UZS",
     payPayme: "Payme",
     payClick: "Click",
     payDev: "Test payment",
     notConfigured: "Payments are not configured yet. Contact an administrator.",
-    ledger: "Movements",
+    ledger: "Transaction history",
+    colDate: "Date",
+    colOp: "Operation",
+    colCredits: "Credits",
+    colBalance: "Balance",
+    opPurchase: "Top-up",
+    opCheck: "Check run",
+    opRefund: "Refund",
+    opAdjust: "Adjustment",
+    ledgerEmpty: "No transactions yet.",
     creditsLabel: "credit",
+    creditsOne: "credit",
+    creditsFew: "credits",
+    creditsMany: "credits",
     priceLabel: "UZS",
     resumeHint:
       "Not enough credits. Top up — the check will continue automatically.",
@@ -978,7 +1121,7 @@ export const enApp: AppCopy = {
     debitMoment:
       "A credit is deducted when an AI check starts successfully (usually 1 credit).",
     offerLink: "Public offer",
-    refundLink: "Refund policy",
+    refundLink: "Refund terms",
     creditsLink: "Plans and credits",
   },
   profile: {

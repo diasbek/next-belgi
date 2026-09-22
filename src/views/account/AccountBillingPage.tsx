@@ -50,6 +50,7 @@ export async function AccountBillingPage({ locale }: { locale: Locale }) {
       <Suspense fallback={null}>
         <BillingPanel
           locale={locale}
+          balance={appUser.balance}
           plans={plansRes?.data || []}
           ledger={ledgerRes.data || []}
           paymeOk={paymeOk}

@@ -10,7 +10,7 @@ import { getAppCopy } from "@/i18n/app-copy";
 import { LanguageSwitcher } from "@/components/molecules/LanguageSwitcher";
 import { cn } from "@/lib/cn";
 import type { AppShellNavItem } from "@/components/templates/app-shell-nav";
-import { IconHome, NavIcon } from "@/components/atoms/DashIcons";
+import { IconCoins, NavIcon } from "@/components/atoms/DashIcons";
 
 export type { AppShellNavItem };
 
@@ -201,10 +201,16 @@ export function AppShell({
                 </button>
               </div>
               <nav className="flex-1 overflow-y-auto overscroll-contain p-3">
+                <p className="mb-2 px-3 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-ink-muted/80">
+                  {copy.workspace}
+                </p>
                 <div className="flex flex-col gap-1">
                   {renderNavLinks(closeDrawer)}
                 </div>
               </nav>
+              <p className="border-t border-black/5 px-4 py-3 text-xs text-ink-muted">
+                © {copy.brand}
+              </p>
             </aside>
           </div>,
           document.body,
@@ -213,16 +219,22 @@ export function AppShell({
 
   return (
     <div className="flex min-h-dvh bg-[#f3f4f1] text-ink">
-      <aside className="sticky top-0 hidden h-dvh w-[15.5rem] shrink-0 overflow-y-auto border-r border-black/5 bg-white lg:block">
-        <nav className="flex flex-col gap-1 p-3">
+      <aside className="sticky top-0 hidden h-dvh w-[15.5rem] shrink-0 flex-col border-r border-black/5 bg-white lg:flex">
+        <div className="flex flex-1 flex-col overflow-y-auto p-3">
           <Link
             href={homeHref}
-            className="mb-4 px-3 font-display text-lg font-semibold tracking-tight text-ink"
+            className="mb-5 px-3 font-display text-lg font-semibold tracking-tight text-ink"
           >
             {copy.brand}
           </Link>
-          {renderNavLinks()}
-        </nav>
+          <p className="mb-2 px-3 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-ink-muted/80">
+            {copy.workspace}
+          </p>
+          <nav className="flex flex-col gap-1">{renderNavLinks()}</nav>
+        </div>
+        <p className="border-t border-black/5 px-4 py-3 text-xs text-ink-muted">
+          © {copy.brand}
+        </p>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -241,20 +253,30 @@ export function AppShell({
             >
               <Link
                 href={rootHref}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg hover:bg-black/[0.04] hover:text-ink"
-                aria-label={title}
+                className="truncate hover:text-ink"
               >
-                <IconHome />
+                {title}
               </Link>
-              <span aria-hidden>›</span>
+              <span aria-hidden>/</span>
               <span className="truncate font-medium text-ink">{crumb}</span>
             </nav>
 
             <div className="flex items-center gap-2 sm:gap-3">
               {variant === "account" ? (
-                <span className="hidden rounded-full bg-[#f3f4f1] px-3 py-1.5 text-sm font-medium sm:inline">
-                  {balance} {copy.credits}
-                </span>
+                <div className="hidden items-center gap-2 rounded-full bg-[#f3f4f1] py-1 pl-2.5 pr-3 text-sm sm:flex">
+                  <span className="text-ink" aria-hidden>
+                    <IconCoins />
+                  </span>
+                  <span className="font-medium text-ink">
+                    {balance} {copy.credits}
+                  </span>
+                  <Link
+                    href={localePath(locale, "/account/billing/")}
+                    className="font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline"
+                  >
+                    {copy.overview.topUp}
+                  </Link>
+                </div>
               ) : null}
               <LanguageSwitcher
                 locale={locale}

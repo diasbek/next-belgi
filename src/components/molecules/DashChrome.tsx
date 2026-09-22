@@ -37,17 +37,26 @@ export function DashPageHeader({
   title,
   lead,
   action,
+  badge,
 }: {
   title: string;
   lead?: string;
   action?: React.ReactNode;
+  badge?: string | number;
 }) {
   return (
     <div className="mb-5 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <h1 className="m-0 font-display text-[clamp(1.5rem,3vw,1.875rem)] font-semibold tracking-[-0.02em] text-ink">
-          {title}
-        </h1>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h1 className="m-0 font-display text-[clamp(1.5rem,3vw,1.875rem)] font-semibold tracking-[-0.02em] text-ink">
+            {title}
+          </h1>
+          {badge !== undefined && badge !== null && badge !== "" ? (
+            <span className="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-[#e8eae4] px-2 text-xs font-semibold text-ink-muted">
+              {badge}
+            </span>
+          ) : null}
+        </div>
         {lead ? (
           <p className="mt-1 max-w-xl text-sm text-ink-muted sm:text-base">
             {lead}

@@ -3,10 +3,12 @@ import { requireUser } from "@/lib/auth/session";
 import { getServiceDb } from "@/lib/db/client";
 import { AppShell } from "@/components/templates/AppShell";
 import { accountNav } from "@/components/templates/app-shell-nav";
+import { DashPageHeader } from "@/components/molecules/DashChrome";
+import { AccountHistoryTable } from "@/components/organisms/AccountHistoryTable";
+import { Button } from "@/components/atoms/Button";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
-import { sectionLead, sectionTitle } from "@/styles/ui";
 
 export async function AccountHistoryPage({ locale }: { locale: Locale }) {
   const appUser = await requireUser(
@@ -24,6 +26,8 @@ export async function AccountHistoryPage({ locale }: { locale: Locale }) {
         .limit(100)
     : { data: [] };
 
+  const rows = checks || [];
+
   return (
     <AppShell
       locale={locale}
@@ -32,41 +36,17 @@ export async function AccountHistoryPage({ locale }: { locale: Locale }) {
       balance={appUser.balance}
       email={appUser.email}
     >
-      <h1 className={sectionTitle}>{copy.history.title}</h1>
-      <p className={sectionLead}>{copy.history.lead}</p>
-      {!checks?.length ? (
-        <p className="text-ink-muted">{copy.history.empty}</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[28rem] text-left text-sm">
-            <thead>
-              <tr className="border-b border-black/10 text-ink-muted">
-                <th className="py-2 font-medium">{copy.history.query}</th>
-                <th className="py-2 font-medium">{copy.history.classes}</th>
-                <th className="py-2 font-medium">{copy.history.date}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {checks.map((c) => (
-                <tr key={c.id} className="border-b border-black/5">
-                  <td className="py-3 font-medium text-ink">{c.query}</td>
-                  <td className="py-3 text-ink-muted">
-                    {Array.isArray(c.nice_classes)
-                      ? (c.nice_classes as unknown[])
-                          .map(String)
-                          .slice(0, 6)
-                          .join(", ")
-                      : "—"}
-                  </td>
-                  <td className="py-3 text-ink-muted">
-                    {new Date(c.created_at).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <DashPageHeader
+        title={copy.history.title}
+        lead={copy.history.lead}
+        badge={rows.length}
+        action={
+          <Button href={localePath(locale, "/account/check/")}>
+            {copy.history.newCheck}
+          </Button>
+        }
+      />
+      <AccountHistoryTable locale={locale} checks={rows} />
     </AppShell>
   );
 }

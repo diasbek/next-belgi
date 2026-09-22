@@ -13,12 +13,15 @@ export function AdminDetailDrawer({
   title,
   children,
   footer,
+  wide,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  /** Wider panel for report previews */
+  wide?: boolean;
 }) {
   return (
     <>
@@ -35,7 +38,8 @@ export function AdminDetailDrawer({
             aria-modal="true"
             aria-label={title}
             className={cn(
-              "absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-black/5 bg-white shadow-[-8px_0_24px_rgb(26_28_24/0.1)]",
+              "absolute inset-y-0 right-0 flex w-full flex-col border-l border-black/5 bg-white shadow-[-8px_0_24px_rgb(26_28_24/0.1)]",
+              wide ? "max-w-xl" : "max-w-md",
             )}
           >
             <div className="flex items-center justify-between border-b border-black/5 px-5 py-4">

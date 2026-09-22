@@ -36,7 +36,7 @@ export async function AdminChecksPage({
     let query = db
       .from("trademark_checks")
       .select(
-        "id, query, activity_raw, locale, source, created_at, user_id, nice_classes, report",
+        "id, query, activity_raw, locale, source, created_at, user_id, nice_classes, report, conclusion_doc",
         { count: "exact" },
       )
       .order("created_at", { ascending: false })

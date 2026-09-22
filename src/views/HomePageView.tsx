@@ -144,7 +144,7 @@ function SampleCard({
   return (
     <div
       className={cn(
-        "relative h-full rounded-[1.25rem] bg-white p-4 pr-10 text-left shadow-md sm:rounded-[1.5rem] sm:p-5 sm:pr-11",
+        "relative rounded-[1.25rem] bg-white p-4 pr-10 text-left shadow-md sm:rounded-[1.5rem] sm:p-5 sm:pr-11",
         className,
       )}
     >
@@ -159,14 +159,7 @@ function SampleCard({
         {name}
       </p>
       <p className="m-0 mt-1 text-xs text-ink-muted sm:text-sm">{category}</p>
-      <p
-        className={cn(
-          "m-0 mt-3 text-sm font-medium",
-          tone === "high" ? "text-danger" : "text-warning",
-        )}
-      >
-        {risk}
-      </p>
+      <p className="m-0 mt-3 text-sm font-medium text-danger">{risk}</p>
       <p className="m-0 mt-0.5 text-xs text-ink-muted sm:text-sm">{similarity}</p>
     </div>
   );
@@ -181,44 +174,25 @@ export function HomePageView({ locale }: { locale: Locale }) {
     <>
       <section
         className={cn(
-          "flex min-h-[calc(100dvh-var(--header-height))] flex-col justify-between gap-10 overflow-x-clip bg-lime py-[var(--section-y-dense)] sm:gap-12",
+          "flex min-h-[calc(100dvh-var(--header-height))] flex-col justify-between overflow-x-clip bg-lime py-[var(--section-y-dense)]",
         )}
       >
         <PageContainer className="flex flex-1 flex-col justify-center">
-          <div className="mx-auto w-full text-center">
-            <h1
-              className={cn(
-                contentBand,
-                "mx-auto my-0 font-display text-[clamp(1.85rem,5.5vw,3.75rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-ink",
-              )}
-            >
+          <div className="mx-auto flex w-full max-w-[72rem] flex-col items-center text-center">
+            <h1 className="m-0 max-w-[42rem] font-display text-[clamp(1.85rem,5vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-ink lg:max-w-[48rem]">
               {copy.home.heroTitle}
             </h1>
 
-            <p
-              className={cn(
-                contentBand,
-                "mx-auto mt-4 max-w-[36rem] text-sm leading-relaxed text-ink/70 sm:mt-5 sm:text-base md:text-lg",
-              )}
-            >
+            <p className="m-0 mt-4 max-w-[36rem] text-sm leading-relaxed text-ink/70 sm:mt-5 sm:text-base md:text-lg">
               {copy.home.heroLead}
             </p>
 
-            {/* Form + flanking sample cards (floating from lg) */}
-            <div className="relative mx-auto mt-8 w-full max-w-lg sm:mt-10 lg:max-w-xl">
-              <SampleCard
-                {...cardA}
-                className="pointer-events-none absolute top-1/2 left-0 z-0 hidden w-[11.5rem] -translate-x-[calc(100%+1.25rem)] -translate-y-1/2 lg:block xl:w-52 xl:-translate-x-[calc(100%+1.75rem)]"
-              />
-              <SampleCard
-                {...cardB}
-                className="pointer-events-none absolute top-1/2 right-0 z-0 hidden w-[11.5rem] translate-x-[calc(100%+1.25rem)] -translate-y-1/2 lg:block xl:w-52 xl:translate-x-[calc(100%+1.75rem)]"
-              />
-
+            {/* Mobile / tablet: form then 2 sample cards */}
+            <div className="mt-8 w-full max-w-lg sm:mt-10 lg:hidden">
               <form
                 action={checkHref}
                 method="get"
-                className="relative z-10 flex w-full flex-col gap-1.5 rounded-[1.5rem] bg-white p-1.5 shadow-md sm:flex-row sm:items-center sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-1.5"
+                className="flex w-full flex-col gap-1.5 rounded-[1.5rem] bg-white p-1.5 shadow-md sm:flex-row sm:items-center sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-1.5"
               >
                 <label className="sr-only" htmlFor="hero-query">
                   {copy.ui.brandPlaceholder}
@@ -238,17 +212,45 @@ export function HomePageView({ locale }: { locale: Locale }) {
                   {copy.ui.check}
                 </button>
               </form>
-
-              <div className="mt-5 grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:hidden">
+              <div className="mt-5 grid grid-cols-2 items-stretch gap-3 sm:gap-4">
                 <SampleCard {...cardA} />
                 <SampleCard {...cardB} />
               </div>
+            </div>
+
+            {/* Desktop: card | form | card — no absolute positioning */}
+            <div className="mt-10 hidden w-full items-center gap-5 xl:gap-7 lg:grid lg:grid-cols-[minmax(11rem,14rem)_minmax(20rem,32rem)_minmax(11rem,14rem)] lg:justify-center">
+              <SampleCard {...cardA} className="pointer-events-none w-full" />
+              <form
+                action={checkHref}
+                method="get"
+                className="flex w-full items-center rounded-[var(--radius-pill)] bg-white p-1.5 shadow-md"
+              >
+                <label className="sr-only" htmlFor="hero-query-desktop">
+                  {copy.ui.brandPlaceholder}
+                </label>
+                <input
+                  id="hero-query-desktop"
+                  name="q"
+                  placeholder="Rizq..."
+                  className="min-h-14 w-full flex-1 border-0 bg-transparent px-6 text-base outline-none"
+                  required
+                />
+                <input type="hidden" name="activity" value="general" />
+                <button
+                  type="submit"
+                  className="min-h-14 shrink-0 rounded-[var(--radius-pill)] bg-primary px-7 text-sm font-semibold text-white"
+                >
+                  {copy.ui.check}
+                </button>
+              </form>
+              <SampleCard {...cardB} className="pointer-events-none w-full" />
             </div>
           </div>
         </PageContainer>
 
         <PageContainer>
-          <div className="grid w-full grid-cols-3 gap-3 pb-2 text-center sm:gap-[var(--grid-gap)] sm:pb-3">
+          <div className="mx-auto grid w-full max-w-[48rem] grid-cols-3 gap-4 pb-1 text-center sm:gap-8 sm:pb-2">
             {copy.home.features.map((feature, index) => (
               <div
                 key={feature.title}

@@ -6,17 +6,15 @@ import { CheckForm } from "@/components/molecules/CheckForm";
 import {
   cardLimeCompact,
   contentBand,
-  gridSpanQuarter,
   gridSpanThird,
   section,
   sectionDense,
   sectionGrid,
-  sectionHero,
   sectionLead,
   sectionTitle,
 } from "@/styles/ui";
 import { cn } from "@/lib/cn";
-
+import type { AnalysisStep } from "@/data/types";
 /** Figma assets: ibm-cloud--citrix-daas, time, condition--wait-point */
 const FEATURE_ICONS = [
   <path
@@ -72,6 +70,62 @@ function ProcessIcon({ id }: { id: string }) {
   );
 }
 
+function AnalysisDocIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className="shrink-0 text-ink/55"
+    >
+      <path
+        d="M7 3h7l5 5v13H7V3Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 3v5h5M9 13h6M9 17h4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function AnalysisRow({
+  step,
+  highlight = false,
+}: {
+  step: AnalysisStep;
+  highlight?: boolean;
+}) {
+  const label = step.title.replace(/\.$/, "");
+  const num = String(step.number).padStart(2, "0");
+
+  return (
+    <div
+      className={cn(
+        "flex min-h-[3.25rem] items-center gap-3 py-3.5 sm:min-h-[3.5rem] sm:gap-4 sm:py-4",
+        highlight &&
+          "rounded-2xl bg-lime px-3 sm:px-4 md:rounded-[1.25rem]",
+      )}
+    >
+      <span className="w-7 shrink-0 text-sm tabular-nums text-ink/35 sm:w-8 sm:text-base">
+        {num}
+      </span>
+      <span className="min-w-0 flex-1 text-left text-sm font-medium leading-snug text-ink sm:text-base">
+        {label}
+      </span>
+      {highlight ? <AnalysisDocIcon /> : null}
+    </div>
+  );
+}
+
 function SampleCard({
   name,
   category,
@@ -90,28 +144,30 @@ function SampleCard({
   return (
     <div
       className={cn(
-        "relative h-full rounded-2xl bg-white p-3 pr-9 text-left shadow-md sm:p-4 sm:pr-10",
+        "relative h-full rounded-[1.25rem] bg-white p-4 pr-10 text-left shadow-md sm:rounded-[1.5rem] sm:p-5 sm:pr-11",
         className,
       )}
     >
       <span
         className={cn(
-          "absolute right-2.5 top-2.5 h-5 w-5 rounded-full sm:right-3 sm:top-3 sm:h-6 sm:w-6",
+          "absolute right-3 top-3 h-5 w-5 rounded-full sm:right-3.5 sm:top-3.5 sm:h-6 sm:w-6",
           tone === "high" ? "bg-danger" : "bg-warning",
         )}
         aria-hidden
       />
-      <p className="m-0 text-sm font-semibold">{name}</p>
-      <p className="m-0 mt-1 text-xs text-ink-muted">{category}</p>
+      <p className="m-0 text-sm font-semibold leading-snug sm:text-base">
+        {name}
+      </p>
+      <p className="m-0 mt-1 text-xs text-ink-muted sm:text-sm">{category}</p>
       <p
         className={cn(
-          "m-0 mt-2 text-xs font-medium sm:mt-3",
+          "m-0 mt-3 text-sm font-medium",
           tone === "high" ? "text-danger" : "text-warning",
         )}
       >
         {risk}
       </p>
-      <p className="m-0 text-xs text-ink-muted">{similarity}</p>
+      <p className="m-0 mt-0.5 text-xs text-ink-muted sm:text-sm">{similarity}</p>
     </div>
   );
 }
@@ -123,33 +179,46 @@ export function HomePageView({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <section className={cn(sectionHero, "overflow-x-clip bg-lime")}>
-        <PageContainer>
-          <div className="text-center">
+      <section
+        className={cn(
+          "flex min-h-[calc(100dvh-var(--header-height))] flex-col justify-between gap-10 overflow-x-clip bg-lime py-[var(--section-y-dense)] sm:gap-12",
+        )}
+      >
+        <PageContainer className="flex flex-1 flex-col justify-center">
+          <div className="mx-auto w-full text-center">
             <h1
               className={cn(
                 contentBand,
-                "m-0 font-display text-[clamp(1.75rem,6vw,3.75rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-ink",
+                "mx-auto my-0 font-display text-[clamp(1.85rem,5.5vw,3.75rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-ink",
               )}
             >
               {copy.home.heroTitle}
             </h1>
 
-            {/* Form stage — floating sample cards only from xl */}
-            <div className="relative mx-auto mt-6 w-full max-w-xl sm:mt-8">
+            <p
+              className={cn(
+                contentBand,
+                "mx-auto mt-4 max-w-[36rem] text-sm leading-relaxed text-ink/70 sm:mt-5 sm:text-base md:text-lg",
+              )}
+            >
+              {copy.home.heroLead}
+            </p>
+
+            {/* Form + flanking sample cards (floating from lg) */}
+            <div className="relative mx-auto mt-8 w-full max-w-lg sm:mt-10 lg:max-w-xl">
               <SampleCard
                 {...cardA}
-                className="pointer-events-none absolute top-1/2 left-0 z-0 hidden w-40 -translate-x-[calc(100%+1rem)] -translate-y-1/2 xl:block xl:w-44 xl:-translate-x-[calc(100%+1.5rem)]"
+                className="pointer-events-none absolute top-1/2 left-0 z-0 hidden w-[11.5rem] -translate-x-[calc(100%+1.25rem)] -translate-y-1/2 lg:block xl:w-52 xl:-translate-x-[calc(100%+1.75rem)]"
               />
               <SampleCard
                 {...cardB}
-                className="pointer-events-none absolute top-1/2 right-0 z-0 hidden w-40 translate-x-[calc(100%+1rem)] -translate-y-1/2 xl:block xl:w-44 xl:translate-x-[calc(100%+1.5rem)]"
+                className="pointer-events-none absolute top-1/2 right-0 z-0 hidden w-[11.5rem] translate-x-[calc(100%+1.25rem)] -translate-y-1/2 lg:block xl:w-52 xl:translate-x-[calc(100%+1.75rem)]"
               />
 
               <form
                 action={checkHref}
                 method="get"
-                className="relative z-10 flex w-full flex-col gap-1.5 rounded-[1.5rem] bg-white p-1.5 shadow-md sm:flex-row sm:items-center sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-1"
+                className="relative z-10 flex w-full flex-col gap-1.5 rounded-[1.5rem] bg-white p-1.5 shadow-md sm:flex-row sm:items-center sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-1.5"
               >
                 <label className="sr-only" htmlFor="hero-query">
                   {copy.ui.brandPlaceholder}
@@ -158,37 +227,35 @@ export function HomePageView({ locale }: { locale: Locale }) {
                   id="hero-query"
                   name="q"
                   placeholder="Rizq..."
-                  className="min-h-11 w-full flex-1 border-0 bg-transparent px-4 text-base outline-none sm:min-h-12 sm:px-5"
+                  className="min-h-12 w-full flex-1 border-0 bg-transparent px-4 text-base outline-none sm:min-h-14 sm:px-6"
                   required
                 />
                 <input type="hidden" name="activity" value="general" />
                 <button
                   type="submit"
-                  className="min-h-11 w-full shrink-0 rounded-[var(--radius-pill)] bg-primary px-5 text-sm font-semibold text-white sm:min-h-12 sm:w-auto"
+                  className="min-h-12 w-full shrink-0 rounded-[var(--radius-pill)] bg-primary px-6 text-sm font-semibold text-white sm:min-h-14 sm:w-auto sm:px-7"
                 >
                   {copy.ui.check}
                 </button>
               </form>
 
-              <div className="mt-4 grid grid-cols-2 items-stretch gap-3 sm:mt-5 sm:gap-[var(--grid-gap)] xl:hidden">
+              <div className="mt-5 grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:hidden">
                 <SampleCard {...cardA} />
                 <SampleCard {...cardB} />
               </div>
             </div>
-
-            <p className="mx-auto mt-5 max-w-[var(--content-copy)] text-sm leading-relaxed text-ink/75 sm:mt-6 md:text-base">
-              {copy.home.heroLead}
-            </p>
           </div>
+        </PageContainer>
 
-          <div className="mt-8 grid w-full grid-cols-3 gap-3 text-center sm:mt-10 sm:gap-[var(--grid-gap)]">
+        <PageContainer>
+          <div className="grid w-full grid-cols-3 gap-3 pb-2 text-center sm:gap-[var(--grid-gap)] sm:pb-3">
             {copy.home.features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="flex min-w-0 flex-col items-center gap-2 sm:gap-3"
+                className="flex min-w-0 flex-col items-center gap-2.5 sm:gap-3"
               >
                 <FeatureIcon index={index} />
-                <p className="m-0 max-w-[12.5rem] text-xs leading-snug text-ink/60 sm:text-sm md:text-base">
+                <p className="m-0 max-w-[13rem] text-xs leading-snug text-ink/70 sm:text-sm md:text-[0.95rem]">
                   {feature.title}
                 </p>
               </div>
@@ -247,23 +314,57 @@ export function HomePageView({ locale }: { locale: Locale }) {
         </PageContainer>
       </section>
 
-      <section className={`${sectionDense} bg-white`}>
+      <section className={`${section} bg-surface-muted`}>
         <PageContainer>
-          <h2 className={sectionTitle}>{copy.home.analysisTitle}</h2>
-          <p className={cn(sectionLead, "mb-6 sm:mb-8")}>
+          <h2 className={cn(sectionTitle, "max-w-[var(--content-copy)]")}>
+            {copy.home.analysisTitle}
+          </h2>
+          <p className="m-0 mb-6 text-base text-ink-muted sm:mb-8 md:text-lg">
             {copy.home.analysisLead}
           </p>
-          <div className={cn(sectionGrid, gridSpanQuarter)}>
-            {copy.home.analysisSteps.map((step) => (
-              <article key={step.id} className={cn(cardLimeCompact, "min-h-0")}>
-                <p className="m-0 text-lg font-semibold text-ink/40 sm:text-xl md:text-2xl">
-                  {step.number}
-                </p>
-                <p className="mb-0 mt-2 text-xs font-medium leading-snug sm:mt-3 sm:text-sm">
-                  {step.title}
-                </p>
-              </article>
-            ))}
+
+          {/* Mobile: single column */}
+          <ol className="m-0 list-none p-0 md:hidden">
+            {copy.home.analysisSteps.map((step, index) => {
+              const isLast = index === copy.home.analysisSteps.length - 1;
+              return (
+                <li
+                  key={step.id}
+                  className={cn(
+                    !isLast && "border-b border-black/[0.08]",
+                    isLast && "mt-1",
+                  )}
+                >
+                  <AnalysisRow step={step} highlight={isLast} />
+                </li>
+              );
+            })}
+          </ol>
+
+          {/* Desktop / tablet: 2 columns, shared row rules */}
+          <div className="hidden md:block" role="list">
+            {Array.from({ length: 6 }, (_, row) => {
+              const left = copy.home.analysisSteps[row];
+              const right = copy.home.analysisSteps[row + 6];
+              const isLastRow = row === 5;
+              return (
+                <div
+                  key={left.id}
+                  role="presentation"
+                  className={cn(
+                    "grid grid-cols-2 gap-x-8 lg:gap-x-14 xl:gap-x-20",
+                    !isLastRow && "border-b border-black/[0.08]",
+                  )}
+                >
+                  <div role="listitem">
+                    <AnalysisRow step={left} />
+                  </div>
+                  <div role="listitem">
+                    <AnalysisRow step={right} highlight={isLastRow} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </PageContainer>
       </section>

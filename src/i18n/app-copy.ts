@@ -303,6 +303,14 @@ export type AppCopy = {
     deactivateConfirm: string;
     deactivateLead: string;
     fieldLocks: string;
+    pasteImport: string;
+    pasteImportLead: string;
+    pasteImportPlaceholder: string;
+    pasteImportRun: string;
+    pasteImportDone: string;
+    pasteImportProgress: string;
+    pasteImportInvalid: string;
+    pasteImportTruncated: string;
   };
   adminAttorneys: {
     title: string;
@@ -761,6 +769,15 @@ export const uzApp: AppCopy = {
     deactivateConfirm: "Yozuvni nofaol qilish?",
     deactivateLead: "Yumshoq oʻchirish — qidiruvda koʻrinmaydi.",
     fieldLocks: "Sync lock maydonlari",
+    pasteImport: "JSON import",
+    pasteImportLead:
+      "Adliya roʻyxat JSONini joylashtiring yoki .json yuklang (data[]). Bir martada 20 000 yozuvgacha — katta fayllar uchun fayl yuklash tavsiya etiladi.",
+    pasteImportPlaceholder: '{ "status": 0, "data": [ … ] }',
+    pasteImportRun: "Import qilish",
+    pasteImportDone: "Import yakunlandi",
+    pasteImportProgress: "Import: {done}/{total}",
+    pasteImportInvalid: "JSON yoki data[] topilmadi",
+    pasteImportTruncated: "Faqat birinchi 20 000 yozuv import qilinadi",
   },
   adminAttorneys: {
     title: "Patent vakillari",
@@ -1278,6 +1295,15 @@ export const ruApp: AppCopy = {
     deactivateConfirm: "Деактивировать запись?",
     deactivateLead: "Мягкое удаление — не показывается в поиске.",
     fieldLocks: "Поля, защищённые от sync",
+    pasteImport: "Импорт JSON",
+    pasteImportLead:
+      "Вставьте JSON списка Adliya или загрузите .json (data[]). До 20 000 записей — для больших объёмов лучше файл.",
+    pasteImportPlaceholder: '{ "status": 0, "data": [ … ] }',
+    pasteImportRun: "Импортировать",
+    pasteImportDone: "Импорт завершён",
+    pasteImportProgress: "Импорт: {done}/{total}",
+    pasteImportInvalid: "Не найден JSON или массив data[]",
+    pasteImportTruncated: "Будут импортированы только первые 20 000 записей",
   },
   adminAttorneys: {
     title: "Патентные поверенные",
@@ -1793,6 +1819,15 @@ export const enApp: AppCopy = {
     deactivateConfirm: "Deactivate this record?",
     deactivateLead: "Soft delete — hidden from search.",
     fieldLocks: "Sync-locked fields",
+    pasteImport: "Import JSON",
+    pasteImportLead:
+      "Paste Adliya list JSON or upload a .json file (data[]). Up to 20,000 records — prefer file upload for large dumps.",
+    pasteImportPlaceholder: '{ "status": 0, "data": [ … ] }',
+    pasteImportRun: "Import",
+    pasteImportDone: "Import finished",
+    pasteImportProgress: "Import: {done}/{total}",
+    pasteImportInvalid: "JSON or data[] not found",
+    pasteImportTruncated: "Only the first 20,000 records will be imported",
   },
   adminAttorneys: {
     title: "Patent attorneys",

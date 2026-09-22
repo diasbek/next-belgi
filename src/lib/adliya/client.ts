@@ -129,7 +129,7 @@ function isDetailTrademark(value: unknown): value is AdliyaTrademark {
   );
 }
 
-function normalizePage(raw: unknown): AdliyaPage<AdliyaTrademark> {
+export function normalizePage(raw: unknown): AdliyaPage<AdliyaTrademark> {
   const root =
     raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
   const payload = "data" in root ? root.data : raw;

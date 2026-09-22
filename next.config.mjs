@@ -71,7 +71,7 @@ const nextConfig = {
     cpus: 2,
     webpackMemoryOptimizations: true,
     serverActions: {
-      bodySizeLimit: "1mb",
+      bodySizeLimit: "5mb",
       allowedOrigins: [
         siteOrigin(siteUrl),
         "belgi.nocode.uz",

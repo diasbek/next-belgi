@@ -34,6 +34,12 @@ import { Button } from "@/components/atoms/Button";
 import { ConfirmDialog } from "@/components/molecules/admin/ConfirmDialog";
 import { adliyaLogoUrl } from "@/lib/adliya/types";
 import { formatAdminDate, shortId } from "@/lib/admin/list-params";
+import {
+  PASTE_IMPORT_CHUNK_SIZE,
+  PASTE_IMPORT_MAX_ITEMS,
+  chunkArray,
+  extractAdliyaListRaw,
+} from "@/lib/registry/extract-adliya-list";
 
 export type AdminRegistryRow = {
   id: string;
@@ -102,6 +108,9 @@ export function AdminRegistryPanel({
   const router = useRouter();
   const [selected, setSelected] = useState<DetailState | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [pasteOpen, setPasteOpen] = useState(false);
+  const [pasteText, setPasteText] = useState("");
+  const [pasteProgress, setPasteProgress] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -156,6 +165,69 @@ export function AdminRegistryPanel({
       }
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function runPasteImport() {
+    setBusy(true);
+    setMsg(null);
+    setPasteProgress(null);
+    try {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(pasteText);
+      } catch {
+        setMsg(copy.adminRegistry.pasteImportInvalid);
+        return;
+      }
+      let items = extractAdliyaListRaw(parsed);
+      if (!items.length) {
+        setMsg(copy.adminRegistry.pasteImportInvalid);
+        return;
+      }
+      let truncated = false;
+      if (items.length > PASTE_IMPORT_MAX_ITEMS) {
+        items = items.slice(0, PASTE_IMPORT_MAX_ITEMS);
+        truncated = true;
+      }
+      const chunks = chunkArray(items, PASTE_IMPORT_CHUNK_SIZE);
+      let imported = 0;
+      for (let i = 0; i < chunks.length; i++) {
+        setPasteProgress(
+          copy.adminRegistry.pasteImportProgress
+            .replace("{done}", String(imported))
+            .replace("{total}", String(items.length)),
+        );
+        const res = await fetch("/api/admin/registry/import/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items: chunks[i] }),
+        });
+        const json = (await res.json()) as {
+          ok?: boolean;
+          imported?: number;
+          error?: string;
+        };
+        if (!res.ok || !json.ok) {
+          setMsg(json.error || copy.adminUi.error);
+          return;
+        }
+        imported += json.imported ?? chunks[i].length;
+      }
+      setPasteOpen(false);
+      setPasteText("");
+      setPasteProgress(null);
+      setMsg(
+        `${copy.adminRegistry.pasteImportDone}: +${imported}${
+          truncated ? ` · ${copy.adminRegistry.pasteImportTruncated}` : ""
+        }`,
+      );
+      router.refresh();
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : copy.adminUi.error);
+    } finally {
+      setBusy(false);
+      setPasteProgress(null);
     }
   }
 
@@ -378,6 +450,17 @@ export function AdminRegistryPanel({
               {busy || syncRunning
                 ? copy.adminUi.loading
                 : copy.adminRegistry.syncNow}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy}
+              onClick={() => {
+                setPasteOpen(true);
+                setMsg(null);
+              }}
+            >
+              {copy.adminRegistry.pasteImport}
             </Button>
             <Button type="button" onClick={() => setCreateOpen(true)}>
               {copy.adminRegistry.create}
@@ -651,6 +734,72 @@ export function AdminRegistryPanel({
             />
           </AdminField>
         </AdminEntityForm>
+      </AdminDetailDrawer>
+
+      <AdminDetailDrawer
+        open={pasteOpen}
+        onOpenChange={(open) => {
+          if (!busy) setPasteOpen(open);
+        }}
+        title={copy.adminRegistry.pasteImport}
+        wide
+        footer={
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy}
+              onClick={() => setPasteOpen(false)}
+            >
+              {copy.adminUi.cancel}
+            </Button>
+            <Button
+              type="button"
+              disabled={busy || !pasteText.trim()}
+              onClick={() => void runPasteImport()}
+            >
+              {busy ? copy.adminUi.loading : copy.adminRegistry.pasteImportRun}
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <p className="m-0 text-sm text-ink-muted">
+            {copy.adminRegistry.pasteImportLead}
+          </p>
+          <AdminField label="JSON">
+            <AdminTextarea
+              value={pasteText}
+              onChange={(e) => setPasteText(e.target.value)}
+              placeholder={copy.adminRegistry.pasteImportPlaceholder}
+              className="min-h-[16rem] font-mono text-xs"
+            />
+          </AdminField>
+          <label className="block text-sm text-ink-muted">
+            <span className="mb-1.5 block text-xs">.json</span>
+            <input
+              type="file"
+              accept="application/json,.json"
+              disabled={busy}
+              className="block w-full text-sm"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setPasteText(String(reader.result || ""));
+                };
+                reader.readAsText(file);
+              }}
+            />
+          </label>
+          {pasteProgress ? (
+            <p className="m-0 text-sm font-medium text-ink">{pasteProgress}</p>
+          ) : null}
+          {msg && pasteOpen ? (
+            <p className="m-0 text-sm text-ink-muted">{msg}</p>
+          ) : null}
+        </div>
       </AdminDetailDrawer>
 
       <ConfirmDialog

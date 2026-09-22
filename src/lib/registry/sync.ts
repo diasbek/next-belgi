@@ -416,3 +416,29 @@ export async function pauseRegistrySync(db?: SupabaseClient) {
   );
   return { ok: true };
 }
+
+/** Bulk upsert of already-mapped remote trademarks (list-only paste import). */
+export async function importRemoteTrademarks(
+  db: SupabaseClient,
+  items: RegistryRemoteTrademark[],
+): Promise<{ ok: true; imported: number } | { ok: false; error: string }> {
+  if (!items.length) return { ok: true, imported: 0 };
+  const rows = items.map(mapRow);
+  const mgs = items.flatMap(mapMgs);
+  const serviceMode = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+  try {
+    // Prefer SQL batch RPC for speed on large pastes.
+    try {
+      await upsertBatch(db, rows, mgs, true);
+    } catch (rpcErr) {
+      if (!serviceMode) throw rpcErr;
+      await upsertBatch(db, rows, mgs, false);
+    }
+    return { ok: true, imported: rows.length };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : String(e),
+    };
+  }
+}

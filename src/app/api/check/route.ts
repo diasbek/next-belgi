@@ -131,13 +131,19 @@ export async function POST(request: Request) {
     return NextResponse.json(result, { status });
   }
 
-  if (result.checkId) {
-    await linkCheckEntitlement({
-      checkId: result.checkId,
-      ledgerId: debit.ledgerId,
-      userId: appUser.id,
-    });
+  if (!result.checkId) {
+    await refundCheckCredit(debit.ledgerId);
+    return NextResponse.json(
+      { ok: false, error: "persist_failed" },
+      { status: 500 },
+    );
   }
+
+  await linkCheckEntitlement({
+    checkId: result.checkId,
+    ledgerId: debit.ledgerId,
+    userId: appUser.id,
+  });
 
   return NextResponse.json({
     ...result,

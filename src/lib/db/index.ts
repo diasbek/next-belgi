@@ -51,22 +51,48 @@ export async function insertTrademarkCheck(
 ): Promise<string | null> {
   const db = getServiceDb();
   if (!db) return null;
+  const client = db;
 
-  const { data, error } = await db
-    .from("trademark_checks")
-    .insert({
-      user_id: input.userId ?? null,
-      query: input.query,
-      activity_raw: input.activityRaw,
-      activity_normalized: input.activityNormalized ?? null,
-      locale: input.locale ?? "uz",
-      nice_classes: input.niceClasses,
-      classification_source: input.classificationSource ?? null,
-      report: input.report,
-      source: input.source,
-    })
-    .select("id")
-    .maybeSingle();
+  async function write(
+    classificationSource: TrademarkCheckInsert["classificationSource"],
+  ) {
+    return client
+      .from("trademark_checks")
+      .insert({
+        user_id: input.userId ?? null,
+        query: input.query,
+        activity_raw: input.activityRaw,
+        activity_normalized: input.activityNormalized ?? null,
+        locale: input.locale ?? "uz",
+        nice_classes: input.niceClasses,
+        classification_source: classificationSource ?? null,
+        report: input.report,
+        source: input.source,
+      })
+      .select("id")
+      .maybeSingle();
+  }
+
+  let { data, error } = await write(input.classificationSource);
+
+  // Older DBs only allow openai|cache|fallback — retry with a compatible value
+  // until migration 20260923010000_check_classification_sources is applied.
+  if (
+    error &&
+    /classification_source_check/i.test(error.message) &&
+    (input.classificationSource === "catalog" ||
+      input.classificationSource === "catalog+openai")
+  ) {
+    const fallback =
+      input.classificationSource === "catalog" ? "cache" : "openai";
+    console.warn(
+      "[db:trademark_checks:insert] remapping classification_source",
+      input.classificationSource,
+      "→",
+      fallback,
+    );
+    ({ data, error } = await write(fallback));
+  }
 
   if (error) {
     console.warn("[db:trademark_checks:insert]", error.message);

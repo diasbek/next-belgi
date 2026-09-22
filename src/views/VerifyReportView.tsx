@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getConclusionCopy } from "@/lib/conclusion/copy";
 import type { VerifyResponse } from "@/lib/conclusion/types";
+import { ConclusionPdfButton } from "@/components/pdf/conclusion/ConclusionPdfButton";
 import { cn } from "@/lib/cn";
 
 export function VerifyReportView({
@@ -123,6 +124,16 @@ export function VerifyReportView({
                 </div>
               ) : null}
             </dl>
+          ) : null}
+
+          {status === "valid" && data?.conclusion ? (
+            <div className="mt-5">
+              <ConclusionPdfButton
+                locale={locale}
+                conclusion={data.conclusion}
+                className="w-full sm:w-auto"
+              />
+            </div>
           ) : null}
         </div>
       )}

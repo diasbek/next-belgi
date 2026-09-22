@@ -59,6 +59,7 @@ export async function GET(_request: Request, context: RouteContext) {
     docNumber: doc?.docNumber,
     hashPrefix: hash ? hash.slice(0, 12) : undefined,
     locale: (data.locale as Locale) || doc?.locale || "uz",
+    conclusion: doc ?? undefined,
   };
 
   return NextResponse.json(body);

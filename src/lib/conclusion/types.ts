@@ -85,4 +85,6 @@ export type VerifyResponse = {
   docNumber?: string;
   hashPrefix?: string;
   locale?: Locale;
+  /** Full report for public PDF download when status is valid. */
+  conclusion?: ConclusionDocument;
 };

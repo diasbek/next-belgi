@@ -117,7 +117,7 @@ export function Header({ locale, content }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-[60] border-b border-black/5 bg-lime/90 backdrop-blur-md">
+      <header className="fixed inset-x-0 top-0 z-[60] border-b border-black/5 bg-lime/95 backdrop-blur-md">
         <div
           className={cn(
             pageContainer,
@@ -176,6 +176,12 @@ export function Header({ locale, content }: HeaderProps) {
           </button>
         </div>
       </header>
+      {/* Reserve space so page content is not under the fixed bar */}
+      <div
+        className="shrink-0"
+        style={{ height: "var(--header-height)" }}
+        aria-hidden
+      />
 
       {open ? (
         <div

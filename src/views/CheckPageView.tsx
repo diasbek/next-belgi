@@ -15,7 +15,7 @@ import {
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
 import { CheckForm } from "@/components/molecules/CheckForm";
-import { section, sectionTitle } from "@/styles/ui";
+import { section, sectionTitle, sectionViewportCenter } from "@/styles/ui";
 
 export function CheckPageView({
   locale,
@@ -169,7 +169,7 @@ export function CheckPageView({
       return <div className="mx-auto max-w-lg py-8 text-center">{body}</div>;
     }
     return (
-      <section className="flex min-h-[70vh] items-center bg-white py-10">
+      <section className={`${sectionViewportCenter} bg-white`}>
         <PageContainer measure="focus" innerClassName="text-center">
           {body}
         </PageContainer>

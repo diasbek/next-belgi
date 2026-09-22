@@ -80,7 +80,7 @@ export function LegalDocPageView({
         <LegalMarkdown content={markdown} />
 
         {related.length ? (
-          <div className="mt-10 border-t border-black/5 pt-6">
+          <div className="mt-8 border-t border-black/5 pt-5 sm:mt-10 sm:pt-6">
             <h2 className="m-0 text-base font-semibold text-ink">
               {indexCopy[locale].related}
             </h2>
@@ -99,7 +99,7 @@ export function LegalDocPageView({
           </div>
         ) : null}
 
-        <p className="mt-10 text-xs text-ink-muted">
+        <p className="mt-8 text-xs text-ink-muted sm:mt-10">
           {indexCopy[locale].templateNote}
         </p>
       </PageContainer>
@@ -116,7 +116,7 @@ export function LegalIndexPageView({ locale }: { locale: Locale }) {
         <h1 className={sectionTitle}>{copy.title}</h1>
         <p className={sectionLead}>{copy.lead}</p>
 
-        <nav className="mt-6 flex flex-wrap gap-2" aria-label="Sections">
+        <nav className="mt-5 flex flex-wrap gap-2 sm:mt-6" aria-label="Sections">
           {LEGAL_GROUPS.map((group) => (
             <a
               key={group.id}
@@ -134,7 +134,7 @@ export function LegalIndexPageView({ locale }: { locale: Locale }) {
             <div
               key={group.id}
               id={group.id}
-              className="mt-12 scroll-mt-24"
+              className="mt-8 scroll-mt-[calc(var(--header-height)+0.75rem)] sm:mt-12"
             >
               <h2 className="m-0 text-lg font-semibold text-ink">
                 {group.title[locale]}

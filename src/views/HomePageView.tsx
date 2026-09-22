@@ -4,10 +4,14 @@ import { localePath } from "@/i18n/paths";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { CheckForm } from "@/components/molecules/CheckForm";
 import {
-  cardLime,
+  cardLimeCompact,
   contentBand,
+  gridSpanQuarter,
+  gridSpanThird,
   section,
+  sectionDense,
   sectionGrid,
+  sectionHero,
   sectionLead,
   sectionTitle,
 } from "@/styles/ui";
@@ -56,7 +60,7 @@ function ProcessIcon({ id }: { id: string }) {
     cert: "M9 12l2 2 4-4M7 4h10v16H7z",
   };
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d={map[id] ?? map.search}
         stroke="currentColor"
@@ -119,8 +123,8 @@ export function HomePageView({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <section className="overflow-x-clip bg-lime">
-        <PageContainer className="pb-12 pt-8 sm:pb-16 sm:pt-10 md:pb-20 md:pt-14">
+      <section className={cn(sectionHero, "overflow-x-clip bg-lime")}>
+        <PageContainer>
           <div className="text-center">
             <h1
               className={cn(
@@ -131,8 +135,8 @@ export function HomePageView({ locale }: { locale: Locale }) {
               {copy.home.heroTitle}
             </h1>
 
-            {/* Form stage — floating sample cards only from xl (enough side room) */}
-            <div className="relative mx-auto mt-8 w-full max-w-xl sm:mt-10">
+            {/* Form stage — floating sample cards only from xl */}
+            <div className="relative mx-auto mt-6 w-full max-w-xl sm:mt-8">
               <SampleCard
                 {...cardA}
                 className="pointer-events-none absolute top-1/2 left-0 z-0 hidden w-40 -translate-x-[calc(100%+1rem)] -translate-y-1/2 xl:block xl:w-44 xl:-translate-x-[calc(100%+1.5rem)]"
@@ -166,22 +170,22 @@ export function HomePageView({ locale }: { locale: Locale }) {
                 </button>
               </form>
 
-              <div className="mt-5 grid grid-cols-2 items-stretch gap-3 sm:gap-[var(--grid-gap)] xl:hidden">
+              <div className="mt-4 grid grid-cols-2 items-stretch gap-3 sm:mt-5 sm:gap-[var(--grid-gap)] xl:hidden">
                 <SampleCard {...cardA} />
                 <SampleCard {...cardB} />
               </div>
             </div>
 
-            <p className="mx-auto mt-6 max-w-[var(--content-copy)] text-sm leading-relaxed text-ink/75 sm:mt-8 md:text-base">
+            <p className="mx-auto mt-5 max-w-[var(--content-copy)] text-sm leading-relaxed text-ink/75 sm:mt-6 md:text-base">
               {copy.home.heroLead}
             </p>
           </div>
 
-          <div className="mt-10 grid w-full grid-cols-3 gap-3 text-center sm:mt-14 sm:gap-[var(--grid-gap)]">
+          <div className="mt-8 grid w-full grid-cols-3 gap-3 text-center sm:mt-10 sm:gap-[var(--grid-gap)]">
             {copy.home.features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="flex min-w-0 flex-col items-center gap-3 sm:gap-5"
+                className="flex min-w-0 flex-col items-center gap-2 sm:gap-3"
               >
                 <FeatureIcon index={index} />
                 <p className="m-0 max-w-[12.5rem] text-xs leading-snug text-ink/60 sm:text-sm md:text-base">
@@ -213,31 +217,28 @@ export function HomePageView({ locale }: { locale: Locale }) {
         </PageContainer>
       </section>
 
-      <section className={`${section} bg-primary text-white`}>
+      <section className={`${sectionDense} bg-primary text-white`}>
         <PageContainer>
-          <h2 className="m-0 mb-3 font-display text-[clamp(1.5rem,4.5vw,3rem)] font-semibold leading-tight tracking-[-0.03em]">
+          <h2 className="m-0 mb-2 font-display text-[clamp(1.5rem,4.5vw,3rem)] font-semibold leading-tight tracking-[-0.03em] sm:mb-3">
             {copy.home.processTitle}
           </h2>
-          <p className="m-0 mb-8 max-w-[var(--content-copy)] text-sm text-white/70 sm:mb-10 md:text-base">
+          <p className="m-0 mb-6 max-w-[var(--content-copy)] text-sm text-white/70 sm:mb-8 md:text-base">
             {copy.home.processLead}
           </p>
-          <div
-            className={cn(
-              sectionGrid,
-              "[&>*]:col-span-4 sm:[&>*]:col-span-4 lg:[&>*]:col-span-4",
-            )}
-          >
+          <div className={cn(sectionGrid, gridSpanThird)}>
             {copy.home.processSteps.map((step) => (
               <article
                 key={step.id}
-                className={cn(cardLime, "flex h-full flex-col")}
+                className={cn(cardLimeCompact, "flex h-full flex-col")}
               >
                 <ProcessIcon id={step.id} />
-                <h3 className="mb-2 mt-4 text-base font-semibold">{step.title}</h3>
-                <p className="m-0 flex-1 text-sm leading-relaxed text-ink/75">
+                <h3 className="mb-1.5 mt-3 text-sm font-semibold sm:mb-2 sm:mt-4 sm:text-base">
+                  {step.title}
+                </h3>
+                <p className="m-0 flex-1 text-xs leading-relaxed text-ink/75 sm:text-sm">
                   {step.text}
                 </p>
-                <p className="mb-0 mt-4 text-xs font-medium text-ink/55">
+                <p className="mb-0 mt-3 text-xs font-medium text-ink/55">
                   {step.duration}
                 </p>
               </article>
@@ -246,25 +247,19 @@ export function HomePageView({ locale }: { locale: Locale }) {
         </PageContainer>
       </section>
 
-      <section className={`${section} bg-white`}>
+      <section className={`${sectionDense} bg-white`}>
         <PageContainer>
           <h2 className={sectionTitle}>{copy.home.analysisTitle}</h2>
-          <p className={sectionLead}>{copy.home.analysisLead}</p>
-          <div
-            className={cn(
-              sectionGrid,
-              "[&>*]:col-span-4 sm:[&>*]:col-span-4 lg:[&>*]:col-span-3",
-            )}
-          >
+          <p className={cn(sectionLead, "mb-6 sm:mb-8")}>
+            {copy.home.analysisLead}
+          </p>
+          <div className={cn(sectionGrid, gridSpanQuarter)}>
             {copy.home.analysisSteps.map((step) => (
-              <article
-                key={step.id}
-                className={cn(cardLime, "min-h-0 sm:min-h-[8rem]")}
-              >
-                <p className="m-0 text-xl font-semibold text-ink/40 sm:text-2xl">
+              <article key={step.id} className={cn(cardLimeCompact, "min-h-0")}>
+                <p className="m-0 text-lg font-semibold text-ink/40 sm:text-xl md:text-2xl">
                   {step.number}
                 </p>
-                <p className="mb-0 mt-4 text-sm font-medium leading-snug sm:mt-8">
+                <p className="mb-0 mt-2 text-xs font-medium leading-snug sm:mt-3 sm:text-sm">
                   {step.title}
                 </p>
               </article>

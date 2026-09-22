@@ -32,7 +32,38 @@ export const contentMeasureClass: Record<ContentMeasure, string> = {
 export const sectionGrid =
   "grid w-full min-w-0 grid-cols-4 gap-[var(--grid-gap)] sm:grid-cols-8 lg:grid-cols-12";
 
+/**
+ * Span recipes for children of sectionGrid:
+ * - gridSpanHalf: 1 → 1 (sm) → 2 (lg)
+ * - gridSpanThird: 2 on mobile → 2 (sm) → 3 (lg) — process / dense cards
+ * - gridSpanThirdStack: 1 → 2 (sm) → 3 (lg) — taller service cards
+ * - gridSpanQuarter: 2 on mobile → 2 (sm) → 4 (lg)
+ */
+export const gridSpanHalf =
+  "[&>*]:col-span-4 sm:[&>*]:col-span-4 lg:[&>*]:col-span-6";
+export const gridSpanThird =
+  "[&>*]:col-span-2 sm:[&>*]:col-span-4 lg:[&>*]:col-span-4";
+export const gridSpanThirdStack =
+  "[&>*]:col-span-4 sm:[&>*]:col-span-4 lg:[&>*]:col-span-4";
+export const gridSpanQuarter =
+  "[&>*]:col-span-2 sm:[&>*]:col-span-4 lg:[&>*]:col-span-3";
+
+/** Default marketing band padding */
 export const section = "py-[var(--section-y)]";
+
+/** Card-heavy blocks (process, analysis, attorneys) */
+export const sectionDense = "py-[var(--section-y-dense)]";
+
+/**
+ * First-screen hero: fill viewport below sticky header.
+ * Pair with overflow-x-clip on the section when needed.
+ */
+export const sectionHero =
+  "flex min-h-[calc(100dvh-var(--header-height))] flex-col justify-center py-[var(--section-y-dense)]";
+
+/** Auth / loading: center in remaining viewport */
+export const sectionViewportCenter =
+  "flex min-h-[calc(100dvh-var(--header-height))] flex-col justify-center py-[var(--section-y-dense)]";
 
 export const sectionTitle =
   "m-0 mb-4 font-display text-[clamp(1.5rem,4.5vw,3.25rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-ink";
@@ -60,6 +91,10 @@ export const fieldInput =
 
 export const cardLime =
   "rounded-[var(--radius-md)] bg-lime p-4 text-ink shadow-sm sm:p-5 md:p-6";
+
+/** Compact card for dense mobile grids */
+export const cardLimeCompact =
+  "rounded-[var(--radius-md)] bg-lime p-3 text-ink shadow-sm sm:p-4 md:p-5";
 
 export const cardDark =
   "rounded-[var(--radius-md)] bg-primary p-4 text-white sm:p-5 md:p-6";

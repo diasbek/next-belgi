@@ -11,7 +11,7 @@ import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
 import { CheckForm } from "@/components/molecules/CheckForm";
 import { readStoredReport } from "@/lib/check/storage";
-import { cardLime, section, sectionGrid } from "@/styles/ui";
+import { cardLime, gridSpanHalf, gridSpanQuarter, section, sectionDense, sectionGrid } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 
 function lawyerInitials(name: string) {
@@ -62,7 +62,7 @@ export function CheckResultPageView({
   const otherSources = report.sources.filter((s) => s.id !== "uz");
 
   return (
-    <section className={`${section} bg-white`}>
+    <section className={`${sectionDense} bg-white`}>
       <PageContainer>
         <CheckForm
           locale={locale}
@@ -73,10 +73,10 @@ export function CheckResultPageView({
           idPrefix="result-check"
           initialQuery={report.query}
           initialActivity={report.activity || activity}
-          className="mb-8 sm:mb-10"
+          className="mb-6 sm:mb-8"
         />
 
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+        <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
           <div className="min-w-0">
             <p className="m-0 text-sm text-ink-muted">
               {copy.report.markTypeLabel}
@@ -96,8 +96,8 @@ export function CheckResultPageView({
           </div>
         </div>
 
-        <div className="mb-10">
-          <h2 className="m-0 mb-4 text-base font-semibold">
+        <div className="mb-8">
+          <h2 className="m-0 mb-3 text-base font-semibold">
             {copy.report.registryUz}
           </h2>
           <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border">
@@ -175,12 +175,7 @@ export function CheckResultPageView({
           </div>
         ))}
 
-        <div
-          className={cn(
-            sectionGrid,
-            "mb-10 [&>*]:col-span-4 lg:[&>*]:col-span-6",
-          )}
-        >
+        <div className={cn(sectionGrid, gridSpanHalf, "mb-8")}>
           <div className={cardLime}>
             <h2 className="m-0 text-base font-semibold">
               {copy.report.conclusionTitle}
@@ -188,16 +183,18 @@ export function CheckResultPageView({
             <p className="mt-3 text-sm leading-relaxed text-ink/80">
               {copy.report.conclusionLead}
             </p>
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
               {report.classRisks.map((risk) => (
                 <div
                   key={risk.classNumber}
-                  className="flex h-24 w-[calc(50%-0.375rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-3 sm:h-28 sm:w-28"
+                  className="flex h-20 w-[calc(50%-0.25rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-2.5 sm:h-24 sm:w-28 sm:p-3"
                 >
                   <span className="text-xs text-ink-muted">
                     {risk.classNumber} класс
                   </span>
-                  <span className="text-2xl font-semibold">{risk.percent}%</span>
+                  <span className="text-xl font-semibold sm:text-2xl">
+                    {risk.percent}%
+                  </span>
                 </div>
               ))}
             </div>
@@ -219,20 +216,15 @@ export function CheckResultPageView({
           </div>
         </div>
 
-        <div
-          className={cn(
-            sectionGrid,
-            "mb-8 [&>*]:col-span-4 sm:[&>*]:col-span-4 lg:[&>*]:col-span-3",
-          )}
-        >
+        <div className={cn(sectionGrid, gridSpanQuarter, "mb-6")}>
           {report.lawyers.map((lawyer) => (
             <article
               key={lawyer.id}
-              className="rounded-2xl border border-border bg-white p-4"
+              className="rounded-2xl border border-border bg-white p-3 sm:p-4"
             >
               <div
                 className={cn(
-                  "mb-3 flex h-24 items-center justify-center rounded-xl bg-surface-muted text-xl font-semibold text-ink/50 sm:h-28",
+                  "mb-2 flex h-16 items-center justify-center rounded-xl bg-surface-muted text-base font-semibold text-ink/50 sm:mb-3 sm:h-20 sm:text-xl",
                 )}
                 aria-hidden
               >
@@ -243,7 +235,7 @@ export function CheckResultPageView({
                 {lawyer.name}
               </p>
               <Button
-                className="mt-4 w-full text-xs"
+                className="mt-3 w-full text-xs sm:mt-4"
                 onClick={() => {
                   void submitLead({
                     type: "lawyer",

@@ -68,9 +68,9 @@ export function PatentAttorneysList({
           {labels.empty}
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border">
+        <div className="max-h-[min(28rem,55dvh)] overflow-auto rounded-2xl border border-border sm:max-h-[min(36rem,60dvh)]">
           <table className="w-full min-w-[40rem] border-collapse text-left text-sm">
-            <thead className="bg-surface-muted text-xs uppercase tracking-wide text-ink-muted">
+            <thead className="sticky top-0 z-10 bg-surface-muted text-xs uppercase tracking-wide text-ink-muted">
               <tr>
                 <th className="px-4 py-3 font-medium">{labels.columns.name}</th>
                 <th className="px-4 py-3 font-medium">

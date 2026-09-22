@@ -19,6 +19,7 @@
   --content-focus: 28rem; /* empty / login / loading */
   --grid-gap: 1rem;
   --section-y: clamp(2.25rem, 7vw, 5rem);
+  --section-y-dense: clamp(1.5rem, 4vw, 3rem);
   --radius-sm: 0.75rem;
   --radius-md: 1.25rem;
   --radius-lg: 2rem;
@@ -38,6 +39,7 @@
   :root {
     --page-padding: clamp(1.25rem, 3.5vw, 2.5rem);
     --section-y: clamp(2.75rem, 7vw, 5.25rem);
+    --section-y-dense: clamp(1.75rem, 4vw, 3.25rem);
     --grid-gap: 1.25rem;
   }
 }

@@ -9,7 +9,12 @@ import { authErrorMessage, getAppCopy } from "@/i18n/app-copy";
 import { safeInternalNext } from "@/lib/navigation/safe-next";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
-import { fieldInput, sectionLead, sectionTitle } from "@/styles/ui";
+import {
+  fieldInput,
+  sectionLead,
+  sectionTitle,
+  sectionViewportCenter,
+} from "@/styles/ui";
 
 type Step = "identity" | "otp" | "password";
 
@@ -169,7 +174,8 @@ export function RegisterForm({ locale }: { locale: Locale }) {
   const { title, lead } = heading();
 
   return (
-    <PageContainer measure="focus" className="py-[var(--section-y)]">
+    <section className={`${sectionViewportCenter} bg-white`}>
+      <PageContainer measure="focus">
       <h1 className={sectionTitle}>{title}</h1>
       <p className={sectionLead}>{lead}</p>
 
@@ -345,5 +351,6 @@ export function RegisterForm({ locale }: { locale: Locale }) {
         </Link>
       </div>
     </PageContainer>
+    </section>
   );
 }

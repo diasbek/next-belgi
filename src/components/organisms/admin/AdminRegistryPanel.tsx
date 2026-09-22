@@ -56,6 +56,9 @@ export type AdminRegistryRow = {
   active: boolean;
   field_locks: string[] | null;
   updated_at: string;
+  application_date?: string | null;
+  registration_date?: string | null;
+  synced_at?: string | null;
 };
 
 type DetailState = AdminRegistryRow & {
@@ -93,6 +96,8 @@ export function AdminRegistryPanel({
   importStatus,
   syncRunning,
   dbUnavailable,
+  sort = "updated_at",
+  dir = "desc",
 }: {
   locale: Locale;
   rows: AdminRegistryRow[];
@@ -103,6 +108,8 @@ export function AdminRegistryPanel({
   importStatus: string;
   syncRunning?: boolean;
   dbUnavailable?: boolean;
+  sort?: string;
+  dir?: string;
 }) {
   const copy = getAppCopy(locale);
   const router = useRouter();
@@ -419,8 +426,28 @@ export function AdminRegistryPanel({
     },
     {
       id: "date",
-      header: copy.adminPayments.colDate,
-      cell: (r) => formatAdminDate(r.updated_at, locale),
+      header:
+        sort === "application_date"
+          ? copy.adminRegistry.colFilingDate
+          : sort === "registration_date"
+            ? copy.adminRegistry.colRegDate
+            : sort === "synced_at"
+              ? copy.adminRegistry.colSynced
+              : copy.adminRegistry.colUpdated,
+      cell: (r) => {
+        const raw =
+          sort === "application_date"
+            ? r.application_date
+            : sort === "registration_date"
+              ? r.registration_date
+              : sort === "synced_at"
+                ? r.synced_at
+                : r.updated_at;
+        if (!raw) return "—";
+        // Adliya dates often come as DD.MM.YYYY text — show as-is.
+        if (/^\d{1,2}\.\d{1,2}\.\d{4}/.test(raw)) return raw;
+        return formatAdminDate(raw, locale);
+      },
       hideOnMobile: true,
     },
   ];
@@ -475,7 +502,59 @@ export function AdminRegistryPanel({
             <AdminUrlFilters
               searchPlaceholder={copy.adminRegistry.searchPlaceholder}
               clearLabel={copy.adminUi.clearFilters}
+              statusOptions={[
+                { value: "", label: copy.adminRegistry.allStatuses },
+                { value: "EXPERTISE", label: "EXPERTISE" },
+                { value: "REGISTERED", label: "REGISTERED" },
+                { value: "DRAFT", label: "DRAFT" },
+                { value: "REJECTED", label: "REJECTED" },
+                { value: "WITHDRAWN", label: "WITHDRAWN" },
+              ]}
               extraFilters={[
+                {
+                  id: "sort",
+                  "aria-label": copy.adminRegistry.sortBy,
+                  defaultValue: "updated_at",
+                  options: [
+                    {
+                      value: "updated_at",
+                      label: copy.adminRegistry.sortUpdated,
+                    },
+                    {
+                      value: "application_date",
+                      label: copy.adminRegistry.sortFiling,
+                    },
+                    {
+                      value: "registration_date",
+                      label: copy.adminRegistry.sortReg,
+                    },
+                    {
+                      value: "status",
+                      label: copy.adminRegistry.sortStatus,
+                    },
+                    {
+                      value: "number",
+                      label: copy.adminRegistry.sortNumber,
+                    },
+                    {
+                      value: "transliteration",
+                      label: copy.adminRegistry.sortName,
+                    },
+                    {
+                      value: "synced_at",
+                      label: copy.adminRegistry.sortSynced,
+                    },
+                  ],
+                },
+                {
+                  id: "dir",
+                  "aria-label": copy.adminRegistry.sortDir,
+                  defaultValue: "desc",
+                  options: [
+                    { value: "desc", label: copy.adminRegistry.sortDesc },
+                    { value: "asc", label: copy.adminRegistry.sortAsc },
+                  ],
+                },
                 {
                   id: "source",
                   options: [

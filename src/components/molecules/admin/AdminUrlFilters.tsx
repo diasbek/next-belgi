@@ -27,6 +27,8 @@ export function AdminUrlFilters({
     id: string;
     options: FilterOption[];
     "aria-label"?: string;
+    /** Shown when URL param is absent */
+    defaultValue?: string;
   }>;
 }) {
   const router = useRouter();
@@ -79,16 +81,23 @@ export function AdminUrlFilters({
       : []),
     ...(extraFilters || []).map((f) => ({
       id: f.id,
-      value: searchParams.get(f.id) ?? "",
+      value: searchParams.get(f.id) ?? f.defaultValue ?? "",
       options: f.options,
-      onChange: (v: string) => push({ [f.id]: v || null }),
+      onChange: (v: string) => {
+        const def = f.defaultValue;
+        if (def && v === def) push({ [f.id]: null });
+        else push({ [f.id]: v || null });
+      },
       "aria-label": f["aria-label"] || f.id,
     })),
   ];
 
-  const extraActive = (extraFilters || []).some(
-    (f) => searchParams.get(f.id),
-  );
+  const extraActive = (extraFilters || []).some((f) => {
+    const v = searchParams.get(f.id);
+    if (!v) return false;
+    if (f.defaultValue && v === f.defaultValue) return false;
+    return true;
+  });
 
   return (
     <FilterBar

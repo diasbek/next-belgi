@@ -27,7 +27,7 @@ export async function AdminRegistryPage({
   );
   const copy = getAppCopy(locale);
   const db = getServiceClient();
-  const { page, q: rawQ, source, active, from, to, pageSize } =
+  const { page, q: rawQ, source, active, status, sort, dir, from, to, pageSize } =
     parseAdminListParams(searchParams);
   const q = rawQ.replace(/[%_,.()]/g, " ").replace(/\s+/g, " ").trim();
 
@@ -51,10 +51,10 @@ export async function AdminRegistryPage({
     let listReq = db
       .from("trademarks")
       .select(
-        "id, adliya_id, number, transliteration, trademark_type, status, owner, applicant, registration_number, logo, source, active, field_locks, updated_at",
+        "id, adliya_id, number, transliteration, trademark_type, status, owner, applicant, registration_number, logo, source, active, field_locks, updated_at, application_date, registration_date, synced_at",
         { count: "exact" },
       )
-      .order("updated_at", { ascending: false })
+      .order(sort, { ascending: dir === "asc" })
       .range(from, to);
 
     if (q) {
@@ -66,10 +66,12 @@ export async function AdminRegistryPage({
           `owner.ilike.${pattern}`,
           `applicant.ilike.${pattern}`,
           `registration_number.ilike.${pattern}`,
+          `status.ilike.${pattern}`,
         ].join(","),
       );
     }
     if (source) listReq = listReq.eq("source", source);
+    if (status) listReq = listReq.eq("status", status);
     if (active === "1") listReq = listReq.eq("active", true);
     if (active === "0") listReq = listReq.eq("active", false);
 
@@ -94,6 +96,8 @@ export async function AdminRegistryPage({
         importStatus={importStatus}
         syncRunning={syncRunning}
         dbUnavailable={!db}
+        sort={sort}
+        dir={dir}
       />
     </AppShell>
   );

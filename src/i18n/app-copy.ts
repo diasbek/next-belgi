@@ -311,6 +311,22 @@ export type AppCopy = {
     pasteImportProgress: string;
     pasteImportInvalid: string;
     pasteImportTruncated: string;
+    allStatuses: string;
+    colFilingDate: string;
+    colRegDate: string;
+    colUpdated: string;
+    colSynced: string;
+    sortBy: string;
+    sortDir: string;
+    sortUpdated: string;
+    sortFiling: string;
+    sortReg: string;
+    sortStatus: string;
+    sortNumber: string;
+    sortName: string;
+    sortSynced: string;
+    sortAsc: string;
+    sortDesc: string;
   };
   adminAttorneys: {
     title: string;
@@ -778,6 +794,22 @@ export const uzApp: AppCopy = {
     pasteImportProgress: "Import: {done}/{total}",
     pasteImportInvalid: "JSON yoki data[] topilmadi",
     pasteImportTruncated: "Faqat birinchi 20 000 yozuv import qilinadi",
+    allStatuses: "Barcha holatlar",
+    colFilingDate: "Topshirish sanasi",
+    colRegDate: "Roʻyxatga olish",
+    colUpdated: "Yangilangan",
+    colSynced: "Sync",
+    sortBy: "Saralash",
+    sortDir: "Tartib",
+    sortUpdated: "Yangilangan",
+    sortFiling: "Topshirish sanasi",
+    sortReg: "Roʻyxatga olish sanasi",
+    sortStatus: "Holat",
+    sortNumber: "Raqam",
+    sortName: "Nom",
+    sortSynced: "Sync vaqti",
+    sortAsc: "Oʻsish",
+    sortDesc: "Kamayish",
   },
   adminAttorneys: {
     title: "Patent vakillari",
@@ -1304,6 +1336,22 @@ export const ruApp: AppCopy = {
     pasteImportProgress: "Импорт: {done}/{total}",
     pasteImportInvalid: "Не найден JSON или массив data[]",
     pasteImportTruncated: "Будут импортированы только первые 20 000 записей",
+    allStatuses: "Все статусы",
+    colFilingDate: "Дата подачи",
+    colRegDate: "Дата регистрации",
+    colUpdated: "Обновлено",
+    colSynced: "Синхронизация",
+    sortBy: "Сортировка",
+    sortDir: "Порядок",
+    sortUpdated: "По обновлению",
+    sortFiling: "По дате подачи",
+    sortReg: "По дате регистрации",
+    sortStatus: "По статусу",
+    sortNumber: "По номеру",
+    sortName: "По названию",
+    sortSynced: "По sync",
+    sortAsc: "По возрастанию",
+    sortDesc: "По убыванию",
   },
   adminAttorneys: {
     title: "Патентные поверенные",
@@ -1828,6 +1876,22 @@ export const enApp: AppCopy = {
     pasteImportProgress: "Import: {done}/{total}",
     pasteImportInvalid: "JSON or data[] not found",
     pasteImportTruncated: "Only the first 20,000 records will be imported",
+    allStatuses: "All statuses",
+    colFilingDate: "Filing date",
+    colRegDate: "Registration date",
+    colUpdated: "Updated",
+    colSynced: "Synced",
+    sortBy: "Sort by",
+    sortDir: "Order",
+    sortUpdated: "Updated",
+    sortFiling: "Filing date",
+    sortReg: "Registration date",
+    sortStatus: "Status",
+    sortNumber: "Number",
+    sortName: "Name",
+    sortSynced: "Synced at",
+    sortAsc: "Ascending",
+    sortDesc: "Descending",
   },
   adminAttorneys: {
     title: "Patent attorneys",

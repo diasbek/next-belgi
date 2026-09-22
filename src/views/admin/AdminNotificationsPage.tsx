@@ -2,52 +2,70 @@ import type { Locale } from "@/i18n/config";
 import { requireAdmin, getServiceClient } from "@/lib/auth/session";
 import { AppShell } from "@/components/templates/AppShell";
 import { adminNav } from "@/components/templates/app-shell-nav";
+import {
+  AdminNotificationsPanel,
+  type AdminNotificationRow,
+} from "@/components/organisms/admin/AdminNotificationsPanel";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
-import { sectionLead, sectionTitle } from "@/styles/ui";
+import {
+  parseAdminListParams,
+  type AdminListSearchParams,
+} from "@/lib/admin/list-params";
 
-export async function AdminNotificationsPage({ locale }: { locale: Locale }) {
+export async function AdminNotificationsPage({
+  locale,
+  searchParams,
+}: {
+  locale: Locale;
+  searchParams?: AdminListSearchParams;
+}) {
   await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/notifications/")),
     localePath(locale, "/"),
   );
   const copy = getAppCopy(locale);
   const db = getServiceClient();
+  const { page, q, status, from, to, pageSize } =
+    parseAdminListParams(searchParams);
 
-  const { data } = db
-    ? await db
-        .from("notification_log")
-        .select(
-          "id, provider, kind, destination, status, provider_message_id, created_at",
-        )
-        .order("created_at", { ascending: false })
-        .limit(100)
-    : { data: [] };
+  let rows: AdminNotificationRow[] = [];
+  let total = 0;
+
+  if (db) {
+    let query = db
+      .from("notification_log")
+      .select(
+        "id, provider, kind, destination, status, provider_message_id, meta, created_at",
+        { count: "exact" },
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (status) query = query.eq("status", status);
+    if (q) {
+      const pattern = `%${q}%`;
+      query = query.or(
+        `provider.ilike.${pattern},kind.ilike.${pattern},destination.ilike.${pattern}`,
+      );
+    }
+
+    const { data, count } = await query;
+    rows = (data || []) as AdminNotificationRow[];
+    total = count ?? 0;
+  }
 
   return (
     <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
-      <h1 className={sectionTitle}>{copy.adminNotifications.title}</h1>
-      <p className={sectionLead}>{copy.adminNotifications.lead}</p>
-      <ul className="divide-y divide-black/5 border-y border-black/5 text-sm">
-        {(data || []).length === 0 ? (
-          <li className="py-4 text-ink-muted">—</li>
-        ) : (
-          (data || []).map((row) => (
-            <li key={row.id} className="py-3">
-              <p className="font-medium text-ink">
-                {row.provider}/{row.kind} · {row.status} · {row.destination}
-              </p>
-              <p className="text-ink-muted">
-                {new Date(row.created_at).toLocaleString()}
-                {row.provider_message_id
-                  ? ` · ${row.provider_message_id}`
-                  : ""}
-              </p>
-            </li>
-          ))
-        )}
-      </ul>
+      <AdminNotificationsPanel
+        locale={locale}
+        rows={rows}
+        total={total}
+        page={page}
+        pageSize={pageSize}
+        dbUnavailable={!db}
+      />
     </AppShell>
   );
 }

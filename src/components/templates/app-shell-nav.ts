@@ -32,3 +32,48 @@ export function adminNav(copy: AppCopy): AppShellNavItem[] {
     { href: "/admin/settings/", label: copy.nav.settings },
   ];
 }
+
+const ACCOUNT_PRIMARY = new Set([
+  "/account/",
+  "/account/check/",
+  "/account/history/",
+  "/account/billing/",
+]);
+
+const ADMIN_PRIMARY = new Set([
+  "/admin/",
+  "/admin/users/",
+  "/admin/payments/",
+  "/admin/checks/",
+]);
+
+export function splitMobileNav(
+  variant: "account" | "admin",
+  nav: AppShellNavItem[],
+): { primary: AppShellNavItem[]; more: AppShellNavItem[] } {
+  const primaryHrefs = variant === "account" ? ACCOUNT_PRIMARY : ADMIN_PRIMARY;
+  const primary: AppShellNavItem[] = [];
+  const more: AppShellNavItem[] = [];
+  for (const item of nav) {
+    if (primaryHrefs.has(item.href)) primary.push(item);
+    else more.push(item);
+  }
+  // Keep primary order as defined in primaryHrefs insertion order via nav order
+  return { primary, more };
+}
+
+export function isPrimaryMobilePath(
+  variant: "account" | "admin",
+  path: string,
+): boolean {
+  const c = path.endsWith("/") ? path : `${path}/`;
+  const set = variant === "account" ? ACCOUNT_PRIMARY : ADMIN_PRIMARY;
+  for (const href of set) {
+    if (href === "/account/" || href === "/admin/") {
+      if (c === href) return true;
+      continue;
+    }
+    if (c === href || c.startsWith(href)) return true;
+  }
+  return false;
+}

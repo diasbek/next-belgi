@@ -140,6 +140,18 @@ export async function revokeSessionByToken(
     .is("revoked_at", null);
 }
 
+export async function revokeSessionById(sessionId: string): Promise<boolean> {
+  if (!sessionId) return false;
+  const db = getServiceDb();
+  if (!db) return false;
+  const { error } = await db
+    .from("app_sessions")
+    .update({ revoked_at: new Date().toISOString() })
+    .eq("id", sessionId)
+    .is("revoked_at", null);
+  return !error;
+}
+
 export async function revokeAllUserSessions(userId: string): Promise<void> {
   const db = getServiceDb();
   if (!db) return;

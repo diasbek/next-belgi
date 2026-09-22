@@ -19,6 +19,8 @@ export type AppCopy = {
     history: string;
     billing: string;
     profile: string;
+    more: string;
+    accountMenu: string;
     dashboard: string;
     users: string;
     payments: string;
@@ -163,22 +165,78 @@ export type AppCopy = {
     statBalance: string;
     addUser: string;
     userId: string;
+    inviteEmail: string;
+    invitePassword: string;
+    inviteSubmit: string;
+    changeRole: string;
+    confirmRole: string;
+    confirmRoleLead: string;
+    statusUnknown: string;
   };
   adminPayments: {
     title: string;
     lead: string;
+    colProvider: string;
+    colAmount: string;
+    colCredits: string;
+    colStatus: string;
+    colDate: string;
+    colUser: string;
+    empty: string;
+    emptyLead: string;
+    detailTitle: string;
+    allStatuses: string;
+    markReviewed: string;
+    reviewed: string;
+    copyId: string;
+    providerId: string;
+    raw: string;
   };
   adminPlans: {
     title: string;
     lead: string;
+    colCode: string;
+    colCredits: string;
+    colPrice: string;
+    colActive: string;
+    colSort: string;
+    empty: string;
+    emptyLead: string;
+    detailTitle: string;
+    create: string;
+    save: string;
+    active: string;
+    inactive: string;
+    titleUz: string;
+    titleRu: string;
+    titleEn: string;
+    codeLabel: string;
   };
   adminChecks: {
     title: string;
     lead: string;
+    colQuery: string;
+    colActivity: string;
+    colSource: string;
+    colDate: string;
+    colUser: string;
+    empty: string;
+    emptyLead: string;
+    detailTitle: string;
+    classes: string;
+    report: string;
+    risk: string;
   };
   adminLeads: {
     title: string;
     lead: string;
+    colType: string;
+    colStatus: string;
+    colDate: string;
+    empty: string;
+    emptyLead: string;
+    detailTitle: string;
+    saveStatus: string;
   };
   adminRegistry: {
     title: string;
@@ -194,25 +252,67 @@ export type AppCopy = {
     title: string;
     lead: string;
     count: string;
+    staticNote: string;
   };
   adminLedger: {
     title: string;
     lead: string;
+    colDelta: string;
+    colBalance: string;
+    colReason: string;
+    colDate: string;
+    colUser: string;
+    empty: string;
+    emptyLead: string;
+    allReasons: string;
   };
   adminNotifications: {
     title: string;
     lead: string;
+    colProvider: string;
+    colKind: string;
+    colStatus: string;
+    colDest: string;
+    colDate: string;
+    empty: string;
+    emptyLead: string;
+    detailTitle: string;
   };
   adminSessions: {
     title: string;
     lead: string;
     active: string;
     revoked: string;
+    colUser: string;
+    colCreated: string;
+    colExpires: string;
+    colStatus: string;
+    empty: string;
+    emptyLead: string;
+    revoke: string;
+    revokeConfirm: string;
+    revokeLead: string;
   };
   adminSettings: {
     title: string;
     lead: string;
     envNote: string;
+  };
+  adminUi: {
+    search: string;
+    clearFilters: string;
+    shown: string;
+    dbUnavailable: string;
+    view: string;
+    cancel: string;
+    confirm: string;
+    save: string;
+    close: string;
+    noResults: string;
+    copy: string;
+    copied: string;
+    loading: string;
+    error: string;
   };
   adminIntegrations: {
     title: string;
@@ -316,6 +416,8 @@ export const uzApp: AppCopy = {
     history: "Tekshiruvlar tarixi",
     billing: "Toʻlov va kreditlar",
     profile: "Profil",
+    more: "Yana",
+    accountMenu: "Hisob",
     dashboard: "Boshqaruv",
     users: "Foydalanuvchilar",
     payments: "Toʻlovlar",
@@ -464,22 +566,78 @@ export const uzApp: AppCopy = {
     statBalance: "Umumiy balans",
     addUser: "Foydalanuvchi qoʻshish",
     userId: "Foydalanuvchi ID",
+    inviteEmail: "Email",
+    invitePassword: "Vaqtinchalik parol",
+    inviteSubmit: "Yaratish",
+    changeRole: "Rolni o‘zgartirish",
+    confirmRole: "Rolni o‘zgartirasizmi?",
+    confirmRoleLead: "Foydalanuvchi admin huquqlariga ega bo‘ladi yoki yo‘qotadi.",
+    statusUnknown: "Noma’lum",
   },
   adminPayments: {
     title: "Toʻlovlar",
     lead: "Barcha toʻlovlar.",
+    colProvider: "Provayder",
+    colAmount: "Summa",
+    colCredits: "Kreditlar",
+    colStatus: "Holat",
+    colDate: "Sana",
+    colUser: "Foydalanuvchi",
+    empty: "Toʻlovlar yoʻq",
+    emptyLead: "Hali toʻlovlar kelmagan.",
+    detailTitle: "Toʻlov",
+    allStatuses: "Barcha holatlar",
+    markReviewed: "Ko‘rib chiqildi",
+    reviewed: "Tekshirildi",
+    copyId: "ID nusxa",
+    providerId: "Provayder ID",
+    raw: "Raw / meta",
   },
   adminPlans: {
     title: "Tariflar",
     lead: "Kredit paketlari.",
+    colCode: "Kod",
+    colCredits: "Kreditlar",
+    colPrice: "Narx",
+    colActive: "Holat",
+    colSort: "Tartib",
+    empty: "Tariflar yoʻq",
+    emptyLead: "Paket yarating.",
+    detailTitle: "Tarif",
+    create: "Paket qoʻshish",
+    save: "Saqlash",
+    active: "Faol",
+    inactive: "Oʻchirilgan",
+    titleUz: "Sarlavha (uz)",
+    titleRu: "Sarlavha (ru)",
+    titleEn: "Sarlavha (en)",
+    codeLabel: "Kod",
   },
   adminChecks: {
     title: "Tekshiruvlar",
     lead: "Barcha hisobotlar.",
+    colQuery: "Belgi",
+    colActivity: "Faoliyat",
+    colSource: "Manba",
+    colDate: "Sana",
+    colUser: "Foydalanuvchi",
+    empty: "Tekshiruvlar yoʻq",
+    emptyLead: "Hali tekshiruvlar yoʻq.",
+    detailTitle: "Tekshiruv",
+    classes: "MKTU",
+    report: "Hisobot",
+    risk: "Risk",
   },
   adminLeads: {
     title: "Murojaatlar",
     lead: "Kontakt va advokat soʻrovlari.",
+    colType: "Tur",
+    colStatus: "Holat",
+    colDate: "Sana",
+    empty: "Murojaatlar yoʻq",
+    emptyLead: "Hali soʻrovlar yoʻq.",
+    detailTitle: "Murojaat",
+    saveStatus: "Holatni saqlash",
   },
   adminRegistry: {
     title: "Tovar belgilari reestri",
@@ -495,26 +653,68 @@ export const uzApp: AppCopy = {
     title: "Patent vakillari",
     lead: "Rasmiy roʻyxat (im.adliya.uz) — saytdagi katalog.",
     count: "Jami",
+    staticNote: "Statik katalog — sajtdagi maʼlumotlar bilan bir xil.",
   },
   adminLedger: {
     title: "Kredit harakatlari",
     lead: "Barcha ledger yozuvlari.",
+    colDelta: "Delta",
+    colBalance: "Balans",
+    colReason: "Sabab",
+    colDate: "Sana",
+    colUser: "Foydalanuvchi",
+    empty: "Yozuvlar yoʻq",
+    emptyLead: "Hali harakatlar yoʻq.",
+    allReasons: "Barcha sabablar",
   },
   adminNotifications: {
     title: "Bildirishnomalar",
     lead: "SMS / email / Telegram yuborish logi.",
+    colProvider: "Provayder",
+    colKind: "Tur",
+    colStatus: "Holat",
+    colDest: "Manzil",
+    colDate: "Sana",
+    empty: "Log boʻsh",
+    emptyLead: "Hali yuborishlar yoʻq.",
+    detailTitle: "Bildirishnoma",
   },
   adminSessions: {
     title: "Sessiyalar",
     lead: "Foydalanuvchi sessiyalari (BFF cookie).",
     active: "Faol",
     revoked: "Yopilgan",
+    colUser: "Foydalanuvchi",
+    colCreated: "Yaratilgan",
+    colExpires: "Tugash",
+    colStatus: "Holat",
+    empty: "Sessiyalar yoʻq",
+    emptyLead: "Hali sessiyalar yoʻq.",
+    revoke: "Yopish",
+    revokeConfirm: "Sessiyani yopish?",
+    revokeLead: "Foydalanuvchi qayta kirishi kerak boʻladi.",
   },
   adminSettings: {
     title: "Sozlamalar",
     lead: "Infra kalitlari faqat muhitda; integratsiyalar — Admin → Integratsiyalar.",
     envNote:
       "SUPABASE_*, SECRETS_MASTER_KEY, SESSION_SECRET, OTP_PEPPER — faqat env. Eskiz/OpenAI/Payme va boshqalar — /admin/integrations/.",
+  },
+  adminUi: {
+    search: "Qidirish",
+    clearFilters: "Tozalash",
+    shown: "{from}–{to} / {total}",
+    dbUnavailable: "Maʼlumotlar bazasi sozlanmagan.",
+    view: "Koʻrish",
+    cancel: "Bekor",
+    confirm: "Tasdiqlash",
+    save: "Saqlash",
+    close: "Yopish",
+    noResults: "Hech narsa topilmadi",
+    copy: "Copy",
+    copied: "Copied",
+    loading: "Loading…",
+    error: "Error",
   },
   adminIntegrations: {
     title: "Integratsiyalar",
@@ -676,6 +876,8 @@ export const ruApp: AppCopy = {
     history: "История проверок",
     billing: "Оплата и кредиты",
     profile: "Профиль",
+    more: "Ещё",
+    accountMenu: "Аккаунт",
     dashboard: "Дашборд",
     users: "Пользователи",
     payments: "Платежи",
@@ -824,22 +1026,78 @@ export const ruApp: AppCopy = {
     statBalance: "Общий баланс",
     addUser: "Добавить пользователя",
     userId: "ID пользователя",
+    inviteEmail: "Email",
+    invitePassword: "Временный пароль",
+    inviteSubmit: "Создать",
+    changeRole: "Сменить роль",
+    confirmRole: "Сменить роль?",
+    confirmRoleLead: "Пользователь получит или потеряет права администратора.",
+    statusUnknown: "Неизвестно",
   },
   adminPayments: {
     title: "Платежи",
     lead: "Все платежи.",
+    colProvider: "Провайдер",
+    colAmount: "Сумма",
+    colCredits: "Кредиты",
+    colStatus: "Статус",
+    colDate: "Дата",
+    colUser: "Пользователь",
+    empty: "Платежей нет",
+    emptyLead: "Пока нет поступлений.",
+    detailTitle: "Платёж",
+    allStatuses: "Все статусы",
+    markReviewed: "Отметить просмотренным",
+    reviewed: "Просмотрено",
+    copyId: "Копировать ID",
+    providerId: "ID провайдера",
+    raw: "Raw / meta",
   },
   adminPlans: {
     title: "Тарифы",
     lead: "Пакеты кредитов.",
+    colCode: "Код",
+    colCredits: "Кредиты",
+    colPrice: "Цена",
+    colActive: "Статус",
+    colSort: "Сорт.",
+    empty: "Тарифов нет",
+    emptyLead: "Создайте пакет.",
+    detailTitle: "Тариф",
+    create: "Добавить пакет",
+    save: "Сохранить",
+    active: "Активен",
+    inactive: "Выключен",
+    titleUz: "Название (uz)",
+    titleRu: "Название (ru)",
+    titleEn: "Название (en)",
+    codeLabel: "Код",
   },
   adminChecks: {
     title: "Проверки",
     lead: "Все отчёты.",
+    colQuery: "Знак",
+    colActivity: "Деятельность",
+    colSource: "Источник",
+    colDate: "Дата",
+    colUser: "Пользователь",
+    empty: "Проверок нет",
+    emptyLead: "Пока нет проверок.",
+    detailTitle: "Проверка",
+    classes: "МКТУ",
+    report: "Отчёт",
+    risk: "Риск",
   },
   adminLeads: {
     title: "Заявки",
     lead: "Контакты и запросы к юристам.",
+    colType: "Тип",
+    colStatus: "Статус",
+    colDate: "Дата",
+    empty: "Заявок нет",
+    emptyLead: "Пока нет обращений.",
+    detailTitle: "Заявка",
+    saveStatus: "Сохранить статус",
   },
   adminRegistry: {
     title: "Реестр товарных знаков",
@@ -855,26 +1113,68 @@ export const ruApp: AppCopy = {
     title: "Патентные поверенные",
     lead: "Официальный список (im.adliya.uz) — каталог на сайте.",
     count: "Всего",
+    staticNote: "Статический каталог — совпадает с публичной страницей.",
   },
   adminLedger: {
     title: "Движения кредитов",
     lead: "Все записи ledger.",
+    colDelta: "Дельта",
+    colBalance: "Баланс",
+    colReason: "Причина",
+    colDate: "Дата",
+    colUser: "Пользователь",
+    empty: "Записей нет",
+    emptyLead: "Пока нет движений.",
+    allReasons: "Все причины",
   },
   adminNotifications: {
     title: "Уведомления",
     lead: "Лог SMS / email / Telegram.",
+    colProvider: "Провайдер",
+    colKind: "Тип",
+    colStatus: "Статус",
+    colDest: "Адрес",
+    colDate: "Дата",
+    empty: "Лог пуст",
+    emptyLead: "Пока нет отправок.",
+    detailTitle: "Уведомление",
   },
   adminSessions: {
     title: "Сессии",
     lead: "Пользовательские сессии (BFF cookie).",
     active: "Активна",
     revoked: "Закрыта",
+    colUser: "Пользователь",
+    colCreated: "Создана",
+    colExpires: "Истекает",
+    colStatus: "Статус",
+    empty: "Сессий нет",
+    emptyLead: "Пока нет сессий.",
+    revoke: "Отозвать",
+    revokeConfirm: "Отозвать сессию?",
+    revokeLead: "Пользователю нужно будет войти снова.",
   },
   adminSettings: {
     title: "Настройки",
     lead: "Инфра-ключи только в env; интеграции — Admin → Интеграции.",
     envNote:
       "SUPABASE_*, SECRETS_MASTER_KEY, SESSION_SECRET, OTP_PEPPER — только env. Eskiz/OpenAI/Payme и др. — /admin/integrations/.",
+  },
+  adminUi: {
+    search: "Поиск",
+    clearFilters: "Сбросить",
+    shown: "{from}–{to} / {total}",
+    dbUnavailable: "База данных не настроена.",
+    view: "Открыть",
+    cancel: "Отмена",
+    confirm: "Подтвердить",
+    save: "Сохранить",
+    close: "Закрыть",
+    noResults: "Ничего не найдено",
+    copy: "Copy",
+    copied: "Copied",
+    loading: "Loading…",
+    error: "Error",
   },
   adminIntegrations: {
     title: "Интеграции",
@@ -1036,6 +1336,8 @@ export const enApp: AppCopy = {
     history: "Check history",
     billing: "Billing & credits",
     profile: "Profile",
+    more: "More",
+    accountMenu: "Account",
     dashboard: "Dashboard",
     users: "Users",
     payments: "Payments",
@@ -1184,22 +1486,78 @@ export const enApp: AppCopy = {
     statBalance: "Total balance",
     addUser: "Add user",
     userId: "User ID",
+    inviteEmail: "Email",
+    invitePassword: "Temporary password",
+    inviteSubmit: "Create",
+    changeRole: "Change role",
+    confirmRole: "Change role?",
+    confirmRoleLead: "The user will gain or lose admin access.",
+    statusUnknown: "Unknown",
   },
   adminPayments: {
     title: "Payments",
     lead: "All payments.",
+    colProvider: "Provider",
+    colAmount: "Amount",
+    colCredits: "Credits",
+    colStatus: "Status",
+    colDate: "Date",
+    colUser: "User",
+    empty: "No payments",
+    emptyLead: "No payments yet.",
+    detailTitle: "Payment",
+    allStatuses: "All statuses",
+    markReviewed: "Mark reviewed",
+    reviewed: "Reviewed",
+    copyId: "Copy ID",
+    providerId: "Provider ID",
+    raw: "Raw / meta",
   },
   adminPlans: {
     title: "Plans",
     lead: "Credit packages.",
+    colCode: "Code",
+    colCredits: "Credits",
+    colPrice: "Price",
+    colActive: "Status",
+    colSort: "Sort",
+    empty: "No plans",
+    emptyLead: "Create a package.",
+    detailTitle: "Plan",
+    create: "Add plan",
+    save: "Save",
+    active: "Active",
+    inactive: "Inactive",
+    titleUz: "Title (uz)",
+    titleRu: "Title (ru)",
+    titleEn: "Title (en)",
+    codeLabel: "Code",
   },
   adminChecks: {
     title: "Checks",
     lead: "All reports.",
+    colQuery: "Mark",
+    colActivity: "Activity",
+    colSource: "Source",
+    colDate: "Date",
+    colUser: "User",
+    empty: "No checks",
+    emptyLead: "No checks yet.",
+    detailTitle: "Check",
+    classes: "Nice",
+    report: "Report",
+    risk: "Risk",
   },
   adminLeads: {
     title: "Leads",
     lead: "Contact and lawyer requests.",
+    colType: "Type",
+    colStatus: "Status",
+    colDate: "Date",
+    empty: "No leads",
+    emptyLead: "No requests yet.",
+    detailTitle: "Lead",
+    saveStatus: "Save status",
   },
   adminRegistry: {
     title: "Trademark registry",
@@ -1215,26 +1573,68 @@ export const enApp: AppCopy = {
     title: "Patent attorneys",
     lead: "Official list (im.adliya.uz) — site catalogue.",
     count: "Total",
+    staticNote: "Static catalog — same as the public page.",
   },
   adminLedger: {
     title: "Credit ledger",
     lead: "All ledger entries.",
+    colDelta: "Delta",
+    colBalance: "Balance",
+    colReason: "Reason",
+    colDate: "Date",
+    colUser: "User",
+    empty: "No entries",
+    emptyLead: "No movements yet.",
+    allReasons: "All reasons",
   },
   adminNotifications: {
     title: "Notifications",
     lead: "SMS / email / Telegram send log.",
+    colProvider: "Provider",
+    colKind: "Kind",
+    colStatus: "Status",
+    colDest: "Destination",
+    colDate: "Date",
+    empty: "Log empty",
+    emptyLead: "No sends yet.",
+    detailTitle: "Notification",
   },
   adminSessions: {
     title: "Sessions",
     lead: "User sessions (BFF cookie).",
     active: "Active",
     revoked: "Revoked",
+    colUser: "User",
+    colCreated: "Created",
+    colExpires: "Expires",
+    colStatus: "Status",
+    empty: "No sessions",
+    emptyLead: "No sessions yet.",
+    revoke: "Revoke",
+    revokeConfirm: "Revoke session?",
+    revokeLead: "The user will need to sign in again.",
   },
   adminSettings: {
     title: "Settings",
     lead: "Infra keys stay in env; integrations — Admin → Integrations.",
     envNote:
       "SUPABASE_*, SECRETS_MASTER_KEY, SESSION_SECRET, OTP_PEPPER — env only. Eskiz/OpenAI/Payme and others — /admin/integrations/.",
+  },
+  adminUi: {
+    search: "Search",
+    clearFilters: "Clear",
+    shown: "{from}–{to} / {total}",
+    dbUnavailable: "Database is not configured.",
+    view: "View",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    save: "Save",
+    close: "Close",
+    noResults: "No results",
+    copy: "Copy",
+    copied: "Copied",
+    loading: "Loading…",
+    error: "Error",
   },
   adminIntegrations: {
     title: "Integrations",

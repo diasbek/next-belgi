@@ -2,14 +2,19 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { localePath, stripLocalePrefix } from "@/i18n/paths";
 import { getAppCopy } from "@/i18n/app-copy";
 import { LanguageSwitcher } from "@/components/molecules/LanguageSwitcher";
+import { DashMobileTabBar } from "@/components/molecules/DashMobileTabBar";
+import { DashMoreSheet } from "@/components/molecules/DashMoreSheet";
 import { cn } from "@/lib/cn";
-import type { AppShellNavItem } from "@/components/templates/app-shell-nav";
+import {
+  isPrimaryMobilePath,
+  splitMobileNav,
+  type AppShellNavItem,
+} from "@/components/templates/app-shell-nav";
 import { IconCoins, NavIcon } from "@/components/atoms/DashIcons";
 
 export type { AppShellNavItem };
@@ -42,13 +47,9 @@ export function AppShell({
   const pathname = usePathname() || "/";
   const { path } = stripLocalePrefix(pathname);
   const router = useRouter();
-  const drawerId = useId();
-  const [drawerMounted, setDrawerMounted] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [portalReady, setPortalReady] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const homeHref = localePath(locale, "/");
   const rootHref =
     variant === "admin"
@@ -63,62 +64,23 @@ export function AppShell({
       ? email?.split("@")[0] || "admin"
       : email?.split("@")[0] || copy.account;
 
-  function openDrawer() {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-    setDrawerMounted(true);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setDrawerOpen(true));
-    });
-  }
-
-  function closeDrawer() {
-    setDrawerOpen(false);
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => {
-      setDrawerMounted(false);
-      closeTimer.current = null;
-    }, 180);
-  }
-
-  function toggleDrawer() {
-    if (drawerOpen) closeDrawer();
-    else openDrawer();
-  }
+  const { primary, more } = useMemo(
+    () => splitMobileNav(variant, nav),
+    [variant, nav],
+  );
+  const moreActive = !isPrimaryMobilePath(variant, path);
 
   useEffect(() => {
-    setPortalReady(true);
-  }, []);
-
-  useEffect(() => {
-    setDrawerOpen(false);
-    setDrawerMounted(false);
     setMenuOpen(false);
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
+    setMoreOpen(false);
   }, [pathname]);
 
+  // Dashboard owns safe-area via tab bar — avoid double body padding on mobile
   useEffect(() => {
-    if (!drawerMounted) return;
-    const prev = document.body.style.overflow;
-    if (drawerOpen) document.body.style.overflow = "hidden";
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") closeDrawer();
-    }
-    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.paddingBottom;
+    document.body.style.paddingBottom = "0px";
     return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [drawerMounted, drawerOpen]);
-
-  useEffect(() => {
-    return () => {
-      if (closeTimer.current) clearTimeout(closeTimer.current);
+      document.body.style.paddingBottom = prev;
     };
   }, []);
 
@@ -160,63 +122,6 @@ export function AppShell({
     });
   }
 
-  const mobileDrawer =
-    portalReady && drawerMounted
-      ? createPortal(
-          <div className="lg:hidden" role="presentation">
-            <button
-              type="button"
-              aria-label="Close"
-              className={cn(
-                "fixed inset-0 z-[80] bg-ink/30 transition-opacity duration-150 ease-out",
-                drawerOpen ? "opacity-100" : "opacity-0",
-              )}
-              onClick={closeDrawer}
-            />
-            <aside
-              id={drawerId}
-              role="dialog"
-              aria-modal="true"
-              aria-label={title}
-              className={cn(
-                "fixed inset-y-0 right-0 z-[90] flex w-[min(18rem,88vw)] flex-col bg-white shadow-[-8px_0_24px_rgb(26_28_24/0.12)] transition-transform duration-150 ease-out will-change-transform",
-                drawerOpen ? "translate-x-0" : "translate-x-full",
-              )}
-            >
-              <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
-                <Link
-                  href={homeHref}
-                  className="font-display text-lg font-semibold tracking-tight text-ink"
-                  onClick={closeDrawer}
-                >
-                  {copy.brand}
-                </Link>
-                <button
-                  type="button"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink hover:bg-black/[0.04]"
-                  onClick={closeDrawer}
-                  aria-label="Close"
-                >
-                  ×
-                </button>
-              </div>
-              <nav className="flex-1 overflow-y-auto overscroll-contain p-3">
-                <p className="mb-2 px-3 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-ink-muted/80">
-                  {copy.workspace}
-                </p>
-                <div className="flex flex-col gap-1">
-                  {renderNavLinks(closeDrawer)}
-                </div>
-              </nav>
-              <p className="border-t border-black/5 px-4 py-3 text-xs text-ink-muted">
-                © {copy.brand}
-              </p>
-            </aside>
-          </div>,
-          document.body,
-        )
-      : null;
-
   return (
     <div className="flex min-h-dvh bg-[#f3f4f1] text-ink">
       <aside className="sticky top-0 hidden h-dvh w-[15.5rem] shrink-0 flex-col border-r border-black/5 bg-white lg:flex">
@@ -251,10 +156,7 @@ export function AppShell({
               className="hidden min-w-0 items-center gap-1.5 text-sm text-ink-muted lg:flex"
               aria-label="Breadcrumb"
             >
-              <Link
-                href={rootHref}
-                className="truncate hover:text-ink"
-              >
+              <Link href={rootHref} className="truncate hover:text-ink">
                 {title}
               </Link>
               <span aria-hidden>/</span>
@@ -263,7 +165,7 @@ export function AppShell({
 
             <div className="flex items-center gap-2 sm:gap-3">
               {variant === "account" ? (
-                <div className="hidden items-center gap-2 rounded-full bg-[#f3f4f1] py-1 pl-2.5 pr-3 text-sm sm:flex">
+                <div className="flex items-center gap-1.5 rounded-full bg-[#f3f4f1] py-1 pr-2.5 pl-2 text-xs sm:gap-2 sm:py-1 sm:pr-3 sm:pl-2.5 sm:text-sm">
                   <span className="text-ink" aria-hidden>
                     <IconCoins />
                   </span>
@@ -272,21 +174,23 @@ export function AppShell({
                   </span>
                   <Link
                     href={localePath(locale, "/account/billing/")}
-                    className="font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline"
+                    className="hidden font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline sm:inline"
                   >
                     {copy.overview.topUp}
                   </Link>
                 </div>
               ) : null}
-              <LanguageSwitcher
-                locale={locale}
-                className="!min-h-9 !rounded-full !border-black/10 !bg-white !px-2.5 !text-sm sm:!px-3"
-              />
-              <div className="relative" ref={menuRef}>
+              <div className="hidden lg:block">
+                <LanguageSwitcher
+                  locale={locale}
+                  className="!min-h-9 !rounded-full !border-black/10 !bg-white !px-2.5 !text-sm sm:!px-3"
+                />
+              </div>
+              <div className="relative hidden lg:block" ref={menuRef}>
                 <button
                   type="button"
                   onClick={() => setMenuOpen((v) => !v)}
-                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white p-0.5 text-sm font-medium sm:py-1 sm:pl-1 sm:pr-3"
+                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white p-0.5 text-sm font-medium sm:py-1 sm:pr-3 sm:pl-1"
                   aria-label={profileLabel}
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime text-xs font-semibold">
@@ -319,26 +223,42 @@ export function AppShell({
                   </div>
                 ) : null}
               </div>
-              <button
-                type="button"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-ink lg:hidden"
-                onClick={toggleDrawer}
-                aria-expanded={drawerOpen}
-                aria-controls={drawerId}
-                aria-label="Menu"
-              >
-                {drawerOpen ? "×" : "☰"}
-              </button>
             </div>
           </div>
         </header>
 
-        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+        <main
+          className={cn(
+            "min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8",
+            "pb-[calc(var(--dash-tabbar-height)+var(--safe-bottom)+1.25rem)] lg:pb-6",
+          )}
+        >
           {children}
         </main>
       </div>
 
-      {mobileDrawer}
+      <DashMobileTabBar
+        locale={locale}
+        path={path}
+        primary={primary}
+        moreLabel={copy.nav.more}
+        moreActive={moreActive || moreOpen}
+        onMoreClick={() => setMoreOpen(true)}
+      />
+      <DashMoreSheet
+        open={moreOpen}
+        onOpenChange={setMoreOpen}
+        locale={locale}
+        path={path}
+        moreNav={more}
+        title={copy.nav.more}
+        accountMenuLabel={copy.nav.accountMenu}
+        logoutLabel={copy.logout}
+        email={email}
+        avatarLetter={avatarLetter}
+        profileLabel={profileLabel}
+        onLogout={() => void logout()}
+      />
     </div>
   );
 }

@@ -12,7 +12,6 @@ import {
   IconCoins,
   IconUsers,
 } from "@/components/atoms/DashIcons";
-import { Button } from "@/components/atoms/Button";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
@@ -25,17 +24,18 @@ export async function AdminUsersPage({ locale }: { locale: Locale }) {
   const copy = getAppCopy(locale);
   const db = getServiceClient();
 
-  const { data: profiles } = db
-    ? await db
-        .from("profiles")
-        .select("id, full_name, role")
-        .order("created_at", { ascending: false })
-        .limit(100)
-    : { data: [] };
-
-  const { data: wallets } = db
-    ? await db.from("wallets").select("user_id, balance")
-    : { data: [] };
+  const [{ data: profiles, count: profileCount }, { data: wallets }] = db
+    ? await Promise.all([
+        db
+          .from("profiles")
+          .select("id, full_name, role", { count: "exact" })
+          .order("created_at", { ascending: false }),
+        db.from("wallets").select("user_id, balance"),
+      ])
+    : [
+        { data: [] as Array<{ id: string; full_name: string | null; role: string }>, count: 0 },
+        { data: [] as Array<{ user_id: string; balance: number }> },
+      ];
 
   const balanceMap = new Map(
     (wallets || []).map((w) => [w.user_id, w.balance as number]),
@@ -48,9 +48,12 @@ export async function AdminUsersPage({ locale }: { locale: Locale }) {
     balance: balanceMap.get(p.id) ?? 0,
   }));
 
-  const totalUsers = users.length;
+  const totalUsers = profileCount ?? users.length;
   const activeUsers = totalUsers;
-  const totalBalance = users.reduce((sum, u) => sum + u.balance, 0);
+  const totalBalance = (wallets || []).reduce(
+    (sum, w) => sum + (w.balance || 0),
+    0,
+  );
 
   return (
     <AppShell
@@ -62,11 +65,6 @@ export async function AdminUsersPage({ locale }: { locale: Locale }) {
       <DashPageHeader
         title={copy.adminUsers.title}
         lead={copy.adminUsers.lead}
-        action={
-          <Button type="button" className="justify-center">
-            + {copy.adminUsers.addUser}
-          </Button>
-        }
       />
 
       <div className="-mx-4 mb-5 flex gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mb-6 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0">

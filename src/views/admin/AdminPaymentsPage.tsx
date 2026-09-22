@@ -2,44 +2,70 @@ import type { Locale } from "@/i18n/config";
 import { requireAdmin, getServiceClient } from "@/lib/auth/session";
 import { AppShell } from "@/components/templates/AppShell";
 import { adminNav } from "@/components/templates/app-shell-nav";
+import {
+  AdminPaymentsPanel,
+  type AdminPaymentRow,
+} from "@/components/organisms/admin/AdminPaymentsPanel";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
-import { sectionLead, sectionTitle } from "@/styles/ui";
+import {
+  parseAdminListParams,
+  type AdminListSearchParams,
+} from "@/lib/admin/list-params";
 
-export async function AdminPaymentsPage({ locale }: { locale: Locale }) {
+export async function AdminPaymentsPage({
+  locale,
+  searchParams,
+}: {
+  locale: Locale;
+  searchParams?: AdminListSearchParams;
+}) {
   await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/payments/")),
     localePath(locale, "/"),
   );
   const copy = getAppCopy(locale);
   const db = getServiceClient();
+  const { page, q, status, from, to, pageSize } =
+    parseAdminListParams(searchParams);
 
-  const { data } = db
-    ? await db
-        .from("payments")
-        .select("id, provider, amount_uzs, credits, status, created_at, user_id")
-        .order("created_at", { ascending: false })
-        .limit(100)
-    : { data: [] };
+  let rows: AdminPaymentRow[] = [];
+  let total = 0;
+
+  if (db) {
+    let query = db
+      .from("payments")
+      .select(
+        "id, provider, amount_uzs, credits, status, created_at, user_id, provider_payment_id, raw",
+        { count: "exact" },
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (status) query = query.eq("status", status);
+    if (q) {
+      const pattern = `%${q}%`;
+      query = query.or(
+        `provider.ilike.${pattern},provider_payment_id.ilike.${pattern},user_id.eq.${q}`,
+      );
+    }
+
+    const { data, count } = await query;
+    rows = (data || []) as AdminPaymentRow[];
+    total = count ?? 0;
+  }
 
   return (
     <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
-      <h1 className={sectionTitle}>{copy.adminPayments.title}</h1>
-      <p className={sectionLead}>{copy.adminPayments.lead}</p>
-      <ul className="divide-y divide-black/5 border-y border-black/5 text-sm">
-        {(data || []).map((p) => (
-          <li key={p.id} className="flex flex-wrap justify-between gap-2 py-3">
-            <span>
-              {p.provider} · {p.credits} cr · {p.status}
-            </span>
-            <span className="text-ink-muted">
-              {p.amount_uzs.toLocaleString()} ·{" "}
-              {new Date(p.created_at).toLocaleString()}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <AdminPaymentsPanel
+        locale={locale}
+        rows={rows}
+        total={total}
+        page={page}
+        pageSize={pageSize}
+        dbUnavailable={!db}
+      />
     </AppShell>
   );
 }

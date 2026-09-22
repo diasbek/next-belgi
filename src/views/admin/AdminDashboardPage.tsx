@@ -34,13 +34,17 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
   if (db) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const [{ count: u }, { count: c }, paid, fail] = await Promise.all([
+    const [{ count: u }, { count: c }, paidSum, fail] = await Promise.all([
       db.from("profiles").select("id", { count: "exact", head: true }),
       db
         .from("trademark_checks")
         .select("id", { count: "exact", head: true })
         .gte("created_at", today.toISOString()),
-      db.from("payments").select("amount_uzs").eq("status", "paid"),
+      db
+        .from("payments")
+        .select("amount_uzs.sum()")
+        .eq("status", "paid")
+        .returns<{ sum: number | null }[]>(),
       db
         .from("payments")
         .select("id", { count: "exact", head: true })
@@ -48,7 +52,8 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
     ]);
     users = u ?? 0;
     checksToday = c ?? 0;
-    revenue = (paid.data || []).reduce((s, p) => s + (p.amount_uzs || 0), 0);
+    const sumRow = paidSum.data?.[0];
+    revenue = Number(sumRow?.sum ?? 0) || 0;
     failed = fail.count ?? 0;
   }
 

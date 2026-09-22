@@ -30,6 +30,8 @@
   --font-display: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
   --tap-min: 44px;
   --header-height: 4.25rem;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --dash-tabbar-height: 3.5rem;
   --motion-fast: 160ms;
   --motion-base: 420ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

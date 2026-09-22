@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { Button } from "@/components/atoms/Button";
-import { fieldInput, sectionLead, sectionTitle } from "@/styles/ui";
+import { fieldInput } from "@/styles/ui";
+import { DashPageHeader } from "@/components/molecules/DashChrome";
+import { AdminDetailDrawer } from "@/components/organisms/admin/AdminDetailDrawer";
 import {
   MODULE_CATALOG,
   type IntegrationProvider,
@@ -193,8 +195,10 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
 
   return (
     <div>
-      <h1 className={sectionTitle}>{copy.adminIntegrations.title}</h1>
-      <p className={sectionLead}>{copy.adminIntegrations.lead}</p>
+      <DashPageHeader
+        title={copy.adminIntegrations.title}
+        lead={copy.adminIntegrations.lead}
+      />
       <p className="mb-4 max-w-2xl text-sm text-ink-muted">
         {copy.adminIntegrations.masterKeyNote}
       </p>
@@ -270,35 +274,40 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
         );
       })}
 
-      {active && catalog ? (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-4 sm:items-center"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setActive(null)}
-        >
-          <div
-            className="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-4 flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-lg font-semibold text-ink">
-                  {moduleTitle(active)}
-                </h3>
-                <p className="text-sm text-ink-muted">
-                  {moduleLead(active)}
-                </p>
-              </div>
-              <button
+      <AdminDetailDrawer
+        open={Boolean(active && catalog)}
+        onOpenChange={(open) => {
+          if (!open) setActive(null);
+        }}
+        title={active ? moduleTitle(active) : copy.adminIntegrations.title}
+        footer={
+          active ? (
+            <div className="flex flex-wrap gap-2">
+              <Button type="button" disabled={busy} onClick={() => void save()}>
+                {copy.adminIntegrations.save}
+              </Button>
+              <Button
                 type="button"
-                className="text-2xl leading-none text-ink-muted"
-                onClick={() => setActive(null)}
-                aria-label="Close"
+                variant="secondary"
+                disabled={busy}
+                onClick={() => void test()}
               >
-                ×
-              </button>
+                {copy.adminIntegrations.test}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setActive(null)}
+              >
+                {copy.adminIntegrations.close}
+              </Button>
             </div>
+          ) : null
+        }
+      >
+        {active && catalog ? (
+          <div>
+            <p className="mb-4 text-sm text-ink-muted">{moduleLead(active)}</p>
 
             {catalog.testOtpHint && form.mode === "test" ? (
               <p className="mb-4 rounded-xl bg-lime/60 px-3 py-2 text-sm text-ink">
@@ -389,30 +398,9 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
                 {err}
               </p>
             ) : null}
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Button type="button" disabled={busy} onClick={() => void save()}>
-                {copy.adminIntegrations.save}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={busy}
-                onClick={() => void test()}
-              >
-                {copy.adminIntegrations.test}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setActive(null)}
-              >
-                {copy.adminIntegrations.close}
-              </Button>
-            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </AdminDetailDrawer>
     </div>
   );
 }

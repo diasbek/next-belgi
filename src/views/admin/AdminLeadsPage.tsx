@@ -2,59 +2,67 @@ import type { Locale } from "@/i18n/config";
 import { requireAdmin, getServiceClient } from "@/lib/auth/session";
 import { AppShell } from "@/components/templates/AppShell";
 import { adminNav } from "@/components/templates/app-shell-nav";
+import {
+  AdminLeadsPanel,
+  type AdminLeadRow,
+} from "@/components/organisms/admin/AdminLeadsPanel";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
-import { sectionLead, sectionTitle } from "@/styles/ui";
+import {
+  parseAdminListParams,
+  type AdminListSearchParams,
+} from "@/lib/admin/list-params";
 
-export async function AdminLeadsPage({ locale }: { locale: Locale }) {
+export async function AdminLeadsPage({
+  locale,
+  searchParams,
+}: {
+  locale: Locale;
+  searchParams?: AdminListSearchParams;
+}) {
   await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/leads/")),
     localePath(locale, "/"),
   );
   const copy = getAppCopy(locale);
   const db = getServiceClient();
+  const { page, q, status, from, to, pageSize } =
+    parseAdminListParams(searchParams);
 
-  const { data } = db
-    ? await db
-        .from("leads")
-        .select("id, type, status, locale, created_at, payload")
-        .order("created_at", { ascending: false })
-        .limit(100)
-    : { data: [] };
+  let rows: AdminLeadRow[] = [];
+  let total = 0;
+
+  if (db) {
+    let query = db
+      .from("leads")
+      .select("id, type, status, locale, created_at, payload", {
+        count: "exact",
+      })
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (status) query = query.eq("status", status);
+    if (q) {
+      const pattern = `%${q}%`;
+      query = query.or(`type.ilike.${pattern},id.ilike.${pattern}`);
+    }
+
+    const { data, count } = await query;
+    rows = (data || []) as AdminLeadRow[];
+    total = count ?? 0;
+  }
 
   return (
     <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
-      <h1 className={sectionTitle}>{copy.adminLeads.title}</h1>
-      <p className={sectionLead}>{copy.adminLeads.lead}</p>
-      <ul className="divide-y divide-black/5 border-y border-black/5 text-sm">
-        {(data || []).length === 0 ? (
-          <li className="py-4 text-ink-muted">—</li>
-        ) : (
-          (data || []).map((l) => {
-            const payload = (l.payload || {}) as Record<string, string>;
-            return (
-              <li key={l.id} className="py-3">
-                <p className="font-medium text-ink">
-                  {l.type} · {l.status} ·{" "}
-                  {payload.name || payload.email || payload.phone || l.id}
-                </p>
-                <p className="text-ink-muted">
-                  {[
-                    l.locale,
-                    payload.email,
-                    payload.phone,
-                    payload.message?.slice(0, 80),
-                    new Date(l.created_at).toLocaleString(),
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-              </li>
-            );
-          })
-        )}
-      </ul>
+      <AdminLeadsPanel
+        locale={locale}
+        rows={rows}
+        total={total}
+        page={page}
+        pageSize={pageSize}
+        dbUnavailable={!db}
+      />
     </AppShell>
   );
 }

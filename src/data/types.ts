@@ -140,6 +140,33 @@ export interface SiteCopy {
     errorTitle: string;
     errorText: string;
     retry: string;
+    stepper: {
+      title: string;
+      stepBrand: string;
+      stepGoods: string;
+      stepConfirm: string;
+      leadBrand: string;
+      leadGoods: string;
+      leadConfirm: string;
+      brandLabel: string;
+      selectGoodsTitle: string;
+      yourCheck: string;
+      change: string;
+      selectedCount: string;
+      multiHint: string;
+      back: string;
+      continue: string;
+      startCheck: string;
+      creditNote: string;
+      nextGoodsHint: string;
+      nextConfirmHint: string;
+      nextRunHint: string;
+      niceChip: string;
+      confirmGoods: string;
+      confirmClasses: string;
+      searchResults: string;
+      classRow: string;
+    };
   };
   report: {
     markTypeLabel: string;

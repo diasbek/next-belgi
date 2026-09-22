@@ -129,23 +129,16 @@ export function CheckPageView({
   }, [canRun, query, activity, locale, router, actionPath]);
 
   const form = (
-    <>
-      <h1 className={sectionTitle}>{copy.check.title}</h1>
-      <p className={embedded ? "mb-6 text-ink-muted" : "mb-8 text-ink-muted"}>
-        {copy.check.lead}
-      </p>
-      <CheckForm
-        locale={locale}
-        brandPlaceholder={copy.ui.brandPlaceholder}
-        activityPlaceholder={copy.ui.activityPlaceholder}
-        submitLabel={copy.ui.check}
-        compact
-        idPrefix={embedded ? "account-check" : "check-page"}
-        actionPath={actionPath}
-        initialQuery={query}
-        initialActivity={activity}
-      />
-    </>
+    <CheckForm
+      locale={locale}
+      brandPlaceholder={copy.ui.brandPlaceholder}
+      activityPlaceholder={copy.ui.activityPlaceholder}
+      submitLabel={copy.ui.check}
+      idPrefix={embedded ? "account-check" : "check-page"}
+      actionPath={actionPath}
+      initialQuery={query}
+      initialActivity={activity}
+    />
   );
 
   if (!query || !activity) {

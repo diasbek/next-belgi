@@ -5,6 +5,10 @@ import { localePath } from "@/i18n/paths";
 import type { TrademarkReport } from "@/lib/check/types";
 import { getConclusionCopy } from "./copy";
 import { mapRisksToVerdict } from "./mapRiskToChance";
+import {
+  expertVerdictsForClasses,
+  findExpertRef,
+} from "./expertRefs";
 import type {
   ConclusionDocument,
   ConclusionInternetItem,
@@ -110,6 +114,57 @@ export function buildConclusionDocument(params: {
       ? params.report.classRisks.map((r) => r.classNumber)
       : parseNiceClassNumbers(params.report.niceClasses);
 
+  const expertHit = findExpertRef(params.report.query);
+  const expert = expertHit?.ref ?? null;
+
+  let adliyaCards = toMatchCards(uz?.matches ?? [], copy.strongOverlapNote);
+  let madridCards = toMatchCards(madrid?.matches ?? [], copy.strongOverlapNote);
+  let internetItemsFinal = internetItems;
+
+  if (expert && expertHit?.exact) {
+    if (!adliyaCards.length && Array.isArray(expert.adliya_matches)) {
+      adliyaCards = expert.adliya_matches as ConclusionMatchCard[];
+    }
+    if (
+      (!madridCards.length || expert.madrid_empty) &&
+      Array.isArray(expert.madrid_matches)
+    ) {
+      madridCards = expert.madrid_empty
+        ? []
+        : (expert.madrid_matches as ConclusionMatchCard[]);
+    }
+    if (
+      (!internetItemsFinal.length || expert.internet_empty) &&
+      Array.isArray(expert.internet_items)
+    ) {
+      internetItemsFinal = expert.internet_empty
+        ? []
+        : (expert.internet_items as ConclusionInternetItem[]);
+    }
+  }
+
+  const heuristicVerdict = mapRisksToVerdict(
+    params.report.classRisks.length
+      ? params.report.classRisks
+      : niceClasses.map((classNumber) => ({
+          classNumber,
+          percent: 15,
+        })),
+  ).filter((v) => v.classNumber > 0);
+
+  const expertVerdict =
+    expert != null
+      ? expertVerdictsForClasses(
+          expert,
+          niceClasses.length ? niceClasses : expert.nice_classes,
+        )
+      : [];
+
+  const byClass =
+    expertVerdict.length > 0
+      ? expertVerdict
+      : heuristicVerdict;
+
   return {
     docNumber: buildDocNumber(issuedAt, code),
     locale,
@@ -121,7 +176,11 @@ export function buildConclusionDocument(params: {
       appearance: copy.appearanceWord,
       mark: params.report.query,
       markType: params.report.markType,
-      niceClasses,
+      niceClasses: niceClasses.length
+        ? niceClasses
+        : expert?.nice_classes?.length
+          ? expert.nice_classes
+          : [],
     },
     methodology: {
       intro: copy.methodologyIntro,
@@ -130,29 +189,25 @@ export function buildConclusionDocument(params: {
     },
     sections: {
       adliyaTitle: copy.adliyaTitle,
-      adliya: toMatchCards(uz?.matches ?? [], copy.strongOverlapNote),
+      adliya: adliyaCards,
       adliyaEmpty: copy.emptyMatches,
       madridTitle: copy.madridTitle,
-      madrid: toMatchCards(madrid?.matches ?? [], copy.strongOverlapNote),
+      madrid: madridCards,
       madridEmpty: copy.emptyMatches,
       internetTitle: copy.internetTitle,
       internetSubtitle: copy.internetSubtitle,
-      internet: internetItems,
+      internet: internetItemsFinal,
       internetEmpty: copy.emptyMatches,
     },
     verdict: {
       title: copy.verdictTitle,
       lead: copy.verdictLead,
-      byClass: mapRisksToVerdict(
-        params.report.classRisks.length
-          ? params.report.classRisks
-          : niceClasses.map((classNumber) => ({
-              classNumber,
-              percent: 15,
-            })),
-      ).filter((v) => v.classNumber > 0),
+      byClass,
     },
-    disclaimer: params.report.disclaimer || copy.disclaimer,
+    disclaimer:
+      (expertHit?.exact && expert?.disclaimer) ||
+      params.report.disclaimer ||
+      copy.disclaimer,
     verification: {
       code,
       url,

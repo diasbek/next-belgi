@@ -14,3 +14,9 @@ export {
   hashConclusionPayload,
   buildDocNumber,
 } from "./buildConclusionDocument";
+export {
+  findExpertRef,
+  normalizeMark,
+  getBundledExpertRefs,
+  expertVerdictsForClasses,
+} from "./expertRefs";

@@ -1,0 +1,793 @@
+[
+  {
+    "mark": "Eliss",
+    "mark_normalized": "eliss",
+    "nice_classes": [
+      30,
+      35,
+      43
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "08.05.2026",
+    "report_at": "09.05.2026",
+    "source_file": "1-Eliss_поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 30,
+        "chanceMin": 25,
+        "chanceMax": 30,
+        "chanceLabel": "25–30%"
+      },
+      {
+        "classNumber": 35,
+        "chanceMin": 20,
+        "chanceMax": 20,
+        "chanceLabel": "20%"
+      },
+      {
+        "classNumber": 43,
+        "chanceMin": 50,
+        "chanceMax": 55,
+        "chanceLabel": "50–55%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "\"Art-Farm\" mas’uliyati cheklangan jamiyati",
+        "owner": "\"Art-Farm\" mas’uliyati cheklangan jamiyati",
+        "term": "mas’uliyati cheklangan jamiyati 07.12.2023-07.12.2033",
+        "classesText": "ТХХТ синф 35 – барча хизматлар",
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "\"ORIENT CAVIAR HOUSE\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "owner": "\"ORIENT CAVIAR HOUSE\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "term": "09.09.2024-09.09.2034",
+        "classesText": "ТХХТ синф 30 – барча товарлар 35 - .... презентация товаров на всех медиасредствах с целью розничной продажи.....продвижение продаж для третьих лиц, в том числе услуги розничной и оптовой торговли в рамках сети магазинов....",
+        "note": null
+      },
+      {
+        "id": "ref-3",
+        "name": "«INTERSOK» mas'uliyati cheklangan jamiyat shaklidagi qo'shma korxonasi",
+        "owner": "«INTERSOK» mas'uliyati cheklangan jamiyat shaklidagi qo'shma korxonasi",
+        "term": "15.02.2016-15.02.2036",
+        "classesText": null,
+        "note": null
+      },
+      {
+        "id": "ref-4",
+        "name": "Масъулияти чекланган жамият шаклидаги «AGROMIR JUICE» қўшма корхонаси",
+        "owner": "Масъулияти чекланган жамият шаклидаги «AGROMIR JUICE» қўшма корхонаси",
+        "term": "23.07.2018-23.07.2028",
+        "classesText": "ТХХТ синф 43 - Услуги по обеспечению пищевыми продуктами и напитками ... рестораны; рестораны самообслуживания .... услуги баров; услуги кемпингов; услуги по приготовлению блюд и доставке их на дом; услуги ресторанов вашоку.....",
+        "note": null
+      },
+      {
+        "id": "ref-5",
+        "name": "«YANDEX» Mas'uliyati cheklangan jamiyat",
+        "owner": "«YANDEX» Mas'uliyati cheklangan jamiyat",
+        "term": "19.09.2025-19.09.2035",
+        "classesText": "ТХХТ синф 35 - .... продвижение продаж для третьих лиц, за исключением продажи одежды....",
+        "note": null
+      },
+      {
+        "id": "ref-6",
+        "name": "\"SHOMUXAMMAD SHOX BARAKA\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "owner": "\"SHOMUXAMMAD SHOX BARAKA\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "term": "16.09.2019-16.09.2029",
+        "classesText": "ТХХТ синф 35 - .... продвижение продаж для третьих лиц;....",
+        "note": null
+      }
+    ],
+    "madrid_matches": [
+      {
+        "id": "ref-1",
+        "name": "\"KONTI-RUS\" JOINT STOCK COMPANY (Россия)",
+        "owner": "\"KONTI-RUS\" JOINT STOCK COMPANY (Россия)",
+        "term": "15.04.2014-15.04.2034",
+        "classesText": null,
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "Cheshmeh Nooshan Khorasan Co. Nik Rose Chenaran Co. (Эрон)",
+        "owner": "Cheshmeh Nooshan Khorasan Co. Nik Rose Chenaran Co. (Эрон)",
+        "term": "02.05.2017-02.05.2027",
+        "classesText": null,
+        "note": null
+      },
+      {
+        "id": "ref-3",
+        "name": "Aktsionernoe obshchestvo \"Slavyanka-lux\" (Россия)",
+        "owner": "Aktsionernoe obshchestvo \"Slavyanka-lux\" (Россия)",
+        "term": "12.04.2021-12.04.2031",
+        "classesText": null,
+        "note": null
+      }
+    ],
+    "internet_items": [
+      {
+        "title": "https://ru.restaurantguru.com/Elliss-Bakery-Tavistock",
+        "url": "https://ru.restaurantguru.com/Elliss-Bakery-Tavistock"
+      },
+      {
+        "title": "https://www.tripadvisor.ru/Restaurant_Review-g190767-d10549548-Reviews-Ellis_s_Bakery-",
+        "url": "https://www.tripadvisor.ru/Restaurant_Review-g190767-d10549548-Reviews-Ellis_s_Bakery-"
+      },
+      {
+        "title": "https://placera.com.tr/cupcake-dukkni/17722027392408438081/",
+        "url": "https://placera.com.tr/cupcake-dukkni/17722027392408438081/"
+      }
+    ],
+    "madrid_empty": false,
+    "internet_empty": false,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/6 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 08.05.2026 й. Ҳисобот санаси: 09.05.2026 й. \n \nКўриниши Белги ТХХК синфи \nEliss сўзли 30 35 43 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"Art-Farm\"  \nmas’uliyati cheklangan jamiyati 07.12.2023-07.12.2033 \nТХХТ синф 35 – барча хизматлар \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n \n \n \n \n\"ORIENT CAVIAR HOUSE\"  \nMAS`ULIYATI CHEKLANGAN \nJAMIYAT \n09.09.2024-09.09.2034 \n \n \n23.05.2016-23.05.2036 \nТХХТ синф \n30 – барча товарлар \n35 - ....  презентация товаров на всех медиасредствах с целью розничной \nпродажи.....продвижение продаж для третьих лиц, в том числе услуги розничной \nи оптовой торговли в рамках сети магазинов.... \n \n  \n\n\n===== PAGE 2/6 =====\n «YURISER» LLC  trademark registration service \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n«INTERSOK» mas'uliyati \ncheklangan jamiyat shaklidagi \nqo'shma korxonasi \n15.02.2016-15.02.2036 \nТХХТ \nсинф \n30 - Батончики злаковые; батончики злаковые с высоким содержанием белка ; \nблины; бриоши; булки; вафли; изделия желейные фруктовые [кондитерские] ; \nизделия из сладостей для украшения тортов; изделия кондитерские из сладкого \nтеста, преимущественно с начинкой; изделия кондитерские мучные; изделия \nкондитерские на основе арахиса; изделия кондитерские на основе миндаля ; \nконфеты; конфеты лакричные [кондитерские изделия]; конфеты мятные; крекеры; \nкрупа кукурузная; крупа овсяная; кукуруза молотая; кукуруза поджаренная; леденцы; \nмакарон [печенье миндальное]; марципан; мука ореховая; мюсли; овес дробленый; \nовес очищенны й; палочки лакричные [кондитерские изделия]; пастилки \n[кондитерские изделия]; печенье; печенье сухое; помадки [кондитерские изделия]; \nпопкорн; пралине; пряники; сладости; сухари; сухари панировочные; тесто для \nкондитерских изделий; тесто миндальное; тесто рисовое для кулинарных целей; \nтесто сдобное сладкое для кондитерских изделий ; тортиллы; халва; хлопья \nкукурузные; хло"
+  },
+  {
+    "mark": "Rizq",
+    "mark_normalized": "rizq",
+    "nice_classes": [
+      29
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "07.05.2026",
+    "report_at": "08.05.2026",
+    "source_file": "1-Rizq_поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 29,
+        "chanceMin": 5,
+        "chanceMax": 10,
+        "chanceLabel": "5–10%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "XABIBULLAYEV FAYZULLO ABDULXAY O‘G‘LI",
+        "owner": "XABIBULLAYEV FAYZULLO ABDULXAY O‘G‘LI",
+        "term": "ABDULXAY O‘G‘LI 27.01.2024 - 27.01.2034",
+        "classesText": null,
+        "note": "Қаршилик қиладиган товарлар ажратиб кўрсатилган. Ундан ташқари қолган барча товарлар хам"
+      }
+    ],
+    "madrid_matches": [],
+    "internet_items": [],
+    "madrid_empty": true,
+    "internet_empty": true,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 07.05.2026 й. Ҳисобот санаси: 08.05.2026 й. \n \nКўриниши Белги ТХХК синфи \nRizq сўзли 29 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nXABIBULLAYEV FAYZULLO \nABDULXAY O‘G‘LI 27.01.2024 - 27.01.2034 \nТХХТ \nсинф \n29 - Баранина вяленая; баранина сушеная; бекон из индейки; блюда готовые в основном из \nмяса; блюда мясные готовые ; ветчина; говядина; говядина вяленая; говядина сушеная; \nговядина тушеная; голова баранья; голова коровы; дичь; желе мясное; жир говяжий пищевой; \nжиры животные пищевые ; закуски на основе мяса ; изделия колбасные ; кишки коровьи \nнатуральные для колбасных изделий; колбаса кровяная; колбасы; колбасы копченые; консервы \nмясные; курдюк бараний; курица; мясо; мясо вяленое и соленое; мясо консервированное; \nмясо свежее; мясо сушеное; оболочки колбасные; оболочки колбасные, натуральные или \nискусственные; паштеты из мяса; печень;  сосиски; сосиски для хот -догов; фарш \nколбасный. \nИзоҳ Қаршилик қиладиган товарлар ажратиб кўрсатилган. Ундан ташқари қолган барча товарлар хам \nтовуқ гўшти ва товуқ гўшти махсулотларига турдош товарлар ҳисобланади.  \n \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас.  \n \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n29 класс –  5-10% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. "
+  },
+  {
+    "mark": "Bismi",
+    "mark_normalized": "bismi",
+    "nice_classes": [
+      30
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "02.07.2026",
+    "report_at": "03.07.2026",
+    "source_file": "1-поиск-Bismi.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 30,
+        "chanceMin": 30,
+        "chanceMax": 35,
+        "chanceLabel": "30–35%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "\"IRUSKON\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "owner": "\"IRUSKON\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "term": "CHEKLANGAN JAMIYAT 10.06.2021 - 10.06.2031",
+        "classesText": "ТХХТ синф 30 - Изделия кондитерские мучные; печенье.",
+        "note": null
+      }
+    ],
+    "madrid_matches": [],
+    "internet_items": [
+      {
+        "title": "https://bismi.com/our-brands/",
+        "url": "https://bismi.com/our-brands/"
+      }
+    ],
+    "madrid_empty": true,
+    "internet_empty": false,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 02.07.2026 й. Ҳисобот санаси: 03.07.2026 й. \n \nКўриниши Белги ТХХК синфи \nBismi сўзли 30 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"IRUSKON\" MAS`ULIYATI \nCHEKLANGAN JAMIYAT 10.06.2021 - 10.06.2031 \nТХХТ синф 30 - Изделия кондитерские мучные; печенье. \n \n \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nИнтернетда айни ном билан барча озиқ-овқатлар тармоқли сотуви ва шу билан бирга ишлаб \nчиқариши билан боғлиқ, 30-класс товар ва хизматларига мос фаолият олиб борувчи машхур бренд \nҳақида маълумотлар бор. \n1. \n \nМанба: https://bismi.com/our-brands/ \n  \n \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n30 класс –  30-35% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. \n"
+  },
+  {
+    "mark": "Al-ma’in",
+    "mark_normalized": "al-ma'in",
+    "nice_classes": [
+      29
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "07.05.2026",
+    "report_at": "08.05.2026",
+    "source_file": "2-Al-ma_in_поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 29,
+        "chanceMin": 25,
+        "chanceMax": 30,
+        "chanceLabel": "25–30%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "'KOZIMJON OMAD' mas'uliyati cheklangan jamiyati",
+        "owner": "'KOZIMJON OMAD' mas'uliyati cheklangan jamiyati",
+        "term": "cheklangan jamiyati 12.04.2019 - 12.04.2029",
+        "classesText": "ТХХТ синф 29 – Изделия колбасные.",
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "'AL-MUIN BAROKOT' mas’uliyati cheklangan jamiyati",
+        "owner": "'AL-MUIN BAROKOT' mas’uliyati cheklangan jamiyati",
+        "term": "cheklangan jamiyati 19.08.2021 - 19.08.2031",
+        "classesText": "ТХХТ синф 29 – Масло сливочное.",
+        "note": "Бу қаршилик кўрсатмайди агар аризада фақатгина товуқ гўшти махсулотлари"
+      },
+      {
+        "id": "ref-3",
+        "name": "KADIROV JAMSHID XURSHIDOVICH",
+        "owner": "KADIROV JAMSHID XURSHIDOVICH",
+        "term": "06.05.2026",
+        "classesText": "ТХХТ синф 29 – барча товарлар",
+        "note": null
+      }
+    ],
+    "madrid_matches": [],
+    "internet_items": [
+      {
+        "title": "https://chatgpt.com/",
+        "url": "https://chatgpt.com/"
+      },
+      {
+        "title": "https://mapcarta.com/36142198",
+        "url": "https://mapcarta.com/36142198"
+      }
+    ],
+    "madrid_empty": true,
+    "internet_empty": false,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/3 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 07.05.2026 й. Ҳисобот санаси: 08.05.2026 й. \n \nКўриниши Белги ТХХК синфи \nAl-ma’in сўзли 29 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n'KOZIMJON OMAD' mas'uliyati \ncheklangan jamiyati 12.04.2019 - 12.04.2029 \nТХХТ синф 29 – Изделия колбасные. \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n'AL-MUIN BAROKOT' mas’uliyati \ncheklangan jamiyati 19.08.2021 - 19.08.2031 \nТХХТ синф 29 – Масло сливочное. \nИзоҳ Бу қаршилик кўрсатмайди агар аризада фақатгина товуқ гўшти махсулотлари \nкўрсатилса \n \n  \n\n\n===== PAGE 2/3 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nKADIROV JAMSHID \nXURSHIDOVICH \n06.05.2026 \n \nТХХТ синф 29 – барча товарлар \n \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \nИнтернетда айни ном билан боғлиқ жой номи ва диний атамага боғлиқ номлар борлиги \nаниқланди. \n1.  \n \nМанбаа: Википедия \n\n\n===== PAGE 3/3 =====\n «YURISER» LLC  trademark registration service \n \n \nМанбаа: https://chatgpt.com/ \nРад этиши учун асос: “Товар белгилари, хизмат кўрсатиш белгилари ва товар келиб чиққан \nжой номлари тў ғрисида ўзр қонуни. 10-модда. товар белгилари сифатида рўйхатдан \nўтказилмайдиган белгилар , 12) жамият манфаатларига, одамийлик ва ахлоқ \nқоидаларига зид бўлган белгилар;...”  \n2 \nУшбу ном билан боғлиқ жой номи борлиги ҳақида маълумотлар бор. \n \nМанбаа: https://mapcarta.com/36142198 \n \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n29 класс –  25-30% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. \n"
+  },
+  {
+    "mark": "Sable’",
+    "mark_normalized": "sable'",
+    "nice_classes": [
+      30,
+      35,
+      43
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "08.05.2026",
+    "report_at": "09.05.2026",
+    "source_file": "2-Sable_поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 30,
+        "chanceMin": 60,
+        "chanceMax": 65,
+        "chanceLabel": "60–65%"
+      },
+      {
+        "classNumber": 35,
+        "chanceMin": 50,
+        "chanceMax": 50,
+        "chanceLabel": "50%"
+      },
+      {
+        "classNumber": 43,
+        "chanceMin": 55,
+        "chanceMax": 60,
+        "chanceLabel": "55–60%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "\"CRAFERS\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
+        "owner": "\"CRAFERS\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
+        "term": "02.10.2018- 02.10.2028",
+        "classesText": "ТХХТ синф 30 – барча товарлар 35 – барча хизматлар 43 – барча хизматлар",
+        "note": null
+      }
+    ],
+    "madrid_matches": [
+      {
+        "id": "ref-1",
+        "name": "Limited Liability Company «United Engineering Center» (Россия)",
+        "owner": "Limited Liability Company «United Engineering Center» (Россия)",
+        "term": "17.04.2000-17.04.2030",
+        "classesText": "ТХХТ синфи 35 - Retail services 35 - Розничные услуги",
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "35 - Retail services, namely the bringing together, for the benefit of others, o",
+        "owner": "35 - Retail services, namely the bringing together, for the benefit of others, of a variety of goods (excluding the transport thereof), enabling customers to conveniently view and purchase those goods. 35 - Розничные услуги, а именно объединение в интересах других различных товаров (за исключением их транспортировки), позволяющее клиентам удобно просматривать и приобретать эти товары. Ҳимояланган давлатлар UZ",
+        "term": null,
+        "classesText": null,
+        "note": null
+      }
+    ],
+    "internet_items": [
+      {
+        "title": "https://ru.restaurantguru.com/Sable-Bakery-Istanbul",
+        "url": "https://ru.restaurantguru.com/Sable-Bakery-Istanbul"
+      },
+      {
+        "title": "https://placera.com.tr/brunch-restorani/12060433547213459078/",
+        "url": "https://placera.com.tr/brunch-restorani/12060433547213459078/"
+      },
+      {
+        "title": "https://restoranim.net/istanbul/bakirkoy/kahvaltici/sable-bakery",
+        "url": "https://restoranim.net/istanbul/bakirkoy/kahvaltici/sable-bakery"
+      },
+      {
+        "title": "https://ru.restaurantguru.com/Sable-sabie-Batumi",
+        "url": "https://ru.restaurantguru.com/Sable-sabie-Batumi"
+      },
+      {
+        "title": "https://www.tripadvisor.ru/Restaurant_Review-g297576-d23943765-Reviews-Sable-",
+        "url": "https://www.tripadvisor.ru/Restaurant_Review-g297576-d23943765-Reviews-Sable-"
+      }
+    ],
+    "madrid_empty": false,
+    "internet_empty": false,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/5 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 08.05.2026 й. Ҳисобот санаси: 09.05.2026 й. \n \nКўриниши Белги ТХХК синфи \nSable’ сўзли 30 35 43 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"CRAFERS\"  \nMAS'ULIYATI CHEKLANGAN \nJAMIYAT \n02.10.2018- 02.10.2028 \nТХХТ синф \n30 – барча товарлар \n35 – барча хизматлар \n43 – барча хизматлар \n \n2. Халқаро Мадрид базаси (WIPO) \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n \n \n \n \n \nLimited Liability Company «United \nEngineering Center» \n(Россия) \n17.04.2000-17.04.2030 \n \n \n17.04.2000-17.04.2030 \nТХХТ \nсинфи \n35 - Retail services \n35 - Розничные услуги \n \n\n\n===== PAGE 2/5 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n35 - Retail services, namely the bringing together, for the benefit of others, of a variety of \ngoods (excluding the transport thereof), enabling customers to conveniently view and \npurchase those goods. \n35 - Розничные услуги, а именно объединение в интересах других различных товаров \n(за исключением их транспортировки), позволяющее клиентам удобно \nпросматривать и приобретать эти товары. \nҲимояланган давлатлар UZ \n \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nИнтернетда айни ном билан 30, 35, 43-класслар товар ва хизматларига мос фаолият олиб борувчи \nмашхур брендлар ҳақида маълумотлар бор. \n1 \n \nМанбаа: https://ru.restaurantguru.com/Sable-Bakery-Istanbul \n \n2 \n\n\n===== PAGE 3/5 =====\n «YURISER» LLC  trademark registration service \n \n \nМанбаа: https://placera.com.tr/brunch-restorani/12060433547213459078/ \n \n3 \n \nМанбаа: https://restoranim.net/istanbul/bakirkoy/kahvaltici/sable-bakery \n \n4 \n\n\n===== PAGE 4/5 =====\n «YURISER» LLC  trademark registration service \n \n \n \nМанбаа: https://ru.restaurantguru.com/Sable-sabie-Batumi \nМанбаа: https://www.tripadvisor.ru/Restaurant_Review-g297576-d23943765-Reviews-Sable-\nBatumi_Adjara_Region.html \n \n \n \nХулоса ва тавсия: \n\n\n===== PAGE 5/5 ==="
+  },
+  {
+    "mark": "Flaffo",
+    "mark_normalized": "flaffo",
+    "nice_classes": [
+      30
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "02.07.2026",
+    "report_at": "03.07.2026",
+    "source_file": "2-поиск-Flaffo.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 30,
+        "chanceMin": 50,
+        "chanceMax": 50,
+        "chanceLabel": "50%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "JURAYEV NURIDDIN XAYOTJON O‘G‘LI",
+        "owner": "JURAYEV NURIDDIN XAYOTJON O‘G‘LI",
+        "term": "18.03.2026",
+        "classesText": "ТХХТ синф 30 – барча товарлар",
+        "note": null
+      }
+    ],
+    "madrid_matches": [],
+    "internet_items": [],
+    "madrid_empty": true,
+    "internet_empty": true,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/1 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 02.07.2026 й. Ҳисобот санаси: 03.07.2026 й. \n \nКўриниши Белги ТХХК синфи \nFlaffo сўзли 30 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nJURAYEV NURIDDIN \nXAYOTJON O‘G‘LI \n18.03.2026 \n \nТХХТ синф 30 – барча товарлар \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас.  \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n30 класс –  50% \n \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. \n"
+  },
+  {
+    "mark": "Al-naim",
+    "mark_normalized": "al-naim",
+    "nice_classes": [
+      29
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "07.05.2026",
+    "report_at": "08.05.2026",
+    "source_file": "3-Al-naim_поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 29,
+        "chanceMin": 50,
+        "chanceMax": 55,
+        "chanceLabel": "50–55%"
+      }
+    ],
+    "adliya_matches": [],
+    "madrid_matches": [],
+    "internet_items": [
+      {
+        "title": "Internet note",
+        "note": "3. Интернет (Хаммага маълум/машхур номлар) Интернетда айни ном билан боғлиқ жой номи борлиги аниқланди. "
+      }
+    ],
+    "madrid_empty": true,
+    "internet_empty": false,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 07.05.2026 й. Ҳисобот санаси: 08.05.2026 й. \n \nКўриниши Белги ТХХК синфи \nAl-naim сўзли 29 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n  \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nИнтернетда айни ном билан боғлиқ жой номи борлиги аниқланди. \n \n \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n29 класс –  50-55% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. \n"
+  },
+  {
+    "mark": "Bitta",
+    "mark_normalized": "bitta",
+    "nice_classes": [
+      29,
+      30
+    ],
+    "activity_raw": "семечка ва снек махсулотлари",
+    "appearance": "сўзли",
+    "issued_at": "06.06.2026",
+    "report_at": "06.06.2026",
+    "source_file": "3-поиск-Bitta.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 29,
+        "chanceMin": 50,
+        "chanceMax": 55,
+        "chanceLabel": "50–55%"
+      },
+      {
+        "classNumber": 30,
+        "chanceMin": 50,
+        "chanceMax": 55,
+        "chanceLabel": "50–55%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "'GLORY FOOD' mas'uliyati cheklangan jamiyati",
+        "owner": "'GLORY FOOD' mas'uliyati cheklangan jamiyati",
+        "term": "cheklangan jamiyati 26.03.2018 - 26.03.2028",
+        "classesText": "ТХХТ синф 30 - Печенье.",
+        "note": "Ариза берилаётганда инобатга олиш лозим."
+      },
+      {
+        "id": "ref-2",
+        "name": "\"ILYOS UMRBEK XO'JA\" OILAVIY KORXONA",
+        "owner": "\"ILYOS UMRBEK XO'JA\" OILAVIY KORXONA",
+        "term": "OILAVIY KORXONA 21.11.2025 - 21.11.2035",
+        "classesText": "ТХХТ синф 29 - Cемена подсолнечника обработанные.",
+        "note": null
+      },
+      {
+        "id": "ref-3",
+        "name": "\"SULTON TEMURBEK YAGONA\" XUSUSIY KORXONA",
+        "owner": "\"SULTON TEMURBEK YAGONA\" XUSUSIY KORXONA",
+        "term": "YAGONA\" XUSUSIY KORXONA 04.04.2007 - 04.04.2027",
+        "classesText": "ТХХТ синф 29 – барча товарлар. 30 – барча товарлар.",
+        "note": null
+      }
+    ],
+    "madrid_matches": [],
+    "internet_items": [],
+    "madrid_empty": true,
+    "internet_empty": true,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 06.06.2026 й. Ҳисобот санаси: 06.06.2026 й. \n \nКўриниши Белги ТХХК синфи \nBitta сўзли 29 30  \nсемечка ва снек махсулотлари \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n'GLORY FOOD' mas'uliyati \ncheklangan jamiyati 26.03.2018 - 26.03.2028 \nТХХТ синф 30 - Печенье. \nИзох: Ариза берилаётганда инобатга олиш лозим. \n \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"ILYOS UMRBEK XO'JA\" \nOILAVIY KORXONA 21.11.2025 - 21.11.2035 \nТХХТ синф 29 - Cемена подсолнечника обработанные.  \n \n \n \n \n \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"SULTON TEMURBEK \nYAGONA\" XUSUSIY KORXONA 04.04.2007 - 04.04.2027 \nТХХТ синф 29 – барча товарлар. \n30 – барча товарлар.  \n \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n29 класс –  50-55% \n30 класс –  50-55% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. \n"
+  },
+  {
+    "mark": "Azal",
+    "mark_normalized": "azal",
+    "nice_classes": [
+      43
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "01.06.2026",
+    "report_at": "02.06.2026",
+    "source_file": "Azal-поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 43,
+        "chanceMin": 50,
+        "chanceMax": 50,
+        "chanceLabel": "50%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "SHUKUROV SOHIB SALIMOVICH",
+        "owner": "SHUKUROV SOHIB SALIMOVICH",
+        "term": "SHUKUROV SOHIB SALIMOVICH 11.04.2025 - 11.04.2035",
+        "classesText": "ТХХТ синф 43 – барча хизматлар",
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "\"ANGLESEY FOOD\" MAS`ULIYATI CHEKLANGAN JAMIYAT XORIJIY KORXONA",
+        "owner": "\"ANGLESEY FOOD\" MAS`ULIYATI CHEKLANGAN JAMIYAT XORIJIY KORXONA",
+        "term": "27.03.2026",
+        "classesText": "ТХХТ синф 43 – УСЛУГИ ПО ОБЕСПЕЧЕНИЮ ПИЩЕВЫМИ ПРОДУКТАМИ И НАПИТКАМИ;услуги по обзору продуктов питания [предоставление информации о пищевых продуктах и напитках]",
+        "note": null
+      },
+      {
+        "id": "ref-3",
+        "name": "TUXTAYEV RAXMONJON TOLIB O‘G‘LI",
+        "owner": "TUXTAYEV RAXMONJON TOLIB O‘G‘LI",
+        "term": "O‘G‘LI 20.05.2025 - 20.05.2035",
+        "classesText": "ТХХТ синф 43 - Услуги гостиничные.",
+        "note": null
+      },
+      {
+        "id": "ref-4",
+        "name": "DJUMANIYAZOV MAXMUD FAYZULLAEVICH",
+        "owner": "DJUMANIYAZOV MAXMUD FAYZULLAEVICH",
+        "term": "FAYZULLAEVICH 06.09.2024 - 06.09.2034",
+        "classesText": "ТХХТ синф 43 - Услуги по приготовлению блюд и доставке их на дом; услуги столовых; услуги ресторанов; услуги ресторанов самообслуживания; украшение еды; услуги ресторанов с едой на вынос.",
+        "note": null
+      }
+    ],
+    "madrid_matches": [
+      {
+        "id": "ref-1",
+        "name": "AZALAÏ Services LLC, société à responsabilité limitée (США)",
+        "owner": "AZALAÏ Services LLC, société à responsabilité limitée (США)",
+        "term": "16.06.2022 - 16.06.2032",
+        "classesText": "ТХХТ синфи 43 - Services for providing food and beverages; temporary accommodation; bar services; catering services; hotel services; temporary accommodation reservation. 43 - Услуги по предоставлению продуктов питания и напитков; временное размещение; услуги бара; услуги общественного питания; гостиничные услуги; бронирование временного жилья. Ҳимояланган давлатлар UZ (МВХ-1694217)",
+        "note": null
+      }
+    ],
+    "internet_items": [
+      {
+        "title": "https://bronix.uz/new/hotel/egypt/kair/azal-pyramids-hotel",
+        "url": "https://bronix.uz/new/hotel/egypt/kair/azal-pyramids-hotel"
+      },
+      {
+        "title": "https://azalpyramids.com/",
+        "url": "https://azalpyramids.com/"
+      }
+    ],
+    "madrid_empty": false,
+    "internet_empty": false,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/3 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгисини рўйхатдан ўтказиш мақсадида унга чалғитадиган \nдаражада ўхшаш бўлган бошқа товар белги номлари тўғрисида \nҲИСОБОТ \n \nБерилган санаси: 01.06.2026 й. Ҳисобот санаси: 02.06.2026 й. \n \nКўриниши Белги ТХХК синфи \nAzal сўзли 43 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \nДастлабки қидирув ихтиёрий, аммо тавсия этилган жараён бўлиб, товар белгисини \nрўйхатдан ўтказиш учун ариза топширишдан олдин миллий ва халқаро маълумотлар базаларида \nтовар белгилари, рўйхатдан ўтиш учун режалаштирилган компаниянинг товар белгисига ўхшаш \nбелгилар мавжудлиги тўғрисида маълумот олиш имконини беради. \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \nЎзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nSHUKUROV SOHIB SALIMOVICH 11.04.2025 - 11.04.2035 \nТХХТ синф  43 – барча хизматлар \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"ANGLESEY FOOD\" MAS`ULIYATI \nCHEKLANGAN JAMIYAT XORIJIY \nKORXONA \n27.03.2026 \n \nТХХТ синф  43 – УСЛУГИ ПО ОБЕСПЕЧЕНИЮ ПИЩЕВЫМИ ПРОДУКТАМИ И НАПИТКАМИ;услуги по \nобзору продуктов питания [предоставление информации о пищевых продуктах и напитках] \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nTUXTAYEV RAXMONJON TOLIB \nO‘G‘LI 20.05.2025 - 20.05.2035 \nТХХТ синф  43 - Услуги гостиничные. \n \n \n\n\n===== PAGE 2/3 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nDJUMANIYAZOV MAXMUD \nFAYZULLAEVICH 06.09.2024 - 06.09.2034 \nТХХТ синф  43 - Услуги по приготовлению блюд и доставке их на дом; услуги столовых; услуги ресторанов; \nуслуги ресторанов самообслуживания; украшение еды; услуги ресторанов с едой на вынос. \n \n \nХалқаро Мадрид базаси (WIPO) \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nAZALAÏ Services LLC, société à \nresponsabilité limitée \n(США) \n16.06.2022 - 16.06.2032 \nТХХТ синфи \n43 - Services for providing food and beverages; temporary accommodation; bar services; catering services; \nhotel services; temporary accommodation reservation. \n43 - Услуги по предоставлению продуктов питания и напитков; временное размещение; услуги бара; \nуслуги общественного питания; гостин"
+  },
+  {
+    "mark": "Kiroko",
+    "mark_normalized": "kiroko",
+    "nice_classes": [
+      3,
+      5
+    ],
+    "activity_raw": "подгузник ва влажний салфетка",
+    "appearance": "сўзли",
+    "issued_at": "18.06.2026",
+    "report_at": "19.06.2026",
+    "source_file": "Kiroko-поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 3,
+        "chanceMin": 60,
+        "chanceMax": 60,
+        "chanceLabel": "60%"
+      },
+      {
+        "classNumber": 5,
+        "chanceMin": 50,
+        "chanceMax": 55,
+        "chanceLabel": "50–55%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "\"SMART HYGIENE FACILITIES\" MAS'ULIYATI CHEKLANGAN JAMIYAT QO`SHMA KORXONA",
+        "owner": "\"SMART HYGIENE FACILITIES\" MAS'ULIYATI CHEKLANGAN JAMIYAT QO`SHMA KORXONA",
+        "term": "14.06.2024 - 14.06.2034",
+        "classesText": "ТХХТ синф 5 - ... подгузники детские; трусы -подгузники детские; прокладки гигиенические; трусы гигиенические женские; трусы гигиенические для страдающих недержанием; прокладки ежедневные [гигиенические]; тампоны гигиенические для женщин; подгузники для страдающих недержанием.",
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "\"BABY PRO INTERNATIONAL\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "owner": "\"BABY PRO INTERNATIONAL\" MAS`ULIYATI CHEKLANGAN JAMIYAT",
+        "term": "26.03.2026",
+        "classesText": "ТХХТ синф 3 – барча товарлар 5 – барча товарлар",
+        "note": null
+      },
+      {
+        "id": "ref-3",
+        "name": "\"PAXTAOBOD COSMETIK\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
+        "owner": "\"PAXTAOBOD COSMETIK\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
+        "term": "16.09.2025",
+        "classesText": "ТХХТ синф 3 – барча товарлар",
+        "note": null
+      }
+    ],
+    "madrid_matches": [],
+    "internet_items": [],
+    "madrid_empty": true,
+    "internet_empty": true,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \n \n \nТ О В А Р   Б Е Л Г И С И   Қ И Д И Р У В   Х И З М А Т И   Ҳ И С О Б О Т И \n \nБериш санаси: 18.06.2026 й. Ҳисобот санаси: 19.06.2026 й. \n \nКўриниши Белги ТХХК синфи \nKiroko сўзли 3, 5 \nподгузник ва влажний салфетка \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \n \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \n \n1. Ўзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"SMART HYGIENE FACILITIES\" \nMAS'ULIYATI CHEKLANGAN \nJAMIYAT QO`SHMA KORXONA \n14.06.2024 - 14.06.2034 \nТХХТ синф \n5 - ... подгузники детские; трусы -подгузники детские; прокладки гигиенические; трусы \nгигиенические женские; трусы гигиенические для страдающих недержанием; прокладки \nежедневные [гигиенические]; тампоны гигиенические для женщин; подгузники для \nстрадающих недержанием. \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"BABY PRO INTERNATIONAL\" \nMAS`ULIYATI CHEKLANGAN \nJAMIYAT \n26.03.2026 \n \nТХХТ синф 3 – барча товарлар \n5 – барча товарлар \n \n  \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n\"PAXTAOBOD COSMETIK\" \nMAS'ULIYATI CHEKLANGAN \nJAMIYAT \n16.09.2025 \n \nТХХТ синф 3 – барча товарлар \n \n \n2. Халқаро Мадрид базаси (WIPO) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n3. Интернет \n(Хаммага маълум/машхур номлар) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас.  \n \n \nХулоса ва тавсия: \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n3 класс –  60% \n5 класс –  50-55% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. \n"
+  },
+  {
+    "mark": "GLOMAP",
+    "mark_normalized": "glomap",
+    "nice_classes": [
+      6,
+      7,
+      12,
+      19,
+      20,
+      24,
+      25,
+      26,
+      35
+    ],
+    "activity_raw": null,
+    "appearance": "so‘zli",
+    "issued_at": "25.06.2026",
+    "report_at": "27.06.2026",
+    "source_file": "Поиск-GLOMAP.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 6,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 7,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 12,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 19,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 20,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 24,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 25,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 26,
+        "chanceMin": 65,
+        "chanceMax": 70,
+        "chanceLabel": "65–70%"
+      },
+      {
+        "classNumber": 35,
+        "chanceMin": 60,
+        "chanceMax": 65,
+        "chanceLabel": "60–65%"
+      }
+    ],
+    "adliya_matches": [],
+    "madrid_matches": [
+      {
+        "id": "ref-1",
+        "name": "AMAP SOFTWARE CO. LTD.",
+        "owner": "AMAP SOFTWARE CO. LTD.",
+        "term": "AMAP SOFTWARE CO. LTD. 12.01.2024 - 12.01.2034",
+        "classesText": "ТХХТ синфи 35 - ...stimulating sales for others; providing an online marketplace for buyers and sellers of goods and services;… 35 - …стимулирование продаж для других; предоставление онлайн-площадки для покупателей и продавцов товаров и услуг;… Ҳимояланган давлатлар UZ (МВХ-1796060)",
+        "note": null
+      }
+    ],
+    "internet_items": [],
+    "madrid_empty": false,
+    "internet_empty": true,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгисини рўйхатдан ўтказиш мақсадида унга чалғитадиган \nдаражада ўхшаш бўлган бошқа товар белги номлари тўғрисида \nҲИСОБОТ \n \nБерилган санаси: 25.06.2026 й. Ҳисобот санаси: 27.06.2026 й. \n \nКўриниши Белги ТХХК синфи \nGLOMAP сўзли \n \n6 7 12 19 20 21 24 25 26 35 \nfurnitura, stanok, mateial (mato), \nkiyim-kechak, stroy material, rom \noyna, moshina zapchast \n \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \nДастлабки қидирув ихтиёрий, аммо тавсия этилган жараён бўлиб, товар белгисини \nрўйхатдан ўтказиш учун ариза топширишдан олдин миллий ва халқаро маълумотлар базаларида \nтовар белгилари, рўйхатдан ўтиш учун режалаштирилган компаниянинг товар белгисига ўхшаш \nбелгилар мавжудлиги тўғрисида маълумот олиш имконини беради. \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \nЎзбекистон Республикаси Адлия вазирлиги базаси \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \nХалқаро Мадрид базаси (WIPO) \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nAMAP SOFTWARE CO. LTD. 12.01.2024 - 12.01.2034 \nТХХТ синфи \n35 - ...stimulating sales for others; providing an online marketplace for buyers and sellers \nof goods and services;… \n35 - …стимулирование продаж для других; предоставление онлайн-площадки \nдля покупателей и продавцов товаров и услуг;… \nҲимояланган давлатлар UZ (МВХ-1796060) \n \n \nИнтернет \n(Хаммага маълум/машхур номлар) \nМавжуд маълумотларга кўра ўхшаш белгилар мавжуд эмас. \n \n \n \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \n \nХулоса ва тавсия: \n \nЭкспертизанинг мазкур номни рўйхатга олишда ижобий жавоб бериш эхтимоли: \n6 класс – 65-70% \n7 класс – 65-70% \n12 класс – 65-70% \n19 класс – 65-70% \n20 класс – 65-70% \n24 класс – 65-70% \n25 класс – 65-70% \n26 класс – 65-70% \n35 класс – 60-65% \n \nАдлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар \nбелгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса \nўз кучини йўқотиши мумкин. "
+  },
+  {
+    "mark": "Ясти",
+    "mark_normalized": "ясти",
+    "nice_classes": [
+      30
+    ],
+    "activity_raw": null,
+    "appearance": "сўзли",
+    "issued_at": "27.04.2026",
+    "report_at": "28.04.2026",
+    "source_file": "Ясти-поиск.pdf",
+    "agency": "YURISER LLC",
+    "verdicts": [
+      {
+        "classNumber": 30,
+        "chanceMin": 50,
+        "chanceMax": 55,
+        "chanceLabel": "50–55%"
+      }
+    ],
+    "adliya_matches": [
+      {
+        "id": "ref-1",
+        "name": "BABAYEVA SHIRIN FARXOT QIZI",
+        "owner": "BABAYEVA SHIRIN FARXOT QIZI",
+        "term": "BABAYEVA SHIRIN FARXOT QIZI 17.05.2024-17.05.2034",
+        "classesText": null,
+        "note": "Шоколадга турдош товарлар сифатида қарши кўрсатилиши мумкин."
+      },
+      {
+        "id": "ref-2",
+        "name": "«SMART PLAST» mas'uliyati cheklangan jamiyati",
+        "owner": "«SMART PLAST» mas'uliyati cheklangan jamiyati",
+        "term": "mas'uliyati cheklangan jamiyati 31.05.2016-31.05.2026",
+        "classesText": "ТХХТ синф 30 - Изделия кондитерские мучные; изделия макаронные; мороженое; резинки жевательные; шоколад.",
+        "note": null
+      }
+    ],
+    "madrid_matches": [
+      {
+        "id": "ref-1",
+        "name": "===== PAGE 2/2 ===== «YURISER» LLC  trademark registration service",
+        "owner": "===== PAGE 2/2 ===== «YURISER» LLC  trademark registration service",
+        "term": null,
+        "classesText": null,
+        "note": null
+      },
+      {
+        "id": "ref-2",
+        "name": "Limited Liability Company \"Yastro- Pererabotka\" (Россия)",
+        "owner": "Limited Liability Company \"Yastro- Pererabotka\" (Россия)",
+        "term": "22.03.2013-22.03.2033",
+        "classesText": "ТХХТ синфи 30 - ....chocolate mousses....chocolate beverages with milk.....chocolate-based beverages....chocolate 30 - ....шоколадные муссы....шоколадные напитки с молоком.....напитки на основе шоколада....шоколад Ҳимояланган давлатлар UZ",
+        "note": null
+      },
+      {
+        "id": "ref-3",
+        "name": "SERSİM İÇ VE DIŞ TİCARET ANONİM ŞİRKETİ (Туркия)",
+        "owner": "SERSİM İÇ VE DIŞ TİCARET ANONİM ŞİRKETİ (Туркия)",
+        "term": "12.01.2024-12.01.2034",
+        "classesText": "ТХХТ синфи 30 – ....chocolate.... 30 - ....шоколад.... Ҳимояланган давлатлар UZ",
+        "note": null
+      }
+    ],
+    "internet_items": [],
+    "madrid_empty": false,
+    "internet_empty": true,
+    "disclaimer": "Адлия Вазирлиги экспертиза фикри ушбу хулосадан фарқ қилиши ҳамда юқорида кўрсатилган товар белгилари базалари мунтазам равишда янгиланиб туришини инобатга олиб, ушбу ҳисоботдаги хулоса ўз кучини йўқотиши мумкин.",
+    "raw_excerpt": "\n\n===== PAGE 1/2 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгисини рўйхатдан ўтказиш мақсадида унга чалғитадиган \nдаражада ўхшаш бўлган бошқа товар белги номлари тўғрисида \nҲИСОБОТ \n \nБерилган санаси: 27.04.2026 й. Ҳисобот санаси: 28.04.2026 й. \n \nКўриниши Белги ТХХК синфи \nЯсти сўзли 30 \n \nҚидирув Ўзбекистон Республикасида рўйхатдан ўтган/устуворлиги бўлган ва халқаро Мадрид \nбитими келишувига кўра химояга эга товар белгилари очиқ базаларидан фойдаланиб ўтказилди. \nДастлабки қидирув ихтиёрий, аммо тавсия этилган жараён бўлиб, товар белгисини \nрўйхатдан ўтказиш учун ариза топширишдан олдин миллий ва халқаро маълумотлар базаларида \nтовар белгилари, рўйхатдан ўтиш учун режалаштирилган компаниянинг товар белгисига ўхшаш \nбелгилар мавжудлиги тўғрисида маълумот олиш имконини беради. \nҚидирув вақтида қуйидагилар ҳисобга олинмади: \n- ҳисобот берилаётган санада Адлия Вазирлигига келиб тушган аризалар; \n- Жахон интеллектуал мулк ташкилотининг Мадрид базасига охирги 3 хафтада келиб тушган \nаризалар. \nЎзбекистон Республикаси Адлия вазирлиги базаси \n \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nBABAYEVA SHIRIN FARXOT QIZI 17.05.2024-17.05.2034 \nТХХТ \nсинф \n30 - Десерты из мороженого; смеси для мороженого; торты -мороженое; мороженое на основе йогурта, с \nпреобладанием мороженого; джелато [мороженое по -итальянски]; закуски на основе мороженого; изделия \nкондитерские из мороженого; конфеты декоративные съедобные для мороженого; напитки с мороженым на \nоснове кофе; смеси быстрого приготовления для мороженого; фруктовый лёд и мороженое; мороженое, \nсорбеты и другой пищевой лед; составы для приготовления мороженого со вкусом овощей; выпечка \nзамороженная; кофе замороженный; смеси замороженные кондитерские; мороженое; вещества связующие \nдля мороженого; сорбет [мороженое]; порошки для приготовления мороженого; йогурт замороженный \n[мороженое]. \nИзоҳ Шоколадга турдош товарлар сифатида қарши кўрсатилиши мумкин. \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \n«SMART PLAST»  \nmas'uliyati cheklangan jamiyati 31.05.2016-31.05.2026 \nТХХТ синф 30 - Изделия кондитерские мучные; изделия макаронные; мороженое; резинки жевательные; \nшоколад. \n \n \nХалқаро Мадрид базаси (WIPO) \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n\n\n===== PAGE 2/2 =====\n «YURISER» LLC  trademark registration service \n \nТовар белгиси кўриниши Ҳуқуқ эгаси Муддати \n \nLimited Liability Company \"Yastro-\nPererabotka\" \n(Россия) \n22.03.2013-22.03.2033 \nТХХТ синфи \n 30 - ....chocolate mousses."
+  }
+]

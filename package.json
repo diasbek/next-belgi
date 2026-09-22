@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "import:trademarks": "tsx --env-file=.env.local scripts/import-trademarks.ts",
+    "seed:expert-refs": "tsx --env-file=.env.local scripts/seed-expert-refs.ts",
     "build:nice": "tsx scripts/build-nice-catalog.ts"
   },
   "dependencies": {

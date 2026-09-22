@@ -53,7 +53,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              '(function(){try{var p=location.pathname;document.documentElement.lang=(p==="/ru"||p.indexOf("/ru/")===0)?"ru":"uz"}catch(e){}})();',
+              '(function(){try{var p=location.pathname;document.documentElement.lang=(p==="/ru"||p.indexOf("/ru/")===0)?"ru":(p==="/en"||p.indexOf("/en/")===0)?"en":"uz"}catch(e){}})();',
           }}
         />
       </head>

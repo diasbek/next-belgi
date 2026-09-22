@@ -48,11 +48,13 @@ export function stripLocalePrefix(pathname: string): {
 
 export function getLocalizedAlternates(path: string) {
   const normalized = normalizePath(path);
-  return {
+  const languages: Record<string, string> = {
     "x-default": localePath(defaultLocale, normalized),
-    ru: localePath("ru", normalized),
-    uz: localePath("uz", normalized),
   };
+  for (const locale of locales) {
+    languages[locale] = localePath(locale, normalized);
+  }
+  return languages;
 }
 
 export function switchLocalePath(

@@ -56,11 +56,15 @@ export async function sendOtpEmail(to: string, code: string, locale: string) {
   const subject =
     locale === "ru"
       ? `Код подтверждения Belgi.ai: ${code}`
-      : `Belgi.ai tasdiqlash kodi: ${code}`;
+      : locale === "en"
+        ? `Belgi.ai verification code: ${code}`
+        : `Belgi.ai tasdiqlash kodi: ${code}`;
   const text =
     locale === "ru"
       ? `Ваш код подтверждения Belgi.ai: ${code}. Действует 10 минут.`
-      : `Belgi.ai tasdiqlash kodi: ${code}. 10 daqiqa amal qiladi.`;
+      : locale === "en"
+        ? `Your Belgi.ai verification code: ${code}. Valid for 10 minutes.`
+        : `Belgi.ai tasdiqlash kodi: ${code}. 10 daqiqa amal qiladi.`;
   return sendResendEmail({ to, subject, text, kind: "otp" });
 }
 

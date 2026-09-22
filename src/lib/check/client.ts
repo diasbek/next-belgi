@@ -1,4 +1,4 @@
-import type { Locale } from "@/i18n/config";
+import { parseLocale, type Locale } from "@/i18n/config";
 import { classifyActivity } from "@/lib/classify";
 import {
   classRisksFromClassification,
@@ -10,7 +10,7 @@ import { buildMockReport } from "./mock";
 import type { CheckRequest, CheckResponse, TrademarkReport } from "./types";
 
 function resolveLocale(locale?: string): Locale {
-  return locale === "ru" ? "ru" : "uz";
+  return parseLocale(locale);
 }
 
 function applyClassificationToReport(

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCanonicalRedirectFromHeaders } from "@/utils/seo/canonical-request";
-import { stripLocalePrefix } from "@/i18n/paths";
+import { localePath, stripLocalePrefix } from "@/i18n/paths";
+import { htmlLang } from "@/i18n/config";
 import { SESSION_COOKIE } from "@/lib/auth/app-session";
 import { getServiceDb } from "@/lib/db/client";
 import { hashSessionToken } from "@/lib/crypto/hash";
@@ -98,15 +99,13 @@ export async function proxy(request: NextRequest) {
     request: { headers: request.headers },
   });
 
-  const { path } = stripLocalePrefix(pathname);
-  const russian =
-    pathname === "/ru" || pathname === "/ru/" || pathname.startsWith("/ru/");
+  const { locale, path } = stripLocalePrefix(pathname);
 
   if (isProtectedPath(path) && !pathname.startsWith("/api")) {
     const { userId, role } = await resolveProxyAuth(request);
     if (!userId) {
       const login = request.nextUrl.clone();
-      login.pathname = russian ? "/ru/login/" : "/login/";
+      login.pathname = localePath(locale, "/login/");
       login.searchParams.set(
         "next",
         `${pathname}${request.nextUrl.search || ""}`,
@@ -116,16 +115,16 @@ export async function proxy(request: NextRequest) {
 
     if (isAdminPath(path) && userId !== "unknown" && role !== "admin") {
       const home = request.nextUrl.clone();
-      home.pathname = russian ? "/ru/" : "/";
+      home.pathname = localePath(locale, "/");
       home.search = "";
       return NextResponse.redirect(home);
     }
   }
 
-  response.headers.set("x-html-lang", russian ? "ru" : "uz");
+  response.headers.set("x-html-lang", htmlLang[locale]);
 
   if (!pathname.startsWith("/api") && !pathname.startsWith("/_next")) {
-    response.cookies.set("belgi_locale", russian ? "ru" : "uz", {
+    response.cookies.set("belgi_locale", locale, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",

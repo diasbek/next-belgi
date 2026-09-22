@@ -1,30 +1,44 @@
 import type { ActivityClassification, ClassifyLocale } from "./types";
 import { formatNiceClassLine } from "./normalize";
 
+type RuleClass = {
+  classNumber: number;
+  labelRu: string;
+  labelUz: string;
+  labelEn: string;
+};
+
+function pickLabel(c: RuleClass, locale: ClassifyLocale): string {
+  if (locale === "ru") return c.labelRu;
+  if (locale === "en") return c.labelEn;
+  return c.labelUz;
+}
+
 /** Deterministic fallback when OpenAI is unavailable. */
 export function buildFallbackClassification(
   activityRaw: string,
   locale: ClassifyLocale,
 ): ActivityClassification {
   const text = activityRaw.trim().toLowerCase();
-  const isRu = locale === "ru";
 
   const rules: Array<{
     test: RegExp;
-    classes: Array<{ classNumber: number; labelRu: string; labelUz: string }>;
+    classes: RuleClass[];
   }> = [
     {
-      test: /подгуз|памперс|подгузник|салфетк|гигиен|diaper|nappy|namlik|salyetka/,
+      test: /подгуз|памперс|подгузник|салфетк|гигиен|diaper|nappy|namlik|salyetka|taglik/,
       classes: [
         {
           classNumber: 3,
           labelRu: "косметика и гигиена",
           labelUz: "kosmetika va gigiyena",
+          labelEn: "cosmetics and hygiene",
         },
         {
           classNumber: 5,
           labelRu: "подгузники и гигиенические изделия",
           labelUz: "taglik va gigiyena buyumlari",
+          labelEn: "diapers and hygiene products",
         },
       ],
     },
@@ -35,6 +49,7 @@ export function buildFallbackClassification(
           classNumber: 43,
           labelRu: "услуги кафе и ресторанов",
           labelUz: "kafe va restoran xizmatlari",
+          labelEn: "cafe and restaurant services",
         },
       ],
     },
@@ -45,6 +60,7 @@ export function buildFallbackClassification(
           classNumber: 25,
           labelRu: "одежда",
           labelUz: "kiyim-kechak",
+          labelEn: "clothing",
         },
       ],
     },
@@ -55,11 +71,13 @@ export function buildFallbackClassification(
           classNumber: 9,
           labelRu: "программное обеспечение",
           labelUz: "dasturiy ta'minot",
+          labelEn: "software",
         },
         {
           classNumber: 42,
           labelRu: "разработка ПО",
           labelUz: "dasturiy ta'minot ishlab chiqish",
+          labelEn: "software development",
         },
       ],
     },
@@ -70,25 +88,27 @@ export function buildFallbackClassification(
           classNumber: 36,
           labelRu: "финансовые услуги",
           labelUz: "moliyaviy xizmatlar",
+          labelEn: "financial services",
         },
       ],
     },
   ];
 
   const matched = rules.find((r) => r.test.test(text));
-  const picked =
+  const picked: RuleClass[] =
     matched?.classes ??
     [
       {
         classNumber: 35,
         labelRu: "реклама и бизнес-услуги",
         labelUz: "reklama va biznes xizmatlari",
+        labelEn: "advertising and business services",
       },
     ];
 
   const classes = picked.map((c) => ({
     classNumber: c.classNumber,
-    label: isRu ? c.labelRu : c.labelUz,
+    label: pickLabel(c, locale),
     confidence: matched ? 0.55 : 0.35,
   }));
 

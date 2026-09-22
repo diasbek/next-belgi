@@ -22,6 +22,9 @@ const indexCopy = {
     lead: "Hujjatlar maʼno boʻyicha guruhlangan. Matnlar shablon — nashrdan oldin yurist bilan kelishiladi.",
     related: "Shu boʻlimdagi boshqa hujjatlar",
     internalNote: "Ichki reglamentlar asosan jamoa uchun; ommaviy foydalanish shart emas.",
+    allDocs: "Barcha hujjatlar",
+    templateNote:
+      "Ishchi shablon. Nashrdan oldin rekvizitlarni toʻldiring va yurist bilan kelishing.",
   },
   ru: {
     title: "Юридические документы",
@@ -29,6 +32,19 @@ const indexCopy = {
     related: "Другие документы в этом разделе",
     internalNote:
       "Внутренние регламенты в основном для команды; публиковать их не обязательно.",
+    allDocs: "Все документы",
+    templateNote:
+      "Рабочий шаблон. Перед публикацией заполните реквизиты и согласуйте с юристом.",
+  },
+  en: {
+    title: "Legal documents",
+    lead: "Documents grouped by topic. Texts are templates — agree them with a lawyer before publishing.",
+    related: "Other documents in this section",
+    internalNote:
+      "Internal policies are mainly for the team; publishing them is optional.",
+    allDocs: "All documents",
+    templateNote:
+      "Working template. Fill in the details and agree with a lawyer before publishing.",
   },
 };
 
@@ -51,7 +67,7 @@ export function LegalDocPageView({
       <PageContainer measure="copy">
         <p className="mb-4 text-sm text-ink-muted">
           <Link href={indexHref} className="underline-offset-2 hover:underline">
-            {locale === "ru" ? "Все документы" : "Barcha hujjatlar"}
+            {indexCopy[locale].allDocs}
           </Link>
           <span aria-hidden> › </span>
           <Link href={groupHref} className="underline-offset-2 hover:underline">
@@ -84,9 +100,7 @@ export function LegalDocPageView({
         ) : null}
 
         <p className="mt-10 text-xs text-ink-muted">
-          {locale === "ru"
-            ? "Рабочий шаблон. Перед публикацией заполните реквизиты и согласуйте с юристом."
-            : "Ishchi shablon. Nashrdan oldin rekvizitlarni toʻldiring va yurist bilan kelishing."}
+          {indexCopy[locale].templateNote}
         </p>
       </PageContainer>
     </section>

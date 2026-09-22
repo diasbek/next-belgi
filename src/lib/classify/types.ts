@@ -1,4 +1,4 @@
-export type ClassifyLocale = "uz" | "ru";
+export type ClassifyLocale = "uz" | "ru" | "en";
 
 export type ClassificationSource = "openai" | "cache" | "fallback";
 

@@ -41,7 +41,11 @@ export function SiteFooter({
           </div>
           <div className="flex flex-col gap-1">
             <p className="mb-1 text-xs font-medium uppercase tracking-wide text-white/50">
-              {locale === "ru" ? "Документы" : "Hujjatlar"}
+              {locale === "ru"
+                ? "Документы"
+                : locale === "en"
+                  ? "Documents"
+                  : "Hujjatlar"}
             </p>
             {legalGroups.map(({ group, href }) => (
               <Link
@@ -56,7 +60,11 @@ export function SiteFooter({
               href={localePath(locale, "/legal/")}
               className="min-h-[var(--tap-min)] py-2 text-sm text-white/85 hover:text-white sm:min-h-0 sm:py-1"
             >
-              {locale === "ru" ? "Все разделы" : "Barcha boʻlimlar"}
+              {locale === "ru"
+                ? "Все разделы"
+                : locale === "en"
+                  ? "All sections"
+                  : "Barcha boʻlimlar"}
             </Link>
           </div>
         </div>

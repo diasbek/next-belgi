@@ -40,7 +40,11 @@ export function readUtm() {
 }
 
 export function formErrorMessage(locale: Locale) {
-  return locale === "uz"
-    ? "Yuborishda xato. Maʼlumotlar saqlangan — qayta urinib koʻring."
-    : "Ошибка отправки. Данные сохранены — попробуйте ещё раз.";
+  if (locale === "ru") {
+    return "Ошибка отправки. Данные сохранены — попробуйте ещё раз.";
+  }
+  if (locale === "en") {
+    return "Could not send. Your data was saved — please try again.";
+  }
+  return "Yuborishda xato. Maʼlumotlar saqlangan — qayta urinib koʻring.";
 }

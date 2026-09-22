@@ -6,7 +6,7 @@ import {
   linkCheckEntitlement,
   refundCheckCredit,
 } from "@/lib/billing/credits";
-import type { Locale } from "@/i18n/config";
+import { parseLocale } from "@/i18n/config";
 import { localePath } from "@/i18n/paths";
 import {
   checkResumePath,
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
-  const locale: Locale = body.locale === "ru" ? "ru" : "uz";
+  const locale = parseLocale(body.locale);
   const query = (body.query ?? "").trim();
   const activity = (body.activity ?? "").trim();
   const actionPath = parseCheckActionPath(body.actionPath);

@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/config";
-import { localePath } from "@/i18n/paths";
+import { localePath, stripLocalePrefix } from "@/i18n/paths";
 
 export type CheckActionPath = "/check/" | "/account/check/";
 
@@ -40,15 +40,12 @@ export function checkResumePath(
 
 export function isCheckResumePath(path: string): boolean {
   const bare = path.split("?")[0] ?? path;
+  const { path: stripped } = stripLocalePrefix(bare);
   return (
-    bare === "/check/" ||
-    bare === "/check" ||
-    bare === "/ru/check/" ||
-    bare === "/ru/check" ||
-    bare === "/account/check/" ||
-    bare === "/account/check" ||
-    bare === "/ru/account/check/" ||
-    bare === "/ru/account/check"
+    stripped === "/check/" ||
+    stripped === "/check" ||
+    stripped === "/account/check/" ||
+    stripped === "/account/check"
   );
 }
 

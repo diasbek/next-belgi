@@ -9,7 +9,8 @@ import {
 } from "@/data/legal/catalog";
 
 function toLegalLocale(locale: Locale): LegalLocale {
-  return locale === "ru" ? "ru" : "uz";
+  if (locale === "ru" || locale === "en") return locale;
+  return "uz";
 }
 
 export function legalContentPath(locale: Locale, file: string): string {

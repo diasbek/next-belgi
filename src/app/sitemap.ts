@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { pagePaths, type PageKey } from "@/i18n/config";
+import { locales, pagePaths, type PageKey } from "@/i18n/config";
 import { localePath } from "@/i18n/paths";
 import { LEGAL_DOCS } from "@/data/legal/catalog";
 import { getCanonicalSiteUrl, isIndexableDeployment } from "@/utils/seo/indexing";
@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const key of indexablePages) {
     const path = pagePaths[key];
-    for (const locale of ["uz", "ru"] as const) {
+    for (const locale of locales) {
       entries.push({
         url: `${base}${localePath(locale, path)}`,
         changeFrequency: key === "home" ? "weekly" : "monthly",
@@ -46,7 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   for (const path of publicLegalPaths) {
-    for (const locale of ["uz", "ru"] as const) {
+    for (const locale of locales) {
       entries.push({
         url: `${base}${localePath(locale, path)}`,
         changeFrequency: "monthly",

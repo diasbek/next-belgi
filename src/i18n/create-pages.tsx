@@ -242,11 +242,17 @@ export function createLegalAliasPage(locale: Locale, aliasPath: string) {
 
 export function createLegalIndexPage(locale: Locale) {
   const title =
-    locale === "ru" ? "Юридические документы" : "Yuridik hujjatlar";
+    locale === "ru"
+      ? "Юридические документы"
+      : locale === "en"
+        ? "Legal documents"
+        : "Yuridik hujjatlar";
   const description =
     locale === "ru"
       ? "Публичные условия, документы подачи заявки и внутренние регламенты Belgi.ai."
-      : "Belgi.ai ommaviy shartlari, ariza hujjatlari va ichki reglamentlar.";
+      : locale === "en"
+        ? "Public terms, filing documents, and internal policies of Belgi.ai."
+        : "Belgi.ai ommaviy shartlari, ariza hujjatlari va ichki reglamentlar.";
   const alternates = getLocalizedAlternates("/legal/");
   return {
     generateMetadata: (): Metadata =>

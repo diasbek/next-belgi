@@ -3,6 +3,7 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import type { Locale } from "@/i18n/config";
+import { localePath } from "@/i18n/paths";
 import type { SiteCopy } from "@/data/types";
 import { Button } from "@/components/atoms/Button";
 import {
@@ -101,10 +102,14 @@ export function ContactForm({
             <span>
               {content.formCommon.consent}{" "}
               <a
-                href={locale === "ru" ? "/ru/consent/" : "/consent/"}
+                href={localePath(locale, "/consent/")}
                 className="font-medium underline underline-offset-2"
               >
-                {locale === "ru" ? "Текст согласия" : "Rozilik matni"}
+                {locale === "ru"
+                  ? "Текст согласия"
+                  : locale === "en"
+                    ? "Consent text"
+                    : "Rozilik matni"}
               </a>
             </span>
           </label>

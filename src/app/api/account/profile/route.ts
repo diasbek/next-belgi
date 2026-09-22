@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isLocale } from "@/i18n/config";
 import { requireUserApi } from "@/lib/auth/session";
 import { getServiceDb } from "@/lib/db/client";
 import { assertSameOrigin } from "@/lib/auth/csrf";
@@ -28,7 +29,7 @@ export async function PATCH(request: Request) {
   if (typeof body.full_name === "string") {
     patch.full_name = body.full_name.trim() || null;
   }
-  if (body.locale === "uz" || body.locale === "ru") {
+  if (isLocale(body.locale)) {
     patch.locale = body.locale;
   }
 

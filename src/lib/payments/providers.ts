@@ -12,6 +12,7 @@ export interface CheckoutPlan {
   price_uzs: number;
   title_uz: string;
   title_ru: string;
+  title_en?: string | null;
 }
 
 export async function getPaymentMode(

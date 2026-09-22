@@ -233,21 +233,33 @@ export function RegisterForm({ locale }: { locale: Locale }) {
                 href={localePath(locale, "/terms/")}
                 className="underline underline-offset-2"
               >
-                {locale === "ru" ? "Оферта" : "Oferta"}
+                {locale === "ru"
+                  ? "Оферта"
+                  : locale === "en"
+                    ? "Offer"
+                    : "Oferta"}
               </Link>
               ,{" "}
               <Link
                 href={localePath(locale, "/privacy/")}
                 className="underline underline-offset-2"
               >
-                {locale === "ru" ? "Конфиденциальность" : "Maxfiylik"}
+                {locale === "ru"
+                  ? "Конфиденциальность"
+                  : locale === "en"
+                    ? "Privacy"
+                    : "Maxfiylik"}
               </Link>
               ,{" "}
               <Link
                 href={localePath(locale, "/consent/")}
                 className="underline underline-offset-2"
               >
-                {locale === "ru" ? "Согласие" : "Rozilik"}
+                {locale === "ru"
+                  ? "Согласие"
+                  : locale === "en"
+                    ? "Consent"
+                    : "Rozilik"}
               </Link>
               .
             </span>

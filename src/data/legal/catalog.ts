@@ -1,4 +1,4 @@
-export type LegalLocale = "ru" | "uz";
+export type LegalLocale = "uz" | "ru" | "en";
 
 /** Semantic groups for the legal hub and footer. */
 export type LegalGroup =
@@ -15,7 +15,7 @@ export type LegalDocMeta = {
   slug: string;
   group: LegalGroup;
   /** Short footer/nav label */
-  footerLabel: { uz: string; ru: string };
+  footerLabel: { uz: string; ru: string; en: string };
   /** Alias routes that also serve this doc (e.g. /terms/) */
   aliases?: string[];
 };
@@ -23,10 +23,10 @@ export type LegalDocMeta = {
 export type LegalGroupMeta = {
   id: LegalGroup;
   /** Shown on /legal/ and as footer section title */
-  title: { uz: string; ru: string };
-  lead: { uz: string; ru: string };
+  title: { uz: string; ru: string; en: string };
+  lead: { uz: string; ru: string; en: string };
   /** Compact footer link label (group hub) */
-  footerLabel: { uz: string; ru: string };
+  footerLabel: { uz: string; ru: string; en: string };
   /** Public site surfaces this group */
   public: boolean;
 };
@@ -37,12 +37,14 @@ export const LEGAL_GROUPS: LegalGroupMeta[] = [
     title: {
       uz: "Xizmat va shartlar",
       ru: "Сервис и условия",
+      en: "Service and terms",
     },
     lead: {
       uz: "Oferta, AI-tekshiruv holati va yuklamalar qoidalari.",
       ru: "Оферта, статус AI-проверки и правила загрузок.",
+      en: "Offer, AI-check status, and upload rules.",
     },
-    footerLabel: { uz: "Shartlar", ru: "Условия" },
+    footerLabel: { uz: "Shartlar", ru: "Условия", en: "Terms" },
     public: true,
   },
   {
@@ -50,12 +52,14 @@ export const LEGAL_GROUPS: LegalGroupMeta[] = [
     title: {
       uz: "Shaxsiy maʼlumotlar",
       ru: "Персональные данные",
+      en: "Personal data",
     },
     lead: {
       uz: "Maxfiylik, rozilik va cookie siyosati.",
       ru: "Конфиденциальность, согласие и cookie.",
+      en: "Privacy, consent, and cookies.",
     },
-    footerLabel: { uz: "Maxfiylik", ru: "Конфиденциальность" },
+    footerLabel: { uz: "Maxfiylik", ru: "Конфиденциальность", en: "Privacy" },
     public: true,
   },
   {
@@ -63,12 +67,14 @@ export const LEGAL_GROUPS: LegalGroupMeta[] = [
     title: {
       uz: "Toʻlov va kreditlar",
       ru: "Оплата и кредиты",
+      en: "Payments and credits",
     },
     lead: {
       uz: "Tariflar, kreditlar yechib olish va qaytarish.",
       ru: "Тарифы, списание кредитов и возвраты.",
+      en: "Plans, credit debiting, and refunds.",
     },
-    footerLabel: { uz: "Toʻlov", ru: "Оплата" },
+    footerLabel: { uz: "Toʻlov", ru: "Оплата", en: "Payments" },
     public: true,
   },
   {
@@ -76,12 +82,14 @@ export const LEGAL_GROUPS: LegalGroupMeta[] = [
     title: {
       uz: "Ariza topshirish",
       ru: "Подача заявки",
+      en: "Filing an application",
     },
     lead: {
       uz: "AI-tekshiruvdan alohida: shartnoma, topshiriq, ishonchnoma va bojlar.",
       ru: "Отдельно от AI-проверки: договор, задание, доверенность и пошлины.",
+      en: "Separate from the AI check: agreement, assignment, power of attorney, and fees.",
     },
-    footerLabel: { uz: "Ariza", ru: "Подача" },
+    footerLabel: { uz: "Ariza", ru: "Подача", en: "Filing" },
     public: true,
   },
   {
@@ -89,88 +97,90 @@ export const LEGAL_GROUPS: LegalGroupMeta[] = [
     title: {
       uz: "Ichki reglamentlar",
       ru: "Внутренние регламенты",
+      en: "Internal policies",
     },
     lead: {
       uz: "Jamoa va pudratchilar uchun: PD, kirish, saqlash, insidentlar.",
       ru: "Для команды и подрядчиков: ПДн, доступ, хранение, инциденты.",
+      en: "For the team and vendors: personal data, access, retention, incidents.",
     },
-    footerLabel: { uz: "Ichki", ru: "Внутренние" },
+    footerLabel: { uz: "Ichki", ru: "Внутренние", en: "Internal" },
     public: false,
   },
 ];
 
 /**
- * Full Belgi.ai legal package (22 docs × ru/uz).
- * Source: content/legal/{ru,uz}/*.md
+ * Full Belgi.ai legal package (22 docs × uz/ru/en).
+ * Source: content/legal/{uz,ru,en}/*.md
  */
 export const LEGAL_DOCS: LegalDocMeta[] = [
   {
     file: "01_public_offer.md",
     slug: "public-offer",
     group: "service",
-    footerLabel: { uz: "Oferta", ru: "Оферта" },
+    footerLabel: { uz: "Oferta", ru: "Оферта", en: "Offer" },
     aliases: ["/terms/", "/offer/"],
   },
   {
     file: "07_ai_disclaimer.md",
     slug: "ai-disclaimer",
     group: "service",
-    footerLabel: { uz: "AI diskleymer", ru: "AI-дисклеймер" },
+    footerLabel: { uz: "AI diskleymer", ru: "AI-дисклеймер", en: "AI disclaimer" },
     aliases: ["/ai-disclaimer/"],
   },
   {
     file: "08_uploaded_materials_and_acceptable_use.md",
     slug: "uploads",
     group: "service",
-    footerLabel: { uz: "Yuklamalar", ru: "Загрузки" },
+    footerLabel: { uz: "Yuklamalar", ru: "Загрузки", en: "Uploads" },
     aliases: ["/uploads/"],
   },
   {
     file: "02_privacy_policy.md",
     slug: "privacy",
     group: "data",
-    footerLabel: { uz: "Maxfiylik siyosati", ru: "Политика конфиденциальности" },
+    footerLabel: { uz: "Maxfiylik siyosati", ru: "Политика конфиденциальности", en: "Privacy policy" },
     aliases: ["/privacy/"],
   },
   {
     file: "03_personal_data_consent.md",
     slug: "consent",
     group: "data",
-    footerLabel: { uz: "Rozilik", ru: "Согласие на ПДн" },
+    footerLabel: { uz: "Rozilik", ru: "Согласие на ПДн", en: "Consent" },
     aliases: ["/consent/"],
   },
   {
     file: "04_cookie_policy.md",
     slug: "cookies",
     group: "data",
-    footerLabel: { uz: "Cookie", ru: "Cookie" },
+    footerLabel: { uz: "Cookie", ru: "Cookie", en: "Cookie" },
     aliases: ["/cookies/"],
   },
   {
     file: "05_tariffs_and_credits.md",
     slug: "credits",
     group: "payments",
-    footerLabel: { uz: "Tarif va kreditlar", ru: "Тарифы и кредиты" },
+    footerLabel: { uz: "Tarif va kreditlar", ru: "Тарифы и кредиты", en: "Plans and credits" },
     aliases: ["/credits/"],
   },
   {
     file: "06_refund_policy.md",
     slug: "refunds",
     group: "payments",
-    footerLabel: { uz: "Qaytarish", ru: "Возвраты" },
+    footerLabel: { uz: "Qaytarish", ru: "Возвраты", en: "Refunds" },
     aliases: ["/refunds/"],
   },
   {
     file: "09_application_services_agreement.md",
     slug: "application-services",
     group: "filing",
-    footerLabel: { uz: "Ariza shartnomasi", ru: "Договор подачи" },
+    footerLabel: { uz: "Ariza shartnomasi", ru: "Договор подачи", en: "Filing agreement" },
   },
   {
     file: "10_application_assignment.md",
     slug: "application-assignment",
     group: "filing",
-    footerLabel: { uz: "Topshiriq", ru: "Задание на подачу" },
+    footerLabel: { uz: "Topshiriq", ru: "Задание на подачу", en: "Filing assignment" },
   },
   {
     file: "11_government_data_transfer_consent.md",
@@ -179,73 +189,74 @@ export const LEGAL_DOCS: LegalDocMeta[] = [
     footerLabel: {
       uz: "Davlatga uzatish",
       ru: "Передача госоргану",
+      en: "Government transfer",
     },
   },
   {
     file: "12_power_of_attorney_template.md",
     slug: "power-of-attorney",
     group: "filing",
-    footerLabel: { uz: "Ishonchnoma", ru: "Доверенность" },
+    footerLabel: { uz: "Ishonchnoma", ru: "Доверенность", en: "Power of attorney" },
   },
   {
     file: "13_state_fees_policy.md",
     slug: "state-fees",
     group: "filing",
-    footerLabel: { uz: "Davlat bojlari", ru: "Госпошлины" },
+    footerLabel: { uz: "Davlat bojlari", ru: "Госпошлины", en: "State fees" },
   },
   {
     file: "14_service_acceptance_act.md",
     slug: "service-acceptance-act",
     group: "filing",
-    footerLabel: { uz: "Akt", ru: "Акт услуг" },
+    footerLabel: { uz: "Akt", ru: "Акт услуг", en: "Acceptance act" },
   },
   {
     file: "15_internal_personal_data_policy.md",
     slug: "internal-personal-data",
     group: "internal",
-    footerLabel: { uz: "Ichki PD siyosati", ru: "Внутр. политика ПДн" },
+    footerLabel: { uz: "Ichki PD siyosati", ru: "Внутр. политика ПДн", en: "Internal PD policy" },
   },
   {
     file: "16_access_control_policy.md",
     slug: "access-control",
     group: "internal",
-    footerLabel: { uz: "Kirish nazorati", ru: "Разграничение доступа" },
+    footerLabel: { uz: "Kirish nazorati", ru: "Разграничение доступа", en: "Access control" },
   },
   {
     file: "17_retention_and_deletion_policy.md",
     slug: "retention",
     group: "internal",
-    footerLabel: { uz: "Saqlash va oʻchirish", ru: "Хранение и удаление" },
+    footerLabel: { uz: "Saqlash va oʻchirish", ru: "Хранение и удаление", en: "Retention and deletion" },
   },
   {
     file: "18_consent_and_version_log_policy.md",
     slug: "consent-log",
     group: "internal",
-    footerLabel: { uz: "Rozilik jurnali", ru: "Журнал согласий" },
+    footerLabel: { uz: "Rozilik jurnali", ru: "Журнал согласий", en: "Consent log" },
   },
   {
     file: "19_incident_response_plan.md",
     slug: "incident-response",
     group: "internal",
-    footerLabel: { uz: "Insidentlar", ru: "Реагирование на инциденты" },
+    footerLabel: { uz: "Insidentlar", ru: "Реагирование на инциденты", en: "Incidents" },
   },
   {
     file: "20_vendor_data_processing_agreement.md",
     slug: "vendor-dpa",
     group: "internal",
-    footerLabel: { uz: "Provayder DPA", ru: "DPA с подрядчиком" },
+    footerLabel: { uz: "Provayder DPA", ru: "DPA с подрядчиком", en: "Vendor DPA" },
   },
   {
     file: "21_ai_quality_control_policy.md",
     slug: "ai-quality",
     group: "internal",
-    footerLabel: { uz: "AI sifat nazorati", ru: "Контроль качества AI" },
+    footerLabel: { uz: "AI sifat nazorati", ru: "Контроль качества AI", en: "AI quality control" },
   },
   {
     file: "22_claims_handling_policy.md",
     slug: "claims",
     group: "internal",
-    footerLabel: { uz: "Daʼvolar tartibi", ru: "Порядок претензий" },
+    footerLabel: { uz: "Daʼvolar tartibi", ru: "Порядок претензий", en: "Claims process" },
   },
 ];
 

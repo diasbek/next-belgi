@@ -111,7 +111,9 @@ export async function sendOtp(params: {
     const msg =
       locale === "ru"
         ? `Belgi.ai: код подтверждения ${code}`
-        : `Belgi.ai: tasdiqlash kodi ${code}`;
+        : locale === "en"
+          ? `Belgi.ai: verification code ${code}`
+          : `Belgi.ai: tasdiqlash kodi ${code}`;
     const sent = await sendEskizSms({ phone: detected.norm, message: msg });
     if (!sent.ok) {
       return { ok: false, error: sent.error, status: 503 };

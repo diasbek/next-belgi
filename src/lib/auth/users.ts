@@ -1,4 +1,5 @@
 import { getServiceDb } from "@/lib/db/client";
+import { parseLocale } from "@/i18n/config";
 import {
   detectChannel,
   normalizeEmail,
@@ -129,7 +130,7 @@ export async function createUserWithPassword(params: {
       has_password: hasPassword,
       phone,
       full_name: params.fullName || null,
-      locale: params.locale === "ru" ? "ru" : "uz",
+      locale: parseLocale(params.locale),
     })
     .eq("id", data.user.id);
 

@@ -20,7 +20,23 @@ type Plan = {
   price_uzs: number;
   title_uz: string;
   title_ru: string;
+  title_en?: string | null;
 };
+
+const EN_PLAN_TITLES: Record<string, string> = {
+  check_1: "1 check",
+  pack_5: "5 checks",
+  pack_10: "10 checks",
+  pack_50: "50 checks",
+};
+
+function planTitle(plan: Plan, locale: Locale): string {
+  if (locale === "ru") return plan.title_ru;
+  if (locale === "en") {
+    return plan.title_en || EN_PLAN_TITLES[plan.code] || plan.title_uz;
+  }
+  return plan.title_uz;
+}
 
 type LedgerRow = {
   id: string;
@@ -179,7 +195,7 @@ export function BillingPanel({
       </div>
       <ul className="mb-10 divide-y divide-black/5 border-y border-black/5">
         {plans.map((plan) => {
-          const title = locale === "ru" ? plan.title_ru : plan.title_uz;
+          const title = planTitle(plan, locale);
           return (
             <li
               key={plan.id}

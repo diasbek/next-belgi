@@ -9,7 +9,7 @@
 - Tailwind CSS v4
 - Formik + Yup
 - Supabase (Postgres + Storage)
-- Локали: **UZ** (без префикса) и **RU** (`/ru/`)
+- Локали: **UZ** (без префикса), **RU** (`/ru/`), **EN** (`/en/`)
 
 ## Запуск
 
@@ -50,7 +50,7 @@ npm run build:archive
 2. Пропишите env из `.env.hostinger.example`.
 3. Start command: `node server.js` (или `npm start`).
 
-Локали: **UZ** без префикса (`/`), **RU** — `/ru/`.
+Локали: **UZ** без префикса (`/`), **RU** — `/ru/`, **EN** — `/en/`.
 
 ## Импорт реестра товарных знаков (Adliya)
 

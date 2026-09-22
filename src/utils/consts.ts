@@ -18,7 +18,7 @@ export const SITE_CONFIG = {
     line: "г. Ташкент, Узбекистан",
     inn: "",
   },
-  locales: ["uz", "ru"] as const,
+  locales: ["uz", "ru", "en"] as const,
   defaultLocale: "uz" as const,
   themeColor: "#4A4D46",
   analytics: {

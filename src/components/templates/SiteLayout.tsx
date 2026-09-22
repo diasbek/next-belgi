@@ -27,7 +27,13 @@ export function SiteLayout({ locale, children }: SiteLayoutProps) {
         acceptLabel={content.ui.cookieAccept}
         declineLabel={content.ui.cookieDecline}
         policyHref={localePath(locale, "/cookies/")}
-        policyLabel={locale === "ru" ? "Политика cookie" : "Cookie siyosati"}
+        policyLabel={
+          locale === "ru"
+            ? "Политика cookie"
+            : locale === "en"
+              ? "Cookie policy"
+              : "Cookie siyosati"
+        }
       />
     </>
   );

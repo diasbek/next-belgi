@@ -270,10 +270,14 @@ export function CheckResultPageView({
         <p className="m-0 text-xs leading-relaxed text-ink-muted">
           {copy.report.disclaimer}{" "}
           <a
-            href={locale === "ru" ? "/ru/ai-disclaimer/" : "/ai-disclaimer/"}
+            href={localePath(locale, "/ai-disclaimer/")}
             className="font-medium text-ink underline underline-offset-2"
           >
-            {locale === "ru" ? "Подробнее" : "Batafsil"}
+            {locale === "ru"
+              ? "Подробнее"
+              : locale === "en"
+                ? "Learn more"
+                : "Batafsil"}
           </a>
         </p>
       </PageContainer>

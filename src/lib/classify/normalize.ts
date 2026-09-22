@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
+import { parseLocale } from "@/i18n/config";
 import type { ClassifyLocale } from "./types";
 
 export function normalizeClassifyLocale(locale?: string): ClassifyLocale {
-  return locale?.toLowerCase().startsWith("ru") ? "ru" : "uz";
+  return parseLocale(locale);
 }
 
 export function normalizeActivityKey(activity: string): string {

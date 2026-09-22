@@ -9,7 +9,7 @@ import {
   type PaymentProvider,
 } from "@/lib/payments/providers";
 import { localePath } from "@/i18n/paths";
-import type { Locale } from "@/i18n/config";
+import { parseLocale } from "@/i18n/config";
 import { safeInternalNext } from "@/lib/navigation/safe-next";
 
 export async function POST(request: Request) {
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     });
   }
 
-  const locale = (body.locale === "ru" ? "ru" : "uz") as Locale;
+  const locale = parseLocale(body.locale);
   const origin =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
     new URL(request.url).origin;

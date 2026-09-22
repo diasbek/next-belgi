@@ -42,7 +42,9 @@ function buildSystemPrompt(locale: ClassifyLocale): string {
   const lang =
     locale === "ru"
       ? "Respond in Russian for labels and activityNormalized."
-      : "Respond in Uzbek (Latin script) for labels and activityNormalized.";
+      : locale === "en"
+        ? "Respond in English for labels and activityNormalized."
+        : "Respond in Uzbek (Latin script) for labels and activityNormalized.";
 
   return [
     "You are an expert in the Nice Classification (МКТУ / Nice Agreement) for trademark filings in Uzbekistan.",

@@ -24,6 +24,11 @@ const copy = {
     lawyerRole: "Yurist",
     disclaimer:
       "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan oʻxshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, roʻyxatga olish toʻgʻrisida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi.",
+    niceFallback: ["[3] taglik", "[5] nam salfetka"],
+    kikoClasses:
+      "[5] bolalar tagliklari; bolalar taglik-shimlari; gigiyenik prokladkalar.",
+    allProducts: "[3] barcha mahsulotlar\n[5] barcha mahsulotlar",
+    allProductsOne: "[3] barcha mahsulotlar",
   },
   ru: {
     defaultActivity: "Детские подгузники",
@@ -42,6 +47,34 @@ const copy = {
     lawyerRole: "Юрист",
     disclaimer:
       "Belgi.ai выполняет автоматизированный поиск и информационную оценку сходства обозначения с товарными знаками и заявками, содержащимися в доступных источниках. Результат проверки не является юридическим заключением, решением о регистрации или гарантией предоставления правовой охраны. Окончательное решение принимается уполномоченным государственным органом.",
+    niceFallback: ["[3] подгузник", "[5] влажный салфетка"],
+    kikoClasses:
+      "[5] подгузники детские; трусы-подгузники детские; прокладки гигиенические; трусы гигиенические женские.",
+    allProducts: "[3] все продукты\n[5] все продукты",
+    allProductsOne: "[3] все продукты",
+  },
+  en: {
+    defaultActivity: "Baby diapers",
+    markType: "word",
+    registryUz: "UZ registry",
+    wipo: "WIPO",
+    internet: "Internet",
+    emptyText: "Based on available data, no similar marks were found",
+    statusPending: "Pending period",
+    statusExam: "Under examination",
+    conclusionTitle: "Conclusion",
+    conclusionLead:
+      "Examination results should support registration of this name:",
+    recommendationsTitle: "Trademark registration recommendations",
+    replaceHint: "Consider a different name",
+    lawyerRole: "Lawyer",
+    disclaimer:
+      "Belgi.ai performs automated search and an informational assessment of similarity between the designation and trademarks and applications in available sources. The check result is not a legal opinion, a registration decision, or a guarantee of legal protection. The final decision is made by the competent state authority.",
+    niceFallback: ["[3] diapers", "[5] wet wipes"],
+    kikoClasses:
+      "[5] baby diapers; baby pant diapers; sanitary pads; women's sanitary pants.",
+    allProducts: "[3] all products\n[5] all products",
+    allProductsOne: "[3] all products",
   },
 } as const;
 
@@ -60,9 +93,7 @@ export function buildMockReport(
 
   const niceClasses = classification
     ? niceClassesFromClassification(classification)
-    : locale === "ru"
-      ? ["[3] подгузник", "[5] влажный салфетка"]
-      : ["[3] taglik", "[5] nam salfetka"];
+    : [...t.niceFallback];
 
   const classRisks = classification
     ? classRisksFromClassification(classification)
@@ -88,10 +119,7 @@ export function buildMockReport(
             registeredFrom: "14.06.2024",
             registeredTo: "14.06.2034",
             similarity: 60,
-            classesText:
-              locale === "ru"
-                ? "[5] подгузники детские; трусы-подгузники детские; прокладки гигиенические; трусы гигиенические женские."
-                : "[5] bolalar tagliklari; bolalar taglik-shimlari; gigiyenik prokladkalar.",
+            classesText: t.kikoClasses,
           },
           {
             id: "icoco",
@@ -100,10 +128,7 @@ export function buildMockReport(
             registeredFrom: "26.03.2026",
             status: t.statusPending,
             similarity: 32,
-            classesText:
-              locale === "ru"
-                ? "[3] все продукты\n[5] все продукты"
-                : "[3] barcha mahsulotlar\n[5] barcha mahsulotlar",
+            classesText: t.allProducts,
           },
           {
             id: "koko",
@@ -112,8 +137,7 @@ export function buildMockReport(
             registeredFrom: "16.09.2025",
             status: t.statusExam,
             similarity: 21,
-            classesText:
-              locale === "ru" ? "[3] все продукты" : "[3] barcha mahsulotlar",
+            classesText: t.allProductsOne,
           },
         ],
       },

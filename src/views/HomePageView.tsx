@@ -31,12 +31,13 @@ const FEATURE_ICONS = [
 
 function FeatureIcon({ index }: { index: number }) {
   return (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center text-ink">
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center text-ink sm:h-10 sm:w-10">
       <svg
         width={40}
         height={40}
         viewBox="0 0 40 40"
         fill="currentColor"
+        className="h-full w-full"
         aria-hidden
       >
         {FEATURE_ICONS[index] ?? FEATURE_ICONS[0]}
@@ -85,29 +86,28 @@ function SampleCard({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-white p-3 text-left shadow-md sm:p-4",
+        "relative h-full rounded-2xl bg-white p-3 pr-9 text-left shadow-md sm:p-4 sm:pr-10",
         className,
       )}
     >
-      <div className="relative">
-        <p className="m-0 text-sm font-semibold">{name}</p>
-        <p className="m-0 mt-1 text-xs text-ink-muted">{category}</p>
-        <p
-          className={cn(
-            "m-0 mt-2 text-xs font-medium sm:mt-3",
-            tone === "high" ? "text-danger" : "text-warning",
-          )}
-        >
-          {risk}
-        </p>
-        <p className="m-0 text-xs text-ink-muted">{similarity}</p>
-        <span
-          className={cn(
-            "absolute -right-1.5 -top-1.5 h-6 w-6 rounded-full sm:-right-2 sm:-top-2 sm:h-7 sm:w-7",
-            tone === "high" ? "bg-danger" : "bg-warning",
-          )}
-        />
-      </div>
+      <span
+        className={cn(
+          "absolute right-2.5 top-2.5 h-5 w-5 rounded-full sm:right-3 sm:top-3 sm:h-6 sm:w-6",
+          tone === "high" ? "bg-danger" : "bg-warning",
+        )}
+        aria-hidden
+      />
+      <p className="m-0 text-sm font-semibold">{name}</p>
+      <p className="m-0 mt-1 text-xs text-ink-muted">{category}</p>
+      <p
+        className={cn(
+          "m-0 mt-2 text-xs font-medium sm:mt-3",
+          tone === "high" ? "text-danger" : "text-warning",
+        )}
+      >
+        {risk}
+      </p>
+      <p className="m-0 text-xs text-ink-muted">{similarity}</p>
     </div>
   );
 }
@@ -131,21 +131,21 @@ export function HomePageView({ locale }: { locale: Locale }) {
               {copy.home.heroTitle}
             </h1>
 
-            {/* Form width stage — sample cards hang outside on lg+ */}
+            {/* Form stage — floating sample cards only from xl (enough side room) */}
             <div className="relative mx-auto mt-8 w-full max-w-xl sm:mt-10">
               <SampleCard
                 {...cardA}
-                className="pointer-events-none absolute top-1/2 left-0 z-0 hidden w-40 -translate-x-[calc(100%+0.75rem)] -translate-y-1/2 lg:block xl:w-44 xl:-translate-x-[calc(100%+1.25rem)]"
+                className="pointer-events-none absolute top-1/2 left-0 z-0 hidden w-40 -translate-x-[calc(100%+1rem)] -translate-y-1/2 xl:block xl:w-44 xl:-translate-x-[calc(100%+1.5rem)]"
               />
               <SampleCard
                 {...cardB}
-                className="pointer-events-none absolute top-1/2 right-0 z-0 hidden w-40 translate-x-[calc(100%+0.75rem)] -translate-y-1/2 lg:block xl:w-44 xl:translate-x-[calc(100%+1.25rem)]"
+                className="pointer-events-none absolute top-1/2 right-0 z-0 hidden w-40 translate-x-[calc(100%+1rem)] -translate-y-1/2 xl:block xl:w-44 xl:translate-x-[calc(100%+1.5rem)]"
               />
 
               <form
                 action={checkHref}
                 method="get"
-                className="relative z-10 flex w-full flex-col gap-2 overflow-hidden rounded-[1.5rem] bg-white p-2 shadow-md sm:flex-row sm:items-stretch sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-0"
+                className="relative z-10 flex w-full flex-col gap-1.5 rounded-[1.5rem] bg-white p-1.5 shadow-md sm:flex-row sm:items-center sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-1"
               >
                 <label className="sr-only" htmlFor="hero-query">
                   {copy.ui.brandPlaceholder}
@@ -154,19 +154,19 @@ export function HomePageView({ locale }: { locale: Locale }) {
                   id="hero-query"
                   name="q"
                   placeholder="Rizq..."
-                  className="min-h-12 flex-1 border-0 bg-transparent px-4 text-base outline-none sm:min-h-14 sm:px-6"
+                  className="min-h-11 w-full flex-1 border-0 bg-transparent px-4 text-base outline-none sm:min-h-12 sm:px-5"
                   required
                 />
                 <input type="hidden" name="activity" value="general" />
                 <button
                   type="submit"
-                  className="min-h-12 w-full rounded-[var(--radius-pill)] bg-primary px-5 text-sm font-semibold text-white sm:m-1.5 sm:w-auto sm:min-h-0"
+                  className="min-h-11 w-full shrink-0 rounded-[var(--radius-pill)] bg-primary px-5 text-sm font-semibold text-white sm:min-h-12 sm:w-auto"
                 >
                   {copy.ui.check}
                 </button>
               </form>
 
-              <div className="mt-5 grid grid-cols-2 gap-[var(--grid-gap)] lg:hidden">
+              <div className="mt-5 grid grid-cols-2 items-stretch gap-3 sm:gap-[var(--grid-gap)] xl:hidden">
                 <SampleCard {...cardA} />
                 <SampleCard {...cardB} />
               </div>
@@ -177,14 +177,14 @@ export function HomePageView({ locale }: { locale: Locale }) {
             </p>
           </div>
 
-          <div className="mt-10 grid w-full gap-[var(--grid-gap)] text-center sm:mt-14 sm:grid-cols-3">
+          <div className="mt-10 grid w-full grid-cols-3 gap-3 text-center sm:mt-14 sm:gap-[var(--grid-gap)]">
             {copy.home.features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="flex flex-col items-center gap-5"
+                className="flex min-w-0 flex-col items-center gap-3 sm:gap-5"
               >
                 <FeatureIcon index={index} />
-                <p className="m-0 max-w-[12.5rem] text-sm leading-snug text-ink/60 sm:text-base">
+                <p className="m-0 max-w-[12.5rem] text-xs leading-snug text-ink/60 sm:text-sm md:text-base">
                   {feature.title}
                 </p>
               </div>

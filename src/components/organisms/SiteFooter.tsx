@@ -33,7 +33,7 @@ export function SiteFooter({
               <Link
                 key={item.href}
                 href={localePath(locale, item.href)}
-                className="min-h-[var(--tap-min)] py-2 text-sm text-white/85 hover:text-white sm:min-h-0 sm:py-1"
+                className="py-1.5 text-sm text-white/85 hover:text-white"
               >
                 {item.label}
               </Link>
@@ -51,14 +51,14 @@ export function SiteFooter({
               <Link
                 key={group.id}
                 href={localePath(locale, href)}
-                className="min-h-[var(--tap-min)] py-2 text-sm text-white/85 hover:text-white sm:min-h-0 sm:py-1"
+                className="py-1.5 text-sm text-white/85 hover:text-white"
               >
                 {group.footerLabel[locale]}
               </Link>
             ))}
             <Link
               href={localePath(locale, "/legal/")}
-              className="min-h-[var(--tap-min)] py-2 text-sm text-white/85 hover:text-white sm:min-h-0 sm:py-1"
+              className="py-1.5 text-sm text-white/85 hover:text-white"
             >
               {locale === "ru"
                 ? "Все разделы"

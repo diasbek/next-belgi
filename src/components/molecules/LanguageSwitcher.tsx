@@ -31,8 +31,7 @@ function LanguageSwitcherInner({
         aria-controls={listId}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className="sm:hidden">{localeLabelsShort[locale]}</span>
-        <span className="hidden sm:inline">{localeLabels[locale]}</span>
+        {localeLabelsShort[locale]}
       </button>
       {open ? (
         <>
@@ -45,7 +44,7 @@ function LanguageSwitcherInner({
           <ul
             id={listId}
             role="listbox"
-            className="absolute right-0 z-50 mt-2 min-w-[9.5rem] overflow-hidden rounded-2xl border border-black/10 bg-white py-1 shadow-lg"
+            className="absolute right-0 z-50 mt-2 min-w-[10rem] overflow-hidden rounded-2xl border border-black/10 bg-white py-1 shadow-lg"
           >
             {locales.map((nextLocale) => {
               const href = switchLocalePath(
@@ -64,12 +63,7 @@ function LanguageSwitcherInner({
                     )}
                     onClick={() => setOpen(false)}
                   >
-                    <span className="sm:hidden">
-                      {localeLabelsShort[nextLocale]}
-                    </span>
-                    <span className="hidden sm:inline">
-                      {localeLabels[nextLocale]}
-                    </span>
+                    {localeLabels[nextLocale]}
                   </Link>
                 </li>
               );

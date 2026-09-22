@@ -37,6 +37,9 @@ export interface TrademarkCheckInsert {
   classificationSource?: ClassificationSource | null;
   report: unknown;
   source: CheckSource;
+  verificationCode?: string | null;
+  payloadHash?: string | null;
+  conclusionDoc?: unknown;
 }
 
 export interface NotificationLogInsert {

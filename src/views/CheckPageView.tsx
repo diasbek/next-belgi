@@ -6,7 +6,10 @@ import type { Locale } from "@/i18n/config";
 import { getContent } from "@/i18n/get-content";
 import { localePath } from "@/i18n/paths";
 import type { CheckResponse } from "@/lib/check/types";
-import { storeReport } from "@/lib/check/storage";
+import {
+  storeReport,
+  storeCheckMeta,
+} from "@/lib/check/storage";
 import { trackEvent } from "@/lib/analytics/events";
 import {
   checkResumePath,
@@ -74,6 +77,9 @@ export function CheckPageView({
           error?: string;
           redirect?: string;
           preview?: boolean;
+          checkId?: string | null;
+          verificationCode?: string | null;
+          conclusion?: import("@/lib/conclusion").ConclusionDocument | null;
         };
         if (cancelled) return;
         const resume = checkResumePath(locale, query, activity, actionPath);
@@ -90,6 +96,11 @@ export function CheckPageView({
           return;
         }
         storeReport(json.report, Boolean(json.preview));
+        storeCheckMeta({
+          checkId: json.checkId ?? null,
+          verificationCode: json.verificationCode ?? null,
+          conclusion: json.conclusion ?? null,
+        });
         trackEvent("check_success", {
           source: json.source,
           preview: Boolean(json.preview),

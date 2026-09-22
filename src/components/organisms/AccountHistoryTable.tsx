@@ -7,6 +7,7 @@ import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { DashPanel } from "@/components/molecules/DashChrome";
 import { IconSearch } from "@/components/atoms/DashIcons";
+import { HistoryPdfButton } from "@/components/pdf/conclusion/HistoryPdfButton";
 import { cn } from "@/lib/cn";
 
 export type HistoryCheckRow = {
@@ -186,6 +187,7 @@ export function AccountHistoryTable({
                         {copy.history.openReport}
                         <span aria-hidden>↗</span>
                       </Link>
+                      <HistoryPdfButton locale={locale} checkId={c.id} />
                     </td>
                   </tr>
                 );

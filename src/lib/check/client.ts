@@ -9,6 +9,12 @@ import {
 } from "@/lib/classify";
 import type { ActivityClassification } from "@/lib/classify";
 import { insertTrademarkCheck } from "@/lib/db";
+import {
+  buildConclusionDocument,
+  generateVerificationCode,
+  hashConclusionPayload,
+} from "@/lib/conclusion";
+import type { ConclusionDocument } from "@/lib/conclusion";
 import { buildMockReport, buildReportFromMatches } from "./mock";
 import { searchLocalRegistry } from "./registry-search";
 import type { CheckRequest, CheckResponse, TrademarkReport } from "./types";
@@ -108,22 +114,41 @@ async function persistCheck(params: {
   classification: ActivityClassification;
   report: TrademarkReport;
   source: "mock" | "upstream" | "registry";
-}): Promise<string | null> {
+}): Promise<{
+  checkId: string | null;
+  verificationCode: string | null;
+  conclusion: ConclusionDocument | null;
+}> {
   try {
-    return await insertTrademarkCheck({
+    const locale = resolveLocale(params.locale);
+    const verificationCode = generateVerificationCode();
+    const conclusion = buildConclusionDocument({
+      report: params.report,
+      locale,
+      verificationCode,
+    });
+    const payloadHash = hashConclusionPayload(conclusion);
+    const checkId = await insertTrademarkCheck({
       userId: params.userId ?? null,
       query: params.query,
       activityRaw: params.activity,
       activityNormalized: params.classification.activityNormalized,
-      locale: params.locale ?? "uz",
+      locale,
       niceClasses: params.classification.classes,
       classificationSource: params.classification.source,
       report: params.report,
       source: params.source,
+      verificationCode,
+      payloadHash,
+      conclusionDoc: conclusion,
     });
+    if (!checkId) {
+      return { checkId: null, verificationCode: null, conclusion: null };
+    }
+    return { checkId, verificationCode, conclusion };
   } catch (error) {
     console.warn("[check:persist]", error);
-    return null;
+    return { checkId: null, verificationCode: null, conclusion: null };
   }
 }
 
@@ -135,7 +160,13 @@ async function persistCheck(params: {
  */
 export async function runTrademarkCheck(
   input: CheckRequest & { userId?: string | null },
-): Promise<CheckResponse & { checkId?: string | null }> {
+): Promise<
+  CheckResponse & {
+    checkId?: string | null;
+    verificationCode?: string | null;
+    conclusion?: ConclusionDocument | null;
+  }
+> {
   const query = input.query.trim();
   const activity = input.activity.trim();
 
@@ -162,7 +193,7 @@ export async function runTrademarkCheck(
       locale,
       matches,
     });
-    const checkId = await persistCheck({
+    const persisted = await persistCheck({
       query,
       activity,
       locale,
@@ -175,7 +206,9 @@ export async function runTrademarkCheck(
       ok: true,
       source: "registry",
       report,
-      checkId,
+      checkId: persisted.checkId,
+      verificationCode: persisted.verificationCode,
+      conclusion: persisted.conclusion,
     };
   }
 
@@ -216,7 +249,7 @@ export async function runTrademarkCheck(
       classification,
       locale,
     );
-    const checkId = await persistCheck({
+    const persisted = await persistCheck({
       query,
       activity,
       locale,
@@ -230,7 +263,9 @@ export async function runTrademarkCheck(
       ok: true,
       source: "upstream",
       report,
-      checkId,
+      checkId: persisted.checkId,
+      verificationCode: persisted.verificationCode,
+      conclusion: persisted.conclusion,
     };
   } catch (error) {
     console.error("[check:upstream]", error);

@@ -68,6 +68,9 @@ export async function insertTrademarkCheck(
         classification_source: classificationSource ?? null,
         report: input.report,
         source: input.source,
+        verification_code: input.verificationCode ?? null,
+        payload_hash: input.payloadHash ?? null,
+        conclusion_doc: input.conclusionDoc ?? null,
       })
       .select("id")
       .maybeSingle();
@@ -92,6 +95,35 @@ export async function insertTrademarkCheck(
       fallback,
     );
     ({ data, error } = await write(fallback));
+  }
+
+  // Until 20260923020000_check_verification is applied, PostgREST rejects unknown columns.
+  if (
+    error &&
+    /verification_code|payload_hash|conclusion_doc|verification_revoked|PGRST204|schema cache/i.test(
+      error.message,
+    )
+  ) {
+    console.warn(
+      "[db:trademark_checks:insert] verification columns missing — inserting without them",
+    );
+    const retry = await client
+      .from("trademark_checks")
+      .insert({
+        user_id: input.userId ?? null,
+        query: input.query,
+        activity_raw: input.activityRaw,
+        activity_normalized: input.activityNormalized ?? null,
+        locale: input.locale ?? "uz",
+        nice_classes: input.niceClasses,
+        classification_source: input.classificationSource ?? null,
+        report: input.report,
+        source: input.source,
+      })
+      .select("id")
+      .maybeSingle();
+    data = retry.data;
+    error = retry.error;
   }
 
   if (error) {

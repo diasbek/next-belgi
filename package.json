@@ -19,11 +19,13 @@
     "build:nice": "tsx scripts/build-nice-catalog.ts"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.9.0",
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",
     "flexsearch": "^0.8.212",
     "formik": "^2.4.9",
     "next": "16.3.1",
+    "qrcode": "^1.5.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
@@ -38,6 +40,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@types/flexsearch": "^0.7.6",
     "@types/node": "^22",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "eslint": "^9.39.1",

@@ -18,7 +18,11 @@ import { CheckForm } from "@/components/molecules/CheckForm";
 import {
   readStoredReport,
   readStoredReportPreview,
+  readStoredCheckMeta,
+  type StoredCheckMeta,
 } from "@/lib/check/storage";
+import { ConclusionPdfButton } from "@/components/pdf/conclusion/ConclusionPdfButton";
+import type { ConclusionDocument } from "@/lib/conclusion";
 import {
   cardLime,
   gridSpanHalf,
@@ -58,11 +62,15 @@ export function CheckResultPageView({
     readStoredReport(),
   );
   const [preview, setPreview] = useState(() => readStoredReportPreview());
+  const [checkMeta, setCheckMeta] = useState<StoredCheckMeta | null>(() =>
+    readStoredCheckMeta(),
+  );
   const [loadedKey, setLoadedKey] = useState(reportKey);
   if (loadedKey !== reportKey) {
     setLoadedKey(reportKey);
     setReport(readStoredReport());
     setPreview(readStoredReportPreview());
+    setCheckMeta(readStoredCheckMeta());
   }
   const checkFormPath = actionPath;
   const resultEmptyHref = localePath(locale, actionPath);
@@ -119,6 +127,14 @@ export function CheckResultPageView({
           <p className="m-0 mt-2 text-ink-muted">
             {copy.report.markTypeLabel}: {report.markType}
           </p>
+          {!preview && checkMeta?.conclusion ? (
+            <div className="mt-3 sm:flex sm:justify-end">
+              <ConclusionPdfButton
+                locale={locale}
+                conclusion={checkMeta.conclusion as ConclusionDocument}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
 

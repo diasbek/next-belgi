@@ -87,10 +87,7 @@ export function DashMoreSheet({
           </div>
         </div>
         <div className="mb-2">
-          <LanguageSwitcher
-            locale={locale}
-            className="!min-h-10 !w-full !justify-between !rounded-xl !border-black/10 !bg-white !px-3 !text-sm"
-          />
+          <LanguageSwitcher locale={locale} variant="inline" />
         </div>
         <button
           type="button"

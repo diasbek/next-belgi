@@ -52,19 +52,28 @@ function fromSelectOption(opt: SelectOption): ActivityOption {
   };
 }
 
-const selectStyles: StylesConfig<SelectOption, true, GroupBase<SelectOption>> = {
+function buildSelectStyles(
+  compact: boolean,
+): StylesConfig<SelectOption, true, GroupBase<SelectOption>> {
+  return {
   control: (base, state) => ({
     ...base,
-    minHeight: "var(--tap-min)",
-    borderRadius: "var(--radius-md)",
-    borderColor: state.isFocused ? "rgb(26 28 24 / 0.25)" : "rgb(26 28 24 / 0.1)",
+    minHeight: compact ? "3.5rem" : "var(--tap-min)",
+    borderRadius: compact ? "var(--radius-lg)" : "var(--radius-md)",
+    borderColor: state.isFocused
+      ? "color-mix(in srgb, var(--color-primary) 40%, transparent)"
+      : "var(--color-border)",
     boxShadow: "none",
     backgroundColor: "#fff",
-    ":hover": { borderColor: "rgb(26 28 24 / 0.25)" },
+    ":hover": {
+      borderColor: state.isFocused
+        ? "color-mix(in srgb, var(--color-primary) 40%, transparent)"
+        : "var(--color-border)",
+    },
   }),
   valueContainer: (base) => ({
     ...base,
-    padding: "6px 12px",
+    padding: compact ? "0 1.25rem" : "6px 12px",
     gap: 4,
   }),
   multiValue: (base) => ({
@@ -106,9 +115,14 @@ const selectStyles: StylesConfig<SelectOption, true, GroupBase<SelectOption>> = 
     cursor: "pointer",
   }),
   indicatorSeparator: () => ({ display: "none" }),
+  indicatorsContainer: (base) => ({
+    ...base,
+    padding: compact ? "0 0.5rem" : base.padding,
+  }),
   dropdownIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.4)" }),
   clearIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.4)" }),
-};
+  };
+}
 
 export function NiceActivityField({
   locale,
@@ -120,6 +134,7 @@ export function NiceActivityField({
   loadingMessage,
   inputId,
   instanceId,
+  compact = false,
 }: {
   locale: Locale;
   value: ActivityOption[];
@@ -130,7 +145,10 @@ export function NiceActivityField({
   loadingMessage: string;
   inputId?: string;
   instanceId?: string;
+  /** Match the compact check-form row (h-14, same radius as text fields). */
+  compact?: boolean;
 }) {
+  const styles = useMemo(() => buildSelectStyles(compact), [compact]);
   const selectValue = useMemo(() => value.map(toSelectOption), [value]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -171,7 +189,7 @@ export function NiceActivityField({
         onChange(list);
       }}
       placeholder={placeholder}
-      styles={selectStyles}
+      styles={styles}
       classNamePrefix="nice-activity"
       formatCreateLabel={(input) =>
         createLabel.replace("{input}", input.trim())

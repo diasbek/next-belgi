@@ -108,7 +108,7 @@ export function Header({ locale, content }: HeaderProps) {
   const ctaButton = (
     <Button
       href={ctaHref}
-      className="px-5"
+      className="h-11 min-h-11 px-5 py-0"
       aria-busy={auth.status === "loading"}
     >
       {auth.status === "loading" ? "…" : ctaLabel}
@@ -153,7 +153,7 @@ export function Header({ locale, content }: HeaderProps) {
           <div className="hidden items-center gap-3 lg:flex">
             <LanguageSwitcher locale={locale} />
             {isAdmin ? (
-              <Button href={adminHref} variant="ghost" className="px-4">
+              <Button href={adminHref} variant="ghost" className="h-11 min-h-11 px-4 py-0">
                 {appCopy.admin}
               </Button>
             ) : null}
@@ -219,8 +219,8 @@ export function Header({ locale, content }: HeaderProps) {
                 </Link>
               );
             })}
-            <div className="mt-2 px-1">
-              <LanguageSwitcher locale={locale} className="w-full" />
+            <div className="mt-2">
+              <LanguageSwitcher locale={locale} variant="inline" />
             </div>
             <div className="mt-auto flex flex-col gap-3 border-t border-black/10 pt-5">
               {isAdmin ? (

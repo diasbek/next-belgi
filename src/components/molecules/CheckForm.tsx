@@ -276,8 +276,8 @@ export function CheckForm({
         <form
           onSubmit={onSubmitCompact}
           className={cn(
-            "grid w-full gap-[var(--grid-gap)]",
-            "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto] lg:items-start",
+            "grid w-full items-center gap-3 text-left",
+            "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)_auto]",
           )}
         >
           <label className="sr-only" htmlFor={brandId}>
@@ -289,7 +289,7 @@ export function CheckForm({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={brandPlaceholder}
-            className={fieldInput}
+            className={cn(fieldInput, "h-14 min-h-14")}
             required
             autoComplete="off"
           />
@@ -308,13 +308,14 @@ export function CheckForm({
               loadingMessage={copy.ui.activityLoading}
               inputId={activityId}
               instanceId={`${idPrefix}-nice`}
+              compact
             />
           </div>
 
           <Button
             type="submit"
             disabled={pending || !activityText.trim()}
-            className="w-full min-w-0 lg:min-w-[9rem]"
+            className="h-14 min-h-14 w-full py-0 lg:w-auto lg:min-w-[9.5rem] lg:px-8"
           >
             {submitLabel}
           </Button>

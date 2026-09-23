@@ -336,7 +336,6 @@ export function HomePageView({ locale }: { locale: Locale }) {
                   <p className="mb-0 mt-2 flex-1 text-sm leading-relaxed text-ink/75">
                     {step.text}
                   </p>
-                  <p className="mb-0 mt-4 text-sm text-ink/45">{step.duration}</p>
                 </article>
               );
             })}

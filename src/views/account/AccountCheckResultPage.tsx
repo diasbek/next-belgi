@@ -11,13 +11,20 @@ export async function AccountCheckResultPage({
   locale,
   query = "",
   activity = "",
+  checkId = "",
 }: {
   locale: Locale;
   query?: string;
   activity?: string;
+  checkId?: string;
 }) {
   const appUser = await requireUser(
-    loginWithNext(locale, localePath(locale, "/account/check/")),
+    loginWithNext(
+      locale,
+      checkId
+        ? `${localePath(locale, "/account/check/result/")}?checkId=${encodeURIComponent(checkId)}`
+        : localePath(locale, "/account/check/"),
+    ),
   );
   const copy = getAppCopy(locale);
 
@@ -33,6 +40,7 @@ export async function AccountCheckResultPage({
         locale={locale}
         query={query}
         activity={activity}
+        checkId={checkId}
         embedded
         actionPath="/account/check/"
       />

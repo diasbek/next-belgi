@@ -90,19 +90,29 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 
   if (!conclusion) {
-    return NextResponse.json(
-      { ok: false, error: "missing_conclusion" },
-      { status: 404 },
-    );
+    // Still allow report-only responses (older or partial rows).
+    if (!data.report || typeof data.report !== "object") {
+      return NextResponse.json(
+        { ok: false, error: "missing_conclusion" },
+        { status: 404 },
+      );
+    }
   }
+
+  const report =
+    data.report && typeof data.report === "object" && !Array.isArray(data.report)
+      ? (data.report as TrademarkReport)
+      : null;
 
   return NextResponse.json({
     ok: true,
     checkId: data.id,
     query: data.query,
+    activity: data.activity_raw ?? null,
     verificationCode,
     revoked: Boolean(data.verification_revoked_at),
     conclusion,
+    report,
     createdAt: data.created_at,
   });
 }

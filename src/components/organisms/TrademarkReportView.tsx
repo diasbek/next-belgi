@@ -134,7 +134,7 @@ export function TrademarkReportView({
                           <p className="m-0 mt-1 text-xs text-ink-muted">
                             {[
                               match.registeredFrom
-                                ? `Рег. ${match.registeredFrom}${match.registeredTo ? ` - ${match.registeredTo}` : ""}`
+                                ? `${copy.report.registeredPrefix} ${match.registeredFrom}${match.registeredTo ? ` - ${match.registeredTo}` : ""}`
                                 : null,
                               match.status ? `[${match.status}]` : null,
                             ]
@@ -216,7 +216,7 @@ export function TrademarkReportView({
                 className="flex h-20 w-[calc(50%-0.25rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-2.5 sm:h-24 sm:w-28 sm:p-3"
               >
                 <span className="text-xs text-ink-muted">
-                  {risk.classNumber} класс
+                  {risk.classNumber} {copy.report.classSuffix}
                 </span>
                 <span className="text-xl font-semibold sm:text-2xl">
                   {risk.percent}%

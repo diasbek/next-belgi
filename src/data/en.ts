@@ -50,10 +50,11 @@ export const enCopy: SiteCopy = {
       "Pick goods/services from the classifier — classes appear here",
     affectedClassChip: "Class {n}",
     contactLawyer: "Contact",
+    checkFormNote:
+      "The result is an informational report based on the Adliya registry and an AI estimate — not a legal opinion.",
   },
   nav: [
     { label: "Agency", href: "/agency/" },
-    { label: "Work", href: "/works/" },
     { label: "Services", href: "/services/" },
     { label: "Contacts", href: "/contacts/" },
   ],
@@ -159,7 +160,7 @@ export const enCopy: SiteCopy = {
   },
   works: {
     title: "Work",
-    lead: "Examples of checks and registrations.",
+    lead: "How a check works — short process overview.",
     empty: "Case studies coming soon.",
   },
   services: {
@@ -258,6 +259,12 @@ export const enCopy: SiteCopy = {
     disclaimer:
       "Belgi.ai performs automated search and an informational assessment of similarity between the designation and trademarks and applications in available sources. The check result is not a legal opinion, a registration decision, or a guarantee of legal protection. The final decision is made by the competent state authority. The Ministry of Justice / competent authority may disagree with the report conclusions because registries are updated regularly.",
     lawyersTitle: "Lawyers",
+    registeredPrefix: "Reg.",
+    classSuffix: "class",
+    notFoundTitle: "Report not found",
+    notFoundLead:
+      "This check was not saved or the link is outdated. Start a new check.",
+    loading: "Loading report…",
   },
   login: {
     title: "Sign in",

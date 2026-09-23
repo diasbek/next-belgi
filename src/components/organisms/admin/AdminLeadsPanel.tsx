@@ -112,7 +112,7 @@ export function AdminLeadsPanel({
     },
     {
       id: "contact",
-      header: copy.adminPayments.colUser,
+      header: copy.adminLeads.colContact,
       cell: (r) => payloadPreview(r.payload) || r.id.slice(0, 8),
     },
     {
@@ -142,7 +142,7 @@ export function AdminLeadsPanel({
             searchPlaceholder={copy.adminUi.search}
             clearLabel={copy.adminUi.clearFilters}
             statusOptions={[
-              { value: "", label: copy.adminPayments.allStatuses },
+              { value: "", label: copy.adminLeads.allStatuses },
               { value: "new", label: "new" },
               { value: "sent", label: "sent" },
               { value: "failed", label: "failed" },

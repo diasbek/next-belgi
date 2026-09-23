@@ -220,11 +220,10 @@ export function HomePageView({ locale }: { locale: Locale }) {
                 <input
                   id="hero-query"
                   name="q"
-                  placeholder="Rizq..."
+                  placeholder={copy.ui.brandPlaceholder}
                   className="min-h-12 w-full flex-1 border-0 bg-transparent px-4 text-base outline-none sm:min-h-14 sm:px-6"
                   required
                 />
-                <input type="hidden" name="activity" value="general" />
                 <button
                   type="submit"
                   className="min-h-12 w-full shrink-0 rounded-[var(--radius-pill)] bg-primary px-6 text-sm font-semibold text-white sm:min-h-14 sm:w-auto sm:px-7"
@@ -252,11 +251,10 @@ export function HomePageView({ locale }: { locale: Locale }) {
                 <input
                   id="hero-query-desktop"
                   name="q"
-                  placeholder="Rizq..."
+                  placeholder={copy.ui.brandPlaceholder}
                   className="min-h-14 w-full flex-1 border-0 bg-transparent px-6 text-base outline-none"
                   required
                 />
-                <input type="hidden" name="activity" value="general" />
                 <button
                   type="submit"
                   className="min-h-14 shrink-0 rounded-[var(--radius-pill)] bg-primary px-7 text-sm font-semibold text-white"

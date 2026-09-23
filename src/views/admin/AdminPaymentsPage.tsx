@@ -21,7 +21,7 @@ export async function AdminPaymentsPage({
   locale: Locale;
   searchParams?: AdminListSearchParams;
 }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/payments/")),
     localePath(locale, "/"),
   );
@@ -57,7 +57,7 @@ export async function AdminPaymentsPage({
   }
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminPaymentsPanel
         locale={locale}
         rows={rows}

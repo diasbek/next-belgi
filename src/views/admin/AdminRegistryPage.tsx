@@ -21,7 +21,7 @@ export async function AdminRegistryPage({
   locale: Locale;
   searchParams?: AdminListSearchParams;
 }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/registry/")),
     localePath(locale, "/"),
   );
@@ -53,7 +53,7 @@ export async function AdminRegistryPage({
     let listReq = db
       .from("trademarks")
       .select(
-        "id, adliya_id, number, transliteration, trademark_type, status, owner, applicant, registration_number, logo, source, active, field_locks, updated_at, application_date, registration_date, synced_at",
+        "id, adliya_id, number, transliteration, trademark_type, status, owner, applicant, registration_number, logo, source, active, field_locks, updated_at, application_date, registration_date, synced_at, trademark_mgs(class_number)",
         { count: "exact" },
       )
       .order(sort, { ascending: dir === "asc" })
@@ -85,9 +85,26 @@ export async function AdminRegistryPage({
     ] = await Promise.all([countReq, stateReq, listReq, statusesReq]);
     registryCount = c ?? 0;
     listTotal = listCount ?? 0;
-    rows = (data || []) as AdminRegistryRow[];
+    rows = ((data || []) as Array<AdminRegistryRow & { trademark_mgs?: { class_number: number }[] }>).map(
+      (row) => {
+        const mgs = Array.isArray(row.trademark_mgs) ? row.trademark_mgs : [];
+        const classNumbers = [
+          ...new Set(
+            mgs
+              .map((m) => Number(m.class_number))
+              .filter((n) => Number.isFinite(n) && n >= 1 && n <= 45),
+          ),
+        ].sort((a, b) => a - b);
+        const { trademark_mgs: _mgs, ...rest } = row;
+        return { ...rest, class_numbers: classNumbers };
+      },
+    );
     syncRunning = s?.status === "running";
-    importStatus = `${String(s?.status ?? "—")} · page ${String(s?.last_page ?? "—")} / ${String(s?.total_pages ?? "—")} · ${String(s?.imported_count ?? 0)}`;
+    importStatus = [
+      String(s?.status ?? "—"),
+      `p.${String(s?.last_page ?? "—")}/${String(s?.total_pages ?? "—")}`,
+      String(s?.imported_count ?? 0),
+    ].join(" · ");
 
     if (!statusErr && Array.isArray(statusData)) {
       statusValues = statusData
@@ -130,7 +147,7 @@ export async function AdminRegistryPage({
   }
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminRegistryPanel
         locale={locale}
         rows={rows}
@@ -141,8 +158,6 @@ export async function AdminRegistryPage({
         importStatus={importStatus}
         syncRunning={syncRunning}
         dbUnavailable={!db}
-        sort={sort}
-        dir={dir}
         statusValues={statusValues}
       />
     </AppShell>

@@ -8,14 +8,14 @@ import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
 
 export async function AdminIntegrationsPage({ locale }: { locale: Locale }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/integrations/")),
     localePath(locale, "/"),
   );
   const copy = getAppCopy(locale);
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <IntegrationsPanel locale={locale} />
     </AppShell>
   );

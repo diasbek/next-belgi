@@ -21,7 +21,7 @@ export async function AdminLeadsPage({
   locale: Locale;
   searchParams?: AdminListSearchParams;
 }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/leads/")),
     localePath(locale, "/"),
   );
@@ -54,7 +54,7 @@ export async function AdminLeadsPage({
   }
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminLeadsPanel
         locale={locale}
         rows={rows}

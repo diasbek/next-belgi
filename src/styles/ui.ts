@@ -87,7 +87,13 @@ export const btnHeroPrimary = btnPrimary;
 export const btnHeroSecondary = btnSecondary;
 
 export const fieldInput =
-  "min-h-14 w-full rounded-[var(--radius-lg)] border border-[#d4b8ff]/70 bg-white px-4 text-base text-ink outline-none placeholder:text-ink-muted/70 focus:border-primary/40 sm:px-5";
+  "min-h-14 w-full rounded-[var(--radius-lg)] border border-border bg-white px-4 text-base text-ink outline-none placeholder:text-ink-muted/70 focus:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/20 sm:px-5";
+
+export const focusRing =
+  "outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2";
+
+export const skeletonPulse =
+  "animate-pulse rounded-xl bg-black/5";
 
 export const cardLime =
   "rounded-[var(--radius-md)] bg-lime p-4 text-ink shadow-sm sm:p-5 md:p-6";

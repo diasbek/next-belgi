@@ -69,6 +69,7 @@ export interface SiteCopy {
     affectedClassesEmpty: string;
     affectedClassChip: string;
     contactLawyer: string;
+    checkFormNote: string;
   };
   nav: NavItem[];
   footer: {
@@ -184,6 +185,11 @@ export interface SiteCopy {
     specialistHint: string;
     disclaimer: string;
     lawyersTitle: string;
+    registeredPrefix: string;
+    classSuffix: string;
+    notFoundTitle: string;
+    notFoundLead: string;
+    loading: string;
   };
   login: {
     title: string;

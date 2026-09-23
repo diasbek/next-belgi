@@ -16,6 +16,13 @@ export function SiteLayout({ locale, children }: SiteLayoutProps) {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        {locale === "ru"
+          ? "К основному содержимому"
+          : locale === "en"
+            ? "Skip to main content"
+            : "Asosiy kontentga oʻtish"}
+      </a>
       <HashScroll />
       <Header locale={locale} content={content} />
       <div id="site-content" className="flex-1">

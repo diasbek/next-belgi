@@ -11,7 +11,7 @@ import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
 
 export async function AdminPlansPage({ locale }: { locale: Locale }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/plans/")),
     localePath(locale, "/"),
   );
@@ -23,7 +23,7 @@ export async function AdminPlansPage({ locale }: { locale: Locale }) {
     : { data: [] };
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminPlansPanel
         locale={locale}
         rows={(data || []) as AdminPlanRow[]}

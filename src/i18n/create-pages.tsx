@@ -132,12 +132,14 @@ export function createCheckResultPage(locale: Locale) {
       const params = await searchParams;
       const query = String(params.q ?? "");
       const activity = String(params.activity ?? "");
+      const checkId = String(params.checkId ?? "");
       return (
         <SiteLayout locale={locale}>
           <CheckResultPageView
             locale={locale}
             query={query}
             activity={activity}
+            checkId={checkId}
           />
         </SiteLayout>
       );

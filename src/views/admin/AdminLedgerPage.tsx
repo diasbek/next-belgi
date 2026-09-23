@@ -21,7 +21,7 @@ export async function AdminLedgerPage({
   locale: Locale;
   searchParams?: AdminListSearchParams;
 }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/ledger/")),
     localePath(locale, "/"),
   );
@@ -53,7 +53,7 @@ export async function AdminLedgerPage({
   }
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminLedgerPanel
         locale={locale}
         rows={rows}

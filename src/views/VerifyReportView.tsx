@@ -55,14 +55,16 @@ export function VerifyReportView({
       </p>
 
       {loading ? (
-        <p className="mt-8 text-ink-muted">…</p>
+        <p className="mt-8 text-ink-muted" aria-live="polite">
+          {copy.verifyPageTitle}…
+        </p>
       ) : (
         <div
           className={cn(
             "mt-8 rounded-2xl border px-5 py-5",
             status === "valid"
-              ? "border-[#b8d96a] bg-[#f4fbe6]"
-              : "border-black/10 bg-surface-muted",
+              ? "border-lime bg-row-selected"
+              : "border-border bg-surface-muted",
           )}
         >
           <p

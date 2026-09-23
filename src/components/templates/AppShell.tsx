@@ -123,7 +123,7 @@ export function AppShell({
   }
 
   return (
-    <div className="flex min-h-dvh bg-[#f3f4f1] text-ink">
+    <div className="flex min-h-dvh bg-dash-bg text-ink">
       <aside className="sticky top-0 hidden h-dvh w-[15.5rem] shrink-0 flex-col border-r border-black/5 bg-white lg:flex">
         <div className="flex flex-1 flex-col overflow-y-auto p-3">
           <Link
@@ -165,7 +165,7 @@ export function AppShell({
 
             <div className="flex items-center gap-2 sm:gap-3">
               {variant === "account" ? (
-                <div className="flex items-center gap-1.5 rounded-full bg-[#f3f4f1] py-1 pr-2.5 pl-2 text-xs sm:gap-2 sm:py-1 sm:pr-3 sm:pl-2.5 sm:text-sm">
+                <div className="flex items-center gap-1.5 rounded-full bg-dash-bg py-1 pr-2.5 pl-2 text-xs sm:gap-2 sm:py-1 sm:pr-3 sm:pl-2.5 sm:text-sm">
                   <span className="text-ink" aria-hidden>
                     <IconCoins />
                   </span>

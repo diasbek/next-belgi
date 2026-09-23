@@ -16,8 +16,7 @@ Shared dash primitives: `DashPageHeader`, `DashPanel`, `DashStatCard` in `molecu
 ## Overlay z-index
 
 - Tab bar: `70`
-- Confirm / drawer overlay: `85`
-- Sheet / drawer panel: `90`
+- Confirm / drawer overlay + panel: `200` (portaled above shell chrome)
 
 ## Patterns
 

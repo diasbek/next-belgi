@@ -31,11 +31,6 @@ export function HistoryPdfButton({
         conclusion?: ConclusionDocument | null;
       };
       if (!res.ok || !json.ok || !json.conclusion) {
-        console.warn(
-          "[history:pdf]",
-          json.error || "missing_conclusion",
-          res.status,
-        );
         setFailed(true);
         return;
       }
@@ -43,8 +38,7 @@ export function HistoryPdfButton({
         "@/components/pdf/conclusion/downloadConclusionPdf"
       );
       await downloadConclusionPdf(json.conclusion);
-    } catch (e) {
-      console.warn("[history:pdf]", e);
+    } catch {
       setFailed(true);
     } finally {
       setBusy(false);
@@ -52,15 +46,21 @@ export function HistoryPdfButton({
   }
 
   return (
-    <button
-      type="button"
-      disabled={busy}
-      onClick={() => void onClick()}
-      title={failed ? copy.downloadPdf : undefined}
-      data-failed={failed || undefined}
-      className="ml-3 inline-flex items-center font-medium text-ink underline-offset-2 hover:underline disabled:opacity-50 data-[failed]:text-red-600"
-    >
-      {busy ? copy.downloading : "PDF"}
-    </button>
+    <span className="ml-3 inline-flex flex-col items-start gap-0.5">
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => void onClick()}
+        aria-busy={busy}
+        className="inline-flex items-center font-medium text-ink underline-offset-2 hover:underline disabled:opacity-50"
+      >
+        {busy ? copy.downloading : copy.downloadPdf}
+      </button>
+      {failed ? (
+        <span className="text-xs text-danger" role="alert">
+          {copy.downloadFailed}
+        </span>
+      ) : null}
+    </span>
   );
 }

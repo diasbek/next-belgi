@@ -16,16 +16,20 @@ export function AdminDataTable<T extends { id: string }>({
   onRowClick,
   selectedId,
   className,
+  tableClassName,
 }: {
   columns: AdminColumn<T>[];
   rows: T[];
   onRowClick?: (row: T) => void;
   selectedId?: string | null;
   className?: string;
+  tableClassName?: string;
 }) {
   return (
     <div className={cn("hidden overflow-x-auto md:block", className)}>
-      <table className="w-full min-w-[40rem] text-left text-sm">
+      <table
+        className={cn("w-full min-w-[40rem] text-left text-sm", tableClassName)}
+      >
         <thead>
           <tr className="border-b border-black/5 text-xs text-ink-muted">
             {columns.map((col) => (
@@ -49,8 +53,8 @@ export function AdminDataTable<T extends { id: string }>({
               onClick={onRowClick ? () => onRowClick(row) : undefined}
               className={cn(
                 "border-b border-black/5 last:border-0",
-                onRowClick && "cursor-pointer hover:bg-[#f8f9f6]",
-                selectedId === row.id && "bg-[#f4fbe6]",
+                onRowClick && "cursor-pointer hover:bg-row-hover",
+                selectedId === row.id && "bg-row-selected",
               )}
             >
               {columns.map((col) => (

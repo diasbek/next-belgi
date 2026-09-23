@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { Button } from "@/components/atoms/Button";
@@ -140,9 +141,12 @@ export function BillingPanel({
   const resolvedSelectedId = plans.some((p) => p.id === selectedId)
     ? selectedId
     : (plans[0]?.id ?? "");
-  if (resolvedSelectedId !== selectedId) {
-    setSelectedId(resolvedSelectedId);
-  }
+
+  useEffect(() => {
+    if (resolvedSelectedId !== selectedId) {
+      setSelectedId(resolvedSelectedId);
+    }
+  }, [resolvedSelectedId, selectedId]);
 
   let resolvedProvider: "payme" | "click" | null = provider;
   if (provider === "payme" && !paymeOk) {
@@ -152,14 +156,30 @@ export function BillingPanel({
   } else if (!provider && defaultProvider) {
     resolvedProvider = defaultProvider;
   }
-  if (resolvedProvider !== provider) {
-    setProvider(resolvedProvider);
-  }
 
   useEffect(() => {
-    if (!paidId || !hasResume || !resumeNext) return;
-    router.replace(resumeNext);
-  }, [paidId, hasResume, resumeNext, router]);
+    if (resolvedProvider !== provider) {
+      setProvider(resolvedProvider);
+    }
+  }, [resolvedProvider, provider]);
+
+  useEffect(() => {
+    if (!paidId) return;
+    toast.success(copy.billing.paidSuccess);
+    if (hasResume && resumeNext) {
+      router.replace(resumeNext);
+      return;
+    }
+    router.replace(localePath(locale, "/account/billing/"));
+    router.refresh();
+  }, [
+    paidId,
+    hasResume,
+    resumeNext,
+    router,
+    copy.billing.paidSuccess,
+    locale,
+  ]);
 
   const unitPrice = useMemo(() => {
     const one = plans.find((p) => p.credits === 1) || plans[0];
@@ -197,7 +217,7 @@ export function BillingPanel({
         setError(
           json.error === "payments_not_configured"
             ? copy.billing.notConfigured
-            : json.error || "Error",
+            : json.error || copy.billing.genericError,
         );
         return;
       }
@@ -213,7 +233,7 @@ export function BillingPanel({
           error?: string;
         };
         if (!complete.ok || !cjson.ok) {
-          setError(cjson.error || "Error");
+          setError(cjson.error || copy.billing.genericError);
           return;
         }
         if (hasResume && resumeNext) {
@@ -230,7 +250,7 @@ export function BillingPanel({
       }
       window.location.href = json.checkoutUrl;
     } catch {
-      setError("Error");
+      setError(copy.billing.genericError);
     } finally {
       setBusy(false);
     }
@@ -462,7 +482,9 @@ export function BillingPanel({
                 </p>
               </>
             ) : (
-              <p className="m-0 text-sm text-ink-muted">—</p>
+              <p className="m-0 text-sm text-ink-muted">
+                {copy.billing.plansEmpty}
+              </p>
             )}
           </DashPanel>
         </section>

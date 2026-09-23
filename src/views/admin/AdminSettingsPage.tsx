@@ -15,7 +15,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/client";
 import Link from "next/link";
 
 export async function AdminSettingsPage({ locale }: { locale: Locale }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/settings/")),
     localePath(locale, "/"),
   );
@@ -38,7 +38,7 @@ export async function AdminSettingsPage({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <DashPageHeader
         title={copy.adminSettings.title}
         lead={copy.adminSettings.lead}

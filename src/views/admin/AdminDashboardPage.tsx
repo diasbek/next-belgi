@@ -17,6 +17,7 @@ import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
 import Link from "next/link";
+import { ErrorBanner } from "@/components/molecules/admin/ErrorBanner";
 
 export async function AdminDashboardPage({ locale }: { locale: Locale }) {
   const admin = await requireAdmin(
@@ -30,6 +31,7 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
   let checksToday = 0;
   let revenue = 0;
   let failed = 0;
+  const dbUnavailable = !db;
 
   if (db) {
     const today = new Date();
@@ -57,6 +59,9 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
     failed = fail.count ?? 0;
   }
 
+  const revenueLocale =
+    locale === "ru" ? "ru-RU" : locale === "en" ? "en-GB" : "uz-UZ";
+
   const stats = [
     {
       label: copy.adminDash.users,
@@ -72,7 +77,7 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
     },
     {
       label: copy.adminDash.revenue,
-      value: revenue.toLocaleString(),
+      value: revenue.toLocaleString(revenueLocale),
       icon: <IconRevenue />,
       href: localePath(locale, "/admin/payments/"),
     },
@@ -90,6 +95,8 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
     { href: localePath(locale, "/admin/checks/"), label: copy.nav.checks },
     { href: localePath(locale, "/admin/registry/"), label: copy.nav.registry },
     { href: localePath(locale, "/admin/leads/"), label: copy.nav.leads },
+    { href: localePath(locale, "/admin/sessions/"), label: copy.nav.sessions },
+    { href: localePath(locale, "/admin/ledger/"), label: copy.nav.ledger },
     { href: localePath(locale, "/admin/settings/"), label: copy.nav.settings },
   ];
 
@@ -101,6 +108,10 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
       email={admin.email}
     >
       <DashPageHeader title={copy.adminDash.title} lead={copy.adminDash.lead} />
+
+      {dbUnavailable ? (
+        <ErrorBanner className="mb-5">{copy.adminUi.dbUnavailable}</ErrorBanner>
+      ) : null}
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s) => (
@@ -117,7 +128,7 @@ export async function AdminDashboardPage({ locale }: { locale: Locale }) {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-[#f3f4f1]"
+                className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-dash-bg"
               >
                 {item.label}
                 <span className="text-ink-muted" aria-hidden>

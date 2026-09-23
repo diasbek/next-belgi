@@ -49,10 +49,11 @@ export const uzCopy: SiteCopy = {
     affectedClassesEmpty: "MKTU dan tovar/xizmat tanlang — sinflar shu yerda chiqadi",
     affectedClassChip: "Sinf {n}",
     contactLawyer: "Bogʻlanish",
+    checkFormNote:
+      "Natija — Adliya reestri va AI bahosi asosidagi axboriy hisobot, yuridik xulosa emas.",
   },
   nav: [
     { label: "Agentlik", href: "/agency/" },
-    { label: "Ishlar", href: "/works/" },
     { label: "Xizmatlar", href: "/services/" },
     { label: "Kontaktlar", href: "/contacts/" },
   ],
@@ -158,7 +159,7 @@ export const uzCopy: SiteCopy = {
   },
   works: {
     title: "Ishlar",
-    lead: "Tekshiruv va roʻyxatga olish misollari.",
+    lead: "Tekshiruv qanday ishlaydi — qisqa jarayon.",
     empty: "Keyslar tez orada paydo boʻladi.",
   },
   services: {
@@ -257,6 +258,12 @@ export const uzCopy: SiteCopy = {
     disclaimer:
       "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan o‘xshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, ro‘yxatga olish to‘g‘risida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi. Adliya vazirligi / vakolatli organ hisobot xulosalari bilan kelishmasligi mumkin, chunki reestrlar muntazam yangilanadi.",
     lawyersTitle: "Yuristlar",
+    registeredPrefix: "Roʻyxat",
+    classSuffix: "sinf",
+    notFoundTitle: "Hisobot topilmadi",
+    notFoundLead:
+      "Bu tekshiruv saqlanmagan yoki havola eskirgan. Yangi tekshiruvni boshlang.",
+    loading: "Hisobot yuklanmoqda…",
   },
   login: {
     title: "Kirish",

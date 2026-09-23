@@ -26,6 +26,7 @@ export type ConclusionCopy = {
   verifyLabel: string;
   downloadPdf: string;
   downloading: string;
+  downloadFailed: string;
   previewWatermark: string;
   verifyPageTitle: string;
   verifyValid: string;
@@ -68,6 +69,7 @@ const uz: ConclusionCopy = {
   verifyLabel: "Hisobot haqiqiyligini tekshirish",
   downloadPdf: "PDF yuklab olish",
   downloading: "PDF tayyorlanmoqda…",
+  downloadFailed: "PDF yuklab boʻlmadi. Qayta urinib koʻring.",
   previewWatermark: "PREVIEW",
   verifyPageTitle: "Hisobot haqiqiyligi",
   verifyValid: "Hujjat haqiqiy",
@@ -110,6 +112,7 @@ const ru: ConclusionCopy = {
   verifyLabel: "Проверить подлинность отчёта",
   downloadPdf: "Скачать PDF",
   downloading: "Готовим PDF…",
+  downloadFailed: "Не удалось скачать PDF. Попробуйте ещё раз.",
   previewWatermark: "PREVIEW",
   verifyPageTitle: "Подлинность отчёта",
   verifyValid: "Документ подлинный",
@@ -152,6 +155,7 @@ const en: ConclusionCopy = {
   verifyLabel: "Verify report authenticity",
   downloadPdf: "Download PDF",
   downloading: "Preparing PDF…",
+  downloadFailed: "Could not download PDF. Please try again.",
   previewWatermark: "PREVIEW",
   verifyPageTitle: "Report authenticity",
   verifyValid: "Document is authentic",

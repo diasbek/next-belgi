@@ -6,11 +6,7 @@ import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { Button } from "@/components/atoms/Button";
 import { DashPanel } from "@/components/molecules/DashChrome";
-import {
-  AdminField,
-  AdminInput,
-  AdminSelect,
-} from "@/components/atoms/admin/AdminField";
+import { fieldInput } from "@/styles/ui";
 
 const INTENTS = ["own_brand", "agency", "lawyer", "other"] as const;
 
@@ -74,7 +70,7 @@ export function OnboardingCard({
 
   return (
     <DashPanel className="mb-6 overflow-hidden">
-      <div className="border-b border-black/5 bg-[#f8f9f6] px-5 py-4">
+      <div className="border-b border-border bg-row-hover px-5 py-4">
         <p className="m-0 text-xs font-semibold tracking-wide text-ink-muted uppercase">
           {copy.onboarding.eyebrow}
         </p>
@@ -84,34 +80,50 @@ export function OnboardingCard({
         <p className="m-0 mt-1 text-sm text-ink-muted">{copy.onboarding.lead}</p>
       </div>
       <form onSubmit={(e) => void onSubmit(e)} className="space-y-4 px-5 py-5">
-        <AdminField label={copy.onboarding.fullName}>
-          <AdminInput
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium text-ink">
+            {copy.onboarding.fullName}
+          </span>
+          <input
+            className={fieldInput}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder={copy.onboarding.fullNamePlaceholder}
             required
             autoComplete="name"
           />
-        </AdminField>
-        <AdminField label={copy.onboarding.company}>
-          <AdminInput
+        </label>
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium text-ink">
+            {copy.onboarding.company}
+          </span>
+          <input
+            className={fieldInput}
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder={copy.onboarding.companyPlaceholder}
             required
             autoComplete="organization"
           />
-        </AdminField>
-        <AdminField label={copy.onboarding.jobTitle}>
-          <AdminInput
+        </label>
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium text-ink">
+            {copy.onboarding.jobTitle}
+          </span>
+          <input
+            className={fieldInput}
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             placeholder={copy.onboarding.jobTitlePlaceholder}
             autoComplete="organization-title"
           />
-        </AdminField>
-        <AdminField label={copy.onboarding.intent}>
-          <AdminSelect
+        </label>
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium text-ink">
+            {copy.onboarding.intent}
+          </span>
+          <select
+            className={fieldInput}
             value={intent}
             onChange={(e) => setIntent(e.target.value)}
           >
@@ -120,8 +132,8 @@ export function OnboardingCard({
                 {intentLabel(v)}
               </option>
             ))}
-          </AdminSelect>
-        </AdminField>
+          </select>
+        </label>
         {error ? (
           <p className="m-0 text-sm text-danger" role="alert">
             {error}

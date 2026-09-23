@@ -106,16 +106,21 @@ export async function AccountOverviewPage({ locale }: { locale: Locale }) {
         ) : (
           <ul className="m-0 divide-y divide-black/5 p-0">
             {checks.map((c) => (
-              <li
-                key={c.id}
-                className="flex items-center justify-between gap-3 px-5 py-3.5 text-sm"
-              >
-                <span className="min-w-0 truncate font-medium text-ink">
-                  {c.query}
-                </span>
-                <span className="shrink-0 text-ink-muted">
-                  {new Date(c.created_at).toLocaleDateString()}
-                </span>
+              <li key={c.id} className="text-sm">
+                <Link
+                  href={`${localePath(locale, "/account/check/result/")}?${new URLSearchParams({ checkId: c.id, q: c.query }).toString()}`}
+                  className="flex items-center justify-between gap-3 px-5 py-3.5 text-ink no-underline hover:bg-surface-muted"
+                >
+                  <span className="min-w-0 truncate font-medium">
+                    {c.query}
+                  </span>
+                  <span className="shrink-0 text-ink-muted">
+                    {new Date(c.created_at).toLocaleDateString(
+                      locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-GB",
+                      { timeZone: "UTC" },
+                    )}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>

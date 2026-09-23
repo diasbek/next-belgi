@@ -98,10 +98,12 @@ function AdminCheckPdfButton({
 }) {
   const copy = getConclusionCopy(locale);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   async function onClick() {
     if (busy) return;
     setBusy(true);
+    setFailed(false);
     try {
       let doc = conclusion;
       if (!doc) {
@@ -114,7 +116,7 @@ function AdminCheckPdfButton({
           conclusion?: ConclusionDocument | null;
         };
         if (!res.ok || !json.ok || !json.conclusion) {
-          console.warn("[admin:checks:pdf]", json);
+          setFailed(true);
           return;
         }
         doc = json.conclusion;
@@ -123,22 +125,29 @@ function AdminCheckPdfButton({
         "@/components/pdf/conclusion/downloadConclusionPdf"
       );
       await downloadConclusionPdf(doc);
-    } catch (e) {
-      console.warn("[admin:checks:pdf]", e);
+    } catch {
+      setFailed(true);
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <Button
-      type="button"
-      className="w-full"
-      disabled={busy}
-      onClick={() => void onClick()}
-    >
-      {busy ? copy.downloading : copy.downloadPdf}
-    </Button>
+    <div className="w-full space-y-2">
+      <Button
+        type="button"
+        className="w-full"
+        disabled={busy}
+        onClick={() => void onClick()}
+      >
+        {busy ? copy.downloading : copy.downloadPdf}
+      </Button>
+      {failed ? (
+        <p className="m-0 text-center text-xs text-danger" role="alert">
+          {copy.downloadFailed}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

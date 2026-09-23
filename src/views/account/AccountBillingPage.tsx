@@ -5,6 +5,7 @@ import { getServiceDb } from "@/lib/db/client";
 import { AppShell } from "@/components/templates/AppShell";
 import { accountNav } from "@/components/templates/app-shell-nav";
 import { BillingPanel } from "@/components/organisms/BillingPanel";
+import { PageSkeleton } from "@/components/atoms/PageSkeleton";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
@@ -47,7 +48,7 @@ export async function AccountBillingPage({ locale }: { locale: Locale }) {
       balance={appUser.balance}
       email={appUser.email}
     >
-      <Suspense fallback={null}>
+      <Suspense fallback={<PageSkeleton className="max-w-2xl" lines={5} />}>
         <BillingPanel
           locale={locale}
           balance={appUser.balance}

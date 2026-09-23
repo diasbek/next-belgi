@@ -264,7 +264,8 @@ export function LoginForm({ locale }: { locale: Locale }) {
           }}
         >
           <p className="text-sm text-ink-muted">{copy.login.otpSent}</p>
-          {testMode || caps.otpTest ? (
+          {process.env.NODE_ENV !== "production" &&
+          (testMode || caps.otpTest) ? (
             <p className="rounded-xl bg-lime/50 px-3 py-2 text-sm text-ink">
               {copy.login.otpTestHint}
             </p>

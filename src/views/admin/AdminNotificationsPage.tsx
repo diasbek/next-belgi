@@ -21,7 +21,7 @@ export async function AdminNotificationsPage({
   locale: Locale;
   searchParams?: AdminListSearchParams;
 }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/notifications/")),
     localePath(locale, "/"),
   );
@@ -57,7 +57,7 @@ export async function AdminNotificationsPage({
   }
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminNotificationsPanel
         locale={locale}
         rows={rows}

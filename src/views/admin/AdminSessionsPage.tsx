@@ -21,7 +21,7 @@ export async function AdminSessionsPage({
   locale: Locale;
   searchParams?: AdminListSearchParams;
 }) {
-  await requireAdmin(
+  const admin = await requireAdmin(
     loginWithNext(locale, localePath(locale, "/admin/sessions/")),
     localePath(locale, "/"),
   );
@@ -52,7 +52,7 @@ export async function AdminSessionsPage({
   }
 
   return (
-    <AppShell locale={locale} variant="admin" nav={adminNav(copy)}>
+    <AppShell locale={locale} variant="admin" nav={adminNav(copy)} email={admin.email}>
       <AdminSessionsPanel
         locale={locale}
         rows={rows}

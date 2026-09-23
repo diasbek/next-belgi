@@ -33,7 +33,7 @@ import {
 import { Button } from "@/components/atoms/Button";
 import { ConfirmDialog } from "@/components/molecules/admin/ConfirmDialog";
 import { adliyaLogoUrl } from "@/lib/adliya/types";
-import { formatAdminDate, shortId } from "@/lib/admin/list-params";
+import { formatAdminDate } from "@/lib/admin/list-params";
 import {
   PASTE_IMPORT_CHUNK_SIZE,
   PASTE_IMPORT_MAX_ITEMS,
@@ -59,6 +59,7 @@ export type AdminRegistryRow = {
   application_date?: string | null;
   registration_date?: string | null;
   synced_at?: string | null;
+  class_numbers?: number[];
 };
 
 type DetailState = AdminRegistryRow & {
@@ -86,6 +87,17 @@ function thumbUrl(logo: string | null): string | null {
   return adliyaLogoUrl(logo);
 }
 
+function formatCellDate(raw: string | null | undefined, locale: Locale): string {
+  if (!raw) return "—";
+  if (/^\d{1,2}\.\d{1,2}\.\d{4}/.test(raw)) return raw;
+  return formatAdminDate(raw, locale);
+}
+
+function mgsLabel(nums: number[] | undefined): string {
+  if (!nums?.length) return "—";
+  return nums.join(", ");
+}
+
 export function AdminRegistryPanel({
   locale,
   rows,
@@ -96,8 +108,6 @@ export function AdminRegistryPanel({
   importStatus,
   syncRunning,
   dbUnavailable,
-  sort = "updated_at",
-  dir = "desc",
   statusValues = [],
 }: {
   locale: Locale;
@@ -109,8 +119,6 @@ export function AdminRegistryPanel({
   importStatus: string;
   syncRunning?: boolean;
   dbUnavailable?: boolean;
-  sort?: string;
-  dir?: string;
   statusValues?: string[];
 }) {
   const copy = getAppCopy(locale);
@@ -146,9 +154,11 @@ export function AdminRegistryPanel({
       };
       if (json.ok && json.row) {
         setSelected({ ...json.row, mgs: json.mgs || [] });
+      } else {
+        setMsg(copy.adminUi.error);
       }
     } catch {
-      // keep list row
+      setMsg(copy.adminUi.error);
     }
   }
 
@@ -398,18 +408,28 @@ export function AdminRegistryPanel({
       header: copy.adminRegistry.colName,
       cell: (r) => (
         <span className="font-medium">
-          {r.transliteration || r.number || shortId(r.id)}
+          {r.transliteration || "—"}
         </span>
       ),
+      className: "min-w-[8rem]",
     },
     {
-      id: "source",
-      header: copy.adminRegistry.colSource,
-      cell: (r) => (
-        <StatusBadge tone={r.source === "manual" ? "info" : "neutral"}>
-          {r.source}
-        </StatusBadge>
-      ),
+      id: "number",
+      header: copy.adminRegistry.colNumber,
+      cell: (r) => r.number || (r.adliya_id != null ? String(r.adliya_id) : "—"),
+      className: "min-w-[7rem] whitespace-nowrap",
+    },
+    {
+      id: "type",
+      header: copy.adminRegistry.colType,
+      cell: (r) => r.trademark_type || "—",
+      hideOnMobile: true,
+    },
+    {
+      id: "mgs",
+      header: copy.adminRegistry.colClasses,
+      cell: (r) => mgsLabel(r.class_numbers),
+      className: "min-w-[5rem]",
     },
     {
       id: "status",
@@ -423,34 +443,66 @@ export function AdminRegistryPanel({
     {
       id: "owner",
       header: copy.adminRegistry.colOwner,
-      cell: (r) => r.owner || r.applicant || "—",
+      cell: (r) => (
+        <span className="line-clamp-2 max-w-[12rem]">{r.owner || "—"}</span>
+      ),
       hideOnMobile: true,
+      className: "min-w-[10rem]",
     },
     {
-      id: "date",
-      header:
-        sort === "application_date"
-          ? copy.adminRegistry.colFilingDate
-          : sort === "registration_date"
-            ? copy.adminRegistry.colRegDate
-            : sort === "synced_at"
-              ? copy.adminRegistry.colSynced
-              : copy.adminRegistry.colUpdated,
-      cell: (r) => {
-        const raw =
-          sort === "application_date"
-            ? r.application_date
-            : sort === "registration_date"
-              ? r.registration_date
-              : sort === "synced_at"
-                ? r.synced_at
-                : r.updated_at;
-        if (!raw) return "—";
-        // Adliya dates often come as DD.MM.YYYY text — show as-is.
-        if (/^\d{1,2}\.\d{1,2}\.\d{4}/.test(raw)) return raw;
-        return formatAdminDate(raw, locale);
-      },
+      id: "applicant",
+      header: copy.adminRegistry.colApplicant,
+      cell: (r) => (
+        <span className="line-clamp-2 max-w-[12rem]">
+          {r.applicant || "—"}
+        </span>
+      ),
       hideOnMobile: true,
+      className: "min-w-[10rem]",
+    },
+    {
+      id: "regNumber",
+      header: copy.adminRegistry.colRegNumber,
+      cell: (r) => r.registration_number || "—",
+      hideOnMobile: true,
+      className: "whitespace-nowrap",
+    },
+    {
+      id: "filing",
+      header: copy.adminRegistry.colFilingDate,
+      cell: (r) => formatCellDate(r.application_date, locale),
+      hideOnMobile: true,
+      className: "whitespace-nowrap",
+    },
+    {
+      id: "regDate",
+      header: copy.adminRegistry.colRegDate,
+      cell: (r) => formatCellDate(r.registration_date, locale),
+      hideOnMobile: true,
+      className: "whitespace-nowrap",
+    },
+    {
+      id: "source",
+      header: copy.adminRegistry.colSource,
+      cell: (r) => (
+        <StatusBadge tone={r.source === "manual" ? "info" : "neutral"}>
+          {r.source}
+        </StatusBadge>
+      ),
+    },
+    {
+      id: "active",
+      header: copy.adminRegistry.colActive,
+      cell: (r) => (r.active ? "✓" : "—"),
+      hideOnMobile: true,
+      className: "w-16 text-center",
+    },
+    {
+      id: "updated",
+      header: copy.adminRegistry.colUpdated,
+      cell: (r) => formatCellDate(r.updated_at, locale),
+      hideOnMobile: true,
+      className: "whitespace-nowrap",
     },
   ];
 
@@ -490,6 +542,62 @@ export function AdminRegistryPanel({
               }}
             >
               {copy.adminRegistry.pasteImport}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                const header = [
+                  "id",
+                  "number",
+                  "transliteration",
+                  "trademark_type",
+                  "status",
+                  "owner",
+                  "applicant",
+                  "registration_number",
+                  "application_date",
+                  "registration_date",
+                  "source",
+                  "active",
+                  "mgs",
+                ];
+                const escape = (v: string) =>
+                  `"${v.replace(/"/g, '""')}"`;
+                const lines = [
+                  header.join(","),
+                  ...rows.map((r) =>
+                    [
+                      r.id,
+                      r.number || "",
+                      r.transliteration || "",
+                      r.trademark_type || "",
+                      r.status || "",
+                      r.owner || "",
+                      r.applicant || "",
+                      r.registration_number || "",
+                      r.application_date || "",
+                      r.registration_date || "",
+                      r.source,
+                      r.active ? "1" : "0",
+                      (r.class_numbers || []).join(";"),
+                    ]
+                      .map((c) => escape(String(c)))
+                      .join(","),
+                  ),
+                ];
+                const blob = new Blob([lines.join("\n")], {
+                  type: "text/csv;charset=utf-8",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `registry-page.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+            >
+              {copy.adminRegistry.exportCsv}
             </Button>
             <Button type="button" onClick={() => setCreateOpen(true)}>
               {copy.adminRegistry.create}
@@ -596,6 +704,7 @@ export function AdminRegistryPanel({
           rows={rows}
           onRowClick={(r) => void openDetail(r)}
           selectedId={selected?.id}
+          tableClassName="min-w-[72rem]"
         />
         <AdminCardList
           rows={rows}
@@ -614,12 +723,27 @@ export function AdminRegistryPanel({
                   />
                 ) : null}
               </span>
-              <div>
+              <div className="min-w-0 space-y-0.5">
                 <p className="m-0 font-medium text-ink">
-                  {r.transliteration || r.number || shortId(r.id)}
+                  {r.transliteration || "—"}
                 </p>
                 <p className="m-0 text-xs text-ink-muted">
-                  {r.source} · {r.status || "—"}
+                  {[
+                    r.number || (r.adliya_id != null ? String(r.adliya_id) : null),
+                    r.status,
+                    r.trademark_type,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ") || "—"}
+                </p>
+                <p className="m-0 text-xs text-ink-muted">
+                  {r.owner || r.applicant || "—"}
+                </p>
+                <p className="m-0 text-xs text-ink-muted">
+                  {copy.adminRegistry.colClasses}: {mgsLabel(r.class_numbers)}
+                  {r.registration_number
+                    ? ` · ${copy.adminRegistry.colRegNumber} ${r.registration_number}`
+                    : ""}
                 </p>
               </div>
             </div>

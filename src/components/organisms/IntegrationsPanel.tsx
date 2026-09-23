@@ -41,6 +41,7 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const statusMap = useMemo(() => {
     const m = new Map<IntegrationProvider, Status>();
@@ -53,9 +54,25 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     : null;
 
   async function load() {
-    const res = await fetch("/api/admin/integrations/");
-    const json = (await res.json()) as { ok?: boolean; items?: Status[] };
-    if (json.items) setItems(json.items);
+    setLoading(true);
+    setErr(null);
+    try {
+      const res = await fetch("/api/admin/integrations/");
+      const json = (await res.json()) as {
+        ok?: boolean;
+        items?: Status[];
+        error?: string;
+      };
+      if (!res.ok || !json.ok) {
+        setErr(json.error || copy.adminUi.error);
+        return;
+      }
+      if (json.items) setItems(json.items);
+    } catch {
+      setErr(copy.adminUi.error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -218,6 +235,11 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
         {err && !active ? (
           <p className="mt-3 text-sm text-danger" role="alert">
             {err}
+          </p>
+        ) : null}
+        {loading ? (
+          <p className="mt-3 text-sm text-ink-muted" aria-live="polite">
+            {copy.adminUi.loading}
           </p>
         ) : null}
       </div>

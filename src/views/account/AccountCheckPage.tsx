@@ -3,9 +3,11 @@ import { requireUser } from "@/lib/auth/session";
 import { AppShell } from "@/components/templates/AppShell";
 import { accountNav } from "@/components/templates/app-shell-nav";
 import { CheckPageView } from "@/views/CheckPageView";
+import { DashPageHeader } from "@/components/molecules/DashChrome";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
 import { loginWithNext } from "@/lib/navigation/safe-next";
+import Link from "next/link";
 
 export async function AccountCheckPage({
   locale,
@@ -29,6 +31,20 @@ export async function AccountCheckPage({
       balance={appUser.balance}
       email={appUser.email}
     >
+      <DashPageHeader
+        title={copy.nav.newCheck}
+        lead={`${copy.overview.balance}: ${appUser.balance} ${copy.credits}`}
+        action={
+          appUser.balance <= 0 ? (
+            <Link
+              href={localePath(locale, "/account/billing/")}
+              className="text-sm font-medium text-ink underline-offset-2 hover:underline"
+            >
+              {copy.overview.topUp}
+            </Link>
+          ) : null
+        }
+      />
       <CheckPageView
         locale={locale}
         query={query}

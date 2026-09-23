@@ -39,12 +39,12 @@ export function CheckPageView({
   const [error, setError] = useState(false);
   const [running, setRunning] = useState(Boolean(query && activity));
   const canRun = Boolean(query && activity);
-  if (!canRun && running) {
-    setRunning(false);
-  }
 
   useEffect(() => {
-    if (!canRun) return;
+    if (!canRun) {
+      setRunning(false);
+      return;
+    }
 
     let cancelled = false;
     const boot = window.setTimeout(() => {
@@ -106,6 +106,7 @@ export function CheckPageView({
           preview: Boolean(json.preview),
         });
         const params = new URLSearchParams({ q: query, activity });
+        if (json.checkId) params.set("checkId", json.checkId);
         const resultPath =
           actionPath === "/account/check/"
             ? "/account/check/result/"
@@ -172,8 +173,11 @@ export function CheckPageView({
   if (running) {
     const body = (
       <>
-        <div className="mx-auto mb-8 h-14 w-14 animate-spin rounded-full border-4 border-lime border-t-primary sm:h-16 sm:w-16" />
-        <ul className="m-0 list-none space-y-3 p-0 text-left text-sm text-ink sm:space-y-4 sm:text-base md:text-lg">
+        <div className="mx-auto mb-8 h-14 w-14 animate-spin rounded-full border-4 border-lime border-t-primary sm:h-16 sm:w-16" aria-hidden />
+        <p className="sr-only" aria-live="polite">
+          {copy.check.searchingItems[0]}
+        </p>
+        <ul className="m-0 list-none space-y-3 p-0 text-left text-sm text-ink sm:space-y-4 sm:text-base md:text-lg" aria-busy="true">
           {copy.check.searchingItems.map((item) => (
             <li
               key={item}

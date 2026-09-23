@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
@@ -79,7 +79,9 @@ export function AccountHistoryTable({
   const [q, setQ] = useState("");
   const [classFilter, setClassFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [page, setPage] = useState(1);
   const [nowMs] = useState(() => Date.now());
+  const pageSize = 25;
 
   const classOptions = useMemo(() => classOptionValues(checks), [checks]);
 
@@ -100,6 +102,17 @@ export function AccountHistoryTable({
       return true;
     });
   }, [checks, q, classFilter, dateFilter, nowMs]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, pageCount);
+  const pageRows = filtered.slice(
+    (safePage - 1) * pageSize,
+    safePage * pageSize,
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [q, classFilter, dateFilter]);
 
   if (!checks.length) {
     return (
@@ -142,8 +155,8 @@ export function AccountHistoryTable({
             className="min-h-11 rounded-xl border border-black/10 bg-white px-3 text-sm text-ink"
           >
             <option value="all">{copy.history.allDates}</option>
-            <option value="7d">7d</option>
-            <option value="30d">30d</option>
+            <option value="7d">{copy.history.last7Days}</option>
+            <option value="30d">{copy.history.last30Days}</option>
           </select>
         </div>
       </div>
@@ -168,14 +181,24 @@ export function AccountHistoryTable({
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => {
+              {!filtered.length ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-4 py-10 text-center text-sm text-ink-muted sm:px-5"
+                  >
+                    {copy.history.emptyFilter}
+                  </td>
+                </tr>
+              ) : (
+                pageRows.map((c) => {
                 const letter = (c.query.trim().charAt(0) || "?").toUpperCase();
                 const { date, time } = formatDateParts(c.created_at);
                 const classes = formatClasses(
                   c.nice_classes,
                   copy.history.noClasses,
                 );
-                const reportHref = `${localePath(locale, "/account/check/result/")}?${new URLSearchParams({ q: c.query }).toString()}`;
+                const reportHref = `${localePath(locale, "/account/check/result/")}?${new URLSearchParams({ checkId: c.id, q: c.query }).toString()}`;
                 return (
                   <tr
                     key={c.id}
@@ -183,7 +206,7 @@ export function AccountHistoryTable({
                   >
                     <td className="px-4 py-3.5 sm:px-5">
                       <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#eceee8] text-sm font-semibold text-ink/70">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-sm font-semibold text-ink/70">
                           {letter}
                         </span>
                         <span className="font-medium text-ink">{c.query}</span>
@@ -215,15 +238,41 @@ export function AccountHistoryTable({
                     </td>
                   </tr>
                 );
-              })}
+              })
+              )}
             </tbody>
           </table>
         </div>
-        <p className="border-t border-black/5 px-4 py-3 text-xs text-ink-muted sm:px-5">
-          {copy.history.shownOf
-            .replace("{shown}", String(filtered.length))
-            .replace("{total}", String(checks.length))}
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/5 px-4 py-3 text-xs text-ink-muted sm:px-5">
+          <p className="m-0">
+            {copy.history.shownOf
+              .replace(`{shown}`, String(pageRows.length))
+              .replace(`{total}`, String(filtered.length))}
+          </p>
+          {pageCount > 1 ? (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="rounded-lg border border-border px-2.5 py-1.5 disabled:opacity-40"
+              >
+                ‹
+              </button>
+              <span>
+                {page} / {pageCount}
+              </span>
+              <button
+                type="button"
+                disabled={page >= pageCount}
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                className="rounded-lg border border-border px-2.5 py-1.5 disabled:opacity-40"
+              >
+                ›
+              </button>
+            </div>
+          ) : null}
+        </div>
       </DashPanel>
 
       <p className="flex items-start gap-2 text-xs text-ink-muted">

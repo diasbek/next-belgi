@@ -328,6 +328,9 @@ export function CheckForm({
           chipLabel={copy.ui.affectedClassChip}
           className="mt-3"
         />
+        <p className="m-0 mt-3 text-center text-xs leading-relaxed text-ink-muted">
+          {copy.ui.checkFormNote}
+        </p>
       </div>
     );
   }
@@ -534,6 +537,9 @@ export function CheckForm({
           {s.nextRunHint}
         </p>
       ) : null}
+      <p className="m-0 mt-4 text-center text-xs leading-relaxed text-ink-muted">
+        {copy.ui.checkFormNote}
+      </p>
     </div>
   );
 }

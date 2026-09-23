@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getContent } from "@/i18n/get-content";
 import { getAppCopy } from "@/i18n/app-copy";
@@ -17,50 +17,168 @@ import {
   readStoredReport,
   readStoredReportPreview,
   readStoredCheckMeta,
+  storeReport,
+  storeCheckMeta,
   type StoredCheckMeta,
 } from "@/lib/check/storage";
 import { ConclusionPdfButton } from "@/components/pdf/conclusion/ConclusionPdfButton";
 import type { ConclusionDocument } from "@/lib/conclusion";
+import type { TrademarkReport } from "@/lib/check/types";
 import { section, sectionDense } from "@/styles/ui";
+
+function isReport(value: unknown): value is TrademarkReport {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      typeof (value as TrademarkReport).query === "string" &&
+      Array.isArray((value as TrademarkReport).sources),
+  );
+}
 
 export function CheckResultPageView({
   locale,
   query,
   activity,
+  checkId = "",
   embedded = false,
   actionPath = "/check/",
 }: {
   locale: Locale;
   query: string;
   activity: string;
+  checkId?: string;
   embedded?: boolean;
   actionPath?: "/check/" | "/account/check/";
 }) {
   const copy = getContent(locale);
   const appCopy = getAppCopy(locale);
-  const reportKey = `${query}\0${activity}`;
-  const [report, setReport] = useState(() => readStoredReport());
-  const [preview, setPreview] = useState(() => readStoredReportPreview());
-  const [checkMeta, setCheckMeta] = useState<StoredCheckMeta | null>(() =>
-    readStoredCheckMeta(),
+  const [report, setReport] = useState<TrademarkReport | null>(() =>
+    checkId ? null : readStoredReport(),
   );
-  const [loadedKey, setLoadedKey] = useState(reportKey);
-  if (loadedKey !== reportKey) {
-    setLoadedKey(reportKey);
-    setReport(readStoredReport());
-    setPreview(readStoredReportPreview());
-    setCheckMeta(readStoredCheckMeta());
-  }
+  const [preview, setPreview] = useState(() =>
+    checkId ? false : readStoredReportPreview(),
+  );
+  const [checkMeta, setCheckMeta] = useState<StoredCheckMeta | null>(() =>
+    checkId ? null : readStoredCheckMeta(),
+  );
+  const [loading, setLoading] = useState(Boolean(checkId));
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (!checkId) {
+      const stored = readStoredReport();
+      const meta = readStoredCheckMeta();
+      // Prefer session cache only when URL matches stored report (or URL empty).
+      if (
+        stored &&
+        (!query || stored.query === query) &&
+        (!activity || !stored.activity || stored.activity === activity)
+      ) {
+        setReport(stored);
+        setPreview(readStoredReportPreview());
+        setCheckMeta(meta);
+        setNotFound(false);
+        setLoading(false);
+        return;
+      }
+      setReport(null);
+      setPreview(false);
+      setCheckMeta(null);
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    setNotFound(false);
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/account/checks/${encodeURIComponent(checkId)}/`,
+          { credentials: "include" },
+        );
+        const json = (await res.json()) as {
+          ok?: boolean;
+          report?: unknown;
+          conclusion?: ConclusionDocument | null;
+          verificationCode?: string | null;
+          query?: string;
+          activity?: string | null;
+        };
+        if (cancelled) return;
+        if (!res.ok || !json.ok || !isReport(json.report)) {
+          // Fall back to session if it matches this checkId.
+          const meta = readStoredCheckMeta();
+          const stored = readStoredReport();
+          if (meta?.checkId === checkId && isReport(stored)) {
+            setReport(stored);
+            setPreview(false);
+            setCheckMeta(meta);
+            setNotFound(false);
+          } else {
+            setReport(null);
+            setNotFound(true);
+          }
+          setLoading(false);
+          return;
+        }
+        storeReport(json.report, false);
+        const meta: StoredCheckMeta = {
+          checkId,
+          verificationCode: json.verificationCode ?? null,
+          conclusion: json.conclusion ?? null,
+        };
+        storeCheckMeta(meta);
+        setReport(json.report);
+        setPreview(false);
+        setCheckMeta(meta);
+        setNotFound(false);
+        setLoading(false);
+      } catch {
+        if (!cancelled) {
+          setReport(null);
+          setNotFound(true);
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [checkId, query, activity]);
+
   const checkFormPath = actionPath;
   const resultEmptyHref = localePath(locale, actionPath);
 
-  if (!report) {
+  if (loading) {
+    const body = (
+      <p className="m-0 text-sm text-ink-muted" aria-live="polite">
+        {copy.report.loading}
+      </p>
+    );
+    if (embedded) {
+      return <div className="py-10 text-center">{body}</div>;
+    }
+    return (
+      <section className={`${section} bg-white`}>
+        <PageContainer measure="focus" innerClassName="text-center">
+          {body}
+        </PageContainer>
+      </section>
+    );
+  }
+
+  if (!report || notFound) {
     const empty = (
       <>
         <h1 className="m-0 mb-4 text-2xl font-semibold">
-          {copy.check.errorTitle}
+          {copy.report.notFoundTitle}
         </h1>
-        <p className="mb-6 text-ink-muted">{copy.check.lead}</p>
+        <p className="mb-6 text-ink-muted">{copy.report.notFoundLead}</p>
         <Button href={resultEmptyHref}>{copy.ui.check}</Button>
       </>
     );

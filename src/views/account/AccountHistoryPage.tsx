@@ -23,7 +23,7 @@ export async function AccountHistoryPage({ locale }: { locale: Locale }) {
         .select("id, query, created_at, nice_classes")
         .eq("user_id", appUser.id)
         .order("created_at", { ascending: false })
-        .limit(100)
+        .limit(200)
     : { data: [] };
 
   const rows = checks || [];

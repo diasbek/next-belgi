@@ -1,5 +1,11 @@
 import { AdminUsersPage } from "@/views/admin/AdminUsersPage";
+import type { AdminListSearchParams } from "@/lib/admin/list-params";
 
-export default function Page() {
-  return <AdminUsersPage locale="en" />;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<AdminListSearchParams>;
+}) {
+  const params = await searchParams;
+  return <AdminUsersPage locale="en" searchParams={params} />;
 }

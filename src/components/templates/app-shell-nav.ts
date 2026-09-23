@@ -43,8 +43,8 @@ const ACCOUNT_PRIMARY = new Set([
 const ADMIN_PRIMARY = new Set([
   "/admin/",
   "/admin/users/",
-  "/admin/payments/",
   "/admin/checks/",
+  "/admin/registry/",
 ]);
 
 export function splitMobileNav(

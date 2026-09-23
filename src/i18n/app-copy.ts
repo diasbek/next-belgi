@@ -57,10 +57,13 @@ export type AppCopy = {
     filterClasses: string;
     filterDates: string;
     allDates: string;
+    last7Days: string;
+    last30Days: string;
     noClasses: string;
     shownOf: string;
     classesHint: string;
     newCheck: string;
+    emptyFilter: string;
   };
   billing: {
     title: string;
@@ -104,6 +107,9 @@ export type AppCopy = {
     offerLink: string;
     refundLink: string;
     creditsLink: string;
+    genericError: string;
+    paidSuccess: string;
+    plansEmpty: string;
   };
   profile: {
     title: string;
@@ -268,11 +274,13 @@ export type AppCopy = {
     lead: string;
     colType: string;
     colStatus: string;
+    colContact: string;
     colDate: string;
     empty: string;
     emptyLead: string;
     detailTitle: string;
     saveStatus: string;
+    allStatuses: string;
   };
   adminRegistry: {
     title: string;
@@ -290,8 +298,12 @@ export type AppCopy = {
     detailTitle: string;
     colName: string;
     colNumber: string;
+    colType: string;
+    colClasses: string;
     colStatus: string;
     colOwner: string;
+    colApplicant: string;
+    colRegNumber: string;
     colSource: string;
     colActive: string;
     allSources: string;
@@ -316,6 +328,7 @@ export type AppCopy = {
     colRegDate: string;
     colUpdated: string;
     colSynced: string;
+    exportCsv: string;
     sortBy: string;
     sortDir: string;
     sortUpdated: string;
@@ -534,11 +547,14 @@ export const uzApp: AppCopy = {
     filterClasses: "MKTU sinflari",
     filterDates: "Barcha sanalar",
     allDates: "Barcha sanalar",
+    last7Days: "7 kun",
+    last30Days: "30 kun",
     noClasses: "Maʼlumot yoʻq",
     shownOf: "Koʻrsatildi {shown} / {total} tekshiruv",
     classesHint:
       "Baʼzi tekshiruvlarda MKTU sinflari koʻrsatilmaydi. Tafsilotlar hisobotda.",
     newCheck: "+ Yangi tekshiruv",
+    emptyFilter: "Filtr boʻyicha natija yoʻq.",
   },
   billing: {
     title: "Toʻlov va kreditlar",
@@ -585,6 +601,9 @@ export const uzApp: AppCopy = {
     offerLink: "Ommaviy oferta",
     refundLink: "Qaytarish shartlari",
     creditsLink: "Tarif va kreditlar",
+    genericError: "Toʻlov amalga oshmadi. Qayta urinib koʻring.",
+    paidSuccess: "Toʻlov qabul qilindi. Balans yangilandi.",
+    plansEmpty: "Hozircha paketlar yoʻq. Keyinroq qaytib keling.",
   },
   profile: {
     title: "Profil",
@@ -750,11 +769,13 @@ export const uzApp: AppCopy = {
     lead: "Kontakt va advokat soʻrovlari.",
     colType: "Tur",
     colStatus: "Holat",
+    colContact: "Kontakt",
     colDate: "Sana",
     empty: "Murojaatlar yoʻq",
     emptyLead: "Hali soʻrovlar yoʻq.",
     detailTitle: "Murojaat",
     saveStatus: "Holatni saqlash",
+    allStatuses: "Barcha holatlar",
   },
   adminRegistry: {
     title: "Tovar belgilari reestri",
@@ -772,8 +793,12 @@ export const uzApp: AppCopy = {
     detailTitle: "Tovar belgisi",
     colName: "Nom",
     colNumber: "Raqam",
+    colType: "Tur",
+    colClasses: "MKTU",
     colStatus: "Holat",
     colOwner: "Egasi",
+    colApplicant: "Ariza beruvchi",
+    colRegNumber: "Roʻyxat №",
     colSource: "Manba",
     colActive: "Faol",
     allSources: "Barcha manbalar",
@@ -799,6 +824,7 @@ export const uzApp: AppCopy = {
     colRegDate: "Roʻyxatga olish",
     colUpdated: "Yangilangan",
     colSynced: "Sync",
+    exportCsv: "CSV",
     sortBy: "Saralash",
     sortDir: "Tartib",
     sortUpdated: "Yangilangan",
@@ -873,10 +899,10 @@ export const uzApp: AppCopy = {
     save: "Saqlash",
     close: "Yopish",
     noResults: "Hech narsa topilmadi",
-    copy: "Copy",
-    copied: "Copied",
-    loading: "Loading…",
-    error: "Error",
+    copy: "Nusxa",
+    copied: "Nusxalandi",
+    loading: "Yuklanmoqda…",
+    error: "Xatolik yuz berdi",
   },
   adminIntegrations: {
     title: "Integratsiyalar",
@@ -1076,11 +1102,14 @@ export const ruApp: AppCopy = {
     filterClasses: "Классы МКТУ",
     filterDates: "Все даты",
     allDates: "Все даты",
+    last7Days: "7 дней",
+    last30Days: "30 дней",
     noClasses: "Нет данных",
     shownOf: "Показано {shown} из {total} проверок",
     classesHint:
       "Классы МКТУ не отображаются для части проверок. Подробности доступны в отчёте.",
     newCheck: "+ Новая проверка",
+    emptyFilter: "По фильтру ничего не найдено.",
   },
   billing: {
     title: "Оплата и кредиты",
@@ -1127,6 +1156,9 @@ export const ruApp: AppCopy = {
     offerLink: "Публичная оферта",
     refundLink: "Условия возврата",
     creditsLink: "Тарифы и кредиты",
+    genericError: "Оплата не удалась. Попробуйте ещё раз.",
+    paidSuccess: "Оплата принята. Баланс обновлён.",
+    plansEmpty: "Пакетов пока нет. Загляните позже.",
   },
   profile: {
     title: "Профиль",
@@ -1292,11 +1324,13 @@ export const ruApp: AppCopy = {
     lead: "Контакты и запросы к юристам.",
     colType: "Тип",
     colStatus: "Статус",
+    colContact: "Контакт",
     colDate: "Дата",
     empty: "Заявок нет",
     emptyLead: "Пока нет обращений.",
     detailTitle: "Заявка",
     saveStatus: "Сохранить статус",
+    allStatuses: "Все статусы",
   },
   adminRegistry: {
     title: "Реестр товарных знаков",
@@ -1314,8 +1348,12 @@ export const ruApp: AppCopy = {
     detailTitle: "Товарный знак",
     colName: "Название",
     colNumber: "Номер",
+    colType: "Тип",
+    colClasses: "МКТУ",
     colStatus: "Статус",
     colOwner: "Владелец",
+    colApplicant: "Заявитель",
+    colRegNumber: "Рег. №",
     colSource: "Источник",
     colActive: "Активен",
     allSources: "Все источники",
@@ -1341,6 +1379,7 @@ export const ruApp: AppCopy = {
     colRegDate: "Дата регистрации",
     colUpdated: "Обновлено",
     colSynced: "Синхронизация",
+    exportCsv: "CSV",
     sortBy: "Сортировка",
     sortDir: "Порядок",
     sortUpdated: "По обновлению",
@@ -1415,10 +1454,10 @@ export const ruApp: AppCopy = {
     save: "Сохранить",
     close: "Закрыть",
     noResults: "Ничего не найдено",
-    copy: "Copy",
-    copied: "Copied",
-    loading: "Loading…",
-    error: "Error",
+    copy: "Копировать",
+    copied: "Скопировано",
+    loading: "Загрузка…",
+    error: "Произошла ошибка",
   },
   adminIntegrations: {
     title: "Интеграции",
@@ -1618,11 +1657,14 @@ export const enApp: AppCopy = {
     filterClasses: "Nice classes",
     filterDates: "All dates",
     allDates: "All dates",
+    last7Days: "7 days",
+    last30Days: "30 days",
     noClasses: "No data",
     shownOf: "Showing {shown} of {total} checks",
     classesHint:
       "Nice classes are missing for some checks. Details are available in the report.",
     newCheck: "+ New check",
+    emptyFilter: "No checks match these filters.",
   },
   billing: {
     title: "Billing and credits",
@@ -1669,6 +1711,9 @@ export const enApp: AppCopy = {
     offerLink: "Public offer",
     refundLink: "Refund terms",
     creditsLink: "Plans and credits",
+    genericError: "Payment failed. Please try again.",
+    paidSuccess: "Payment received. Balance updated.",
+    plansEmpty: "No plans available yet. Please check back later.",
   },
   profile: {
     title: "Profile",
@@ -1832,11 +1877,13 @@ export const enApp: AppCopy = {
     lead: "Contact and lawyer requests.",
     colType: "Type",
     colStatus: "Status",
+    colContact: "Contact",
     colDate: "Date",
     empty: "No leads",
     emptyLead: "No requests yet.",
     detailTitle: "Lead",
     saveStatus: "Save status",
+    allStatuses: "All statuses",
   },
   adminRegistry: {
     title: "Trademark registry",
@@ -1854,8 +1901,12 @@ export const enApp: AppCopy = {
     detailTitle: "Trademark",
     colName: "Name",
     colNumber: "Number",
+    colType: "Type",
+    colClasses: "Nice classes",
     colStatus: "Status",
     colOwner: "Owner",
+    colApplicant: "Applicant",
+    colRegNumber: "Reg. no.",
     colSource: "Source",
     colActive: "Active",
     allSources: "All sources",
@@ -1881,6 +1932,7 @@ export const enApp: AppCopy = {
     colRegDate: "Registration date",
     colUpdated: "Updated",
     colSynced: "Synced",
+    exportCsv: "CSV",
     sortBy: "Sort by",
     sortDir: "Order",
     sortUpdated: "Updated",

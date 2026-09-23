@@ -45,7 +45,6 @@ export function RegisterForm({ locale }: { locale: Locale }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [acceptMarketing, setAcceptMarketing] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -270,15 +269,6 @@ export function RegisterForm({ locale }: { locale: Locale }) {
               .
             </span>
           </label>
-          <label className="flex items-start gap-3 text-sm text-ink-muted">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={acceptMarketing}
-              onChange={(e) => setAcceptMarketing(e.target.checked)}
-            />
-            <span>{copy.login.acceptMarketing}</span>
-          </label>
           <Button type="submit" disabled={loading} className="w-full">
             {copy.login.continue}
           </Button>
@@ -294,7 +284,8 @@ export function RegisterForm({ locale }: { locale: Locale }) {
           }}
         >
           <p className="text-sm text-ink-muted">{copy.login.otpSent}</p>
-          {testMode || caps.otpTest ? (
+          {process.env.NODE_ENV !== "production" &&
+          (testMode || caps.otpTest) ? (
             <p className="rounded-xl bg-lime/50 px-3 py-2 text-sm text-ink">
               {copy.login.otpTestHint}
             </p>

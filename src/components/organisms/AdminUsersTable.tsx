@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
@@ -18,8 +18,10 @@ import {
 } from "@/components/atoms/admin/AdminField";
 import { AdminEntityForm } from "@/components/organisms/admin/AdminEntityForm";
 import { ConfirmDialog } from "@/components/molecules/admin/ConfirmDialog";
-import { FilterBar } from "@/components/molecules/admin/FilterBar";
-import { Pagination } from "@/components/molecules/admin/Pagination";
+import {
+  AdminUrlFilters,
+  AdminPageLink,
+} from "@/components/molecules/admin/AdminUrlFilters";
 import {
   StatusBadge,
 } from "@/components/atoms/admin/StatusBadge";
@@ -56,18 +58,21 @@ function initials(name: string) {
 export function AdminUsersTable({
   locale,
   users,
+  page = 1,
+  pageSize = 25,
+  total,
 }: {
   locale: Locale;
   users: AdminUserRow[];
+  page?: number;
+  pageSize?: number;
+  total?: number;
 }) {
   const copy = getAppCopy(locale);
   const router = useRouter();
-  const [q, setQ] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
   const [selected, setSelected] = useState<AdminUserRow | null>(null);
   const [delta, setDelta] = useState("");
   const [message, setMessage] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [invitePassword, setInvitePassword] = useState("");
@@ -75,25 +80,9 @@ export function AdminUsersTable({
   const [busy, setBusy] = useState(false);
   const [roleConfirm, setRoleConfirm] = useState(false);
   const [pendingRole, setPendingRole] = useState<"user" | "admin">("user");
-  const pageSize = 10;
 
-  const filtered = useMemo(() => {
-    const query = q.trim().toLowerCase();
-    return users.filter((u) => {
-      if (roleFilter && u.role !== roleFilter) return false;
-      if (!query) return true;
-      const hay =
-        `${u.full_name || ""} ${u.email || ""} ${u.company_name || ""} ${u.phone || ""} ${u.id}`.toLowerCase();
-      return hay.includes(query);
-    });
-  }, [users, q, roleFilter]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const currentPage = Math.min(page, totalPages);
-  const pageRows = filtered.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
+  const listTotal = total ?? users.length;
+  const pageRows = users;
 
   function roleLabel(role: string) {
     return role === "admin"
@@ -124,7 +113,7 @@ export function AdminUsersTable({
         body: JSON.stringify({
           userId: selected.id,
           delta: value,
-          note: "admin UI",
+          note: "admin_adjust",
         }),
       });
       const json = (await res.json()) as {
@@ -133,7 +122,9 @@ export function AdminUsersTable({
         error?: string;
       };
       if (json.ok) {
-        setMessage(`OK → ${json.balance}`);
+        setMessage(
+          `${copy.adminUsers.adjust}: ${json.balance} ${copy.credits}`,
+        );
         setDelta("");
         setSelected({ ...selected, balance: Number(json.balance) || 0 });
         router.refresh();
@@ -271,40 +262,17 @@ export function AdminUsersTable({
 
       <DashPanel className="overflow-hidden">
         <div className="border-b border-black/5 p-4">
-          <FilterBar
-            search={q}
-            onSearchChange={(v) => {
-              setQ(v);
-              setPage(1);
-            }}
-            searchPlaceholder={copy.adminUsers.searchPlaceholder}
-            filters={[
-              {
-                id: "role",
-                value: roleFilter,
-                options: [
-                  { value: "", label: copy.adminUsers.allRoles },
-                  { value: "admin", label: copy.adminUsers.roleAdmin },
-                  { value: "user", label: copy.adminUsers.roleUser },
-                ],
-                onChange: (v) => {
-                  setRoleFilter(v);
-                  setPage(1);
-                },
-                "aria-label": copy.adminUsers.role,
-              },
-            ]}
-            onClear={
-              q || roleFilter
-                ? () => {
-                    setQ("");
-                    setRoleFilter("");
-                    setPage(1);
-                  }
-                : undefined
-            }
-            clearLabel={copy.adminUi.clearFilters}
-          />
+          <Suspense fallback={null}>
+            <AdminUrlFilters
+              searchPlaceholder={copy.adminUsers.searchPlaceholder}
+              clearLabel={copy.adminUi.clearFilters}
+              statusOptions={[
+                { value: "", label: copy.adminUsers.allRoles },
+                { value: "admin", label: copy.adminUsers.roleAdmin },
+                { value: "user", label: copy.adminUsers.roleUser },
+              ]}
+            />
+          </Suspense>
         </div>
 
         {message ? (
@@ -353,13 +321,14 @@ export function AdminUsersTable({
           }}
         />
 
-        <Pagination
-          page={currentPage}
-          pageSize={pageSize}
-          total={filtered.length}
-          shownLabel={copy.adminUi.shown}
-          onPageChange={setPage}
-        />
+        <Suspense fallback={null}>
+          <AdminPageLink
+            page={page}
+            pageSize={pageSize}
+            total={listTotal}
+            shownLabel={copy.adminUi.shown}
+          />
+        </Suspense>
       </DashPanel>
 
       <AdminDetailDrawer

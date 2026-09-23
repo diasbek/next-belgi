@@ -441,6 +441,13 @@ export type AppCopy = {
     catAi: string;
     catAuth: string;
     catData: string;
+    setupOrderTitle: string;
+    setupOrderLead: string;
+    stepsTitle: string;
+    portalOpen: string;
+    afterSaveTitle: string;
+    registryLink: string;
+    fieldLabels: Record<string, string>;
     modules: Record<
       | "eskiz"
       | "resend"
@@ -454,7 +461,13 @@ export type AppCopy = {
       | "uspto"
       | "ipaustralia"
       | "kazpatent",
-      { title: string; lead: string }
+      {
+        title: string;
+        lead: string;
+        steps?: string[];
+        portalUrl?: string;
+        afterSave?: string;
+      }
     >;
   };
   login: {
@@ -952,54 +965,152 @@ export const uzApp: AppCopy = {
     catAi: "AI",
     catAuth: "Kirish",
     catData: "Maʼlumotlar",
+    setupOrderTitle: "Tavsiya etilgan tartib",
+    setupOrderLead:
+      "Avval mock/test → Adliya → Madrid (reestr sahifasi) → EUIPO → USPTO → IP Australia. Batafsil: docs/integrations-setup.md",
+    stepsTitle: "Qadamlar",
+    portalOpen: "Portalni ochish",
+    afterSaveTitle: "Saqlagach",
+    registryLink: "Reestr sahifasiga oʻtish (sync / Madrid)",
+    fieldLabels: {
+      mode: "Rejim",
+      email: "Email",
+      password: "Parol",
+      from: "From",
+      base_url: "Base URL",
+      api_key: "API kalit",
+      model: "Model",
+      notify_to: "Notify to",
+      merchant_id: "Merchant ID",
+      key: "Key",
+      service_id: "Service ID",
+      secret_key: "Secret key",
+      client_id: "Client ID",
+      client_secret: "Client secret",
+      redirect_uri: "Redirect URI",
+      bot_token: "Bot token",
+      chat_id: "Chat ID",
+      access_token: "Access token (Bearer)",
+      api_base: "API base URL",
+    },
     modules: {
       eskiz: {
         title: "SMS (Eskiz)",
         lead: "Tasdiqlash kodlari SMS orqali. Sinov: kod 00000.",
+        steps: [
+          "Eskiz kabinetidan email/parol oling.",
+          "Rejim: Sinov (kod 00000) yoki Jangovar.",
+          "Jangovarda email, password, from ni toʻldiring → Saqlash → Test.",
+        ],
       },
       resend: {
         title: "Email (Resend)",
         lead: "Tasdiqlash kodlari va murojaat xabarlari. Sinov: kod 00000.",
+        steps: [
+          "resend.com da API key oling.",
+          "Sinov yoki Jangovar → api_key / from → Saqlash → Test.",
+        ],
+        portalUrl: "https://resend.com/",
       },
       telegram: {
         title: "Telegram",
         lead: "Murojaat bildirishnomalari. Sinov: faqat jurnal.",
+        steps: [
+          "@BotFather orqali bot_token oling.",
+          "chat_id ni bilib oling → Saqlash → Test.",
+        ],
       },
       openai: {
         title: "OpenAI",
         lead: "Nice klassifikatsiya. Mock: mahalliy zaxira.",
+        steps: [
+          "platform.openai.com da API key.",
+          "Mock (kalitsiz) yoki Live + api_key → Saqlash.",
+        ],
+        portalUrl: "https://platform.openai.com/",
       },
       payme: {
         title: "Payme",
         lead: "Dev, sandbox yoki jangovar rejim.",
+        steps: [
+          "Avval Dev (mock top-up) — kalit shart emas.",
+          "Sandbox: test.paycom.uz kalitlari.",
+          "Live: merchant_id + key → Saqlash.",
+        ],
       },
       click: {
         title: "Click",
         lead: "Dev yoki jangovar ekvayring.",
+        steps: [
+          "Dev — mock top-up.",
+          "Live: merchant_id, service_id, secret_key.",
+        ],
       },
       google: {
         title: "Google",
         lead: "Kirish va hisob bogʻlash.",
+        steps: [
+          "Google Cloud Console da OAuth client.",
+          "client_id, client_secret, redirect_uri → Saqlash.",
+        ],
+        portalUrl: "https://console.cloud.google.com/",
       },
       adliya: {
         title: "Adliya IM",
-        lead: "Reestr importi. Sinov: token shart emas.",
+        lead: "Milliy reestr (UZ). Sinov: token shart emas; live uchun Bearer.",
+        steps: [
+          "im.adliya.uz / API kabinetiga kiring.",
+          "DevTools → Network: Bearer token ni api-ip.adliya.uz soʻrovidan nusxalang.",
+          "Rejim Jangovar → access_token (+ api_base) → Saqlash → Test.",
+          "Keyin /admin/registry/ da sync yoki JSON import.",
+        ],
+        portalUrl: "https://im.adliya.uz/",
+        afterSave:
+          "Token saqlangach reestr sahifasida syncni ishga tushiring. Madrid XML ham shu yerda yuklanadi.",
       },
       euipo: {
         title: "EUIPO",
-        lead: "EUIPO TMView qidiruvi. Mock: namuna natijalar.",
+        lead: "Yevropa (EUTM) qidiruvi. Mock → Sandbox → Live.",
+        steps: [
+          "dev.euipo.europa.eu da akkaunt oching.",
+          "OAuth2 client credentials ilovasini yarating.",
+          "Trademark Search API ga obuna (sandbox; live — tasdiq ~1 hafta).",
+          "Rejim Sandbox yoki Live → client_id + client_secret → Saqlash.",
+          "Tekshiruvda «Yevropa (EUIPO)» ni yoqing (+1 kredit).",
+        ],
+        portalUrl: "https://dev.euipo.europa.eu/",
+        afterSave:
+          "Mock kalitsiz ishlaydi. Live kalitlar boʻlmasa blok «manba mavjud emas» koʻrsatadi.",
       },
       uspto: {
         title: "USPTO",
-        lead: "USPTO qidiruv API. Mock: namuna natijalar.",
+        lead: "AQSH reestri. Mock yoki Live API key.",
+        steps: [
+          "developer.uspto.gov da API key oling (USPTO-API-KEY).",
+          "Rejim Live → api_key → Saqlash.",
+          "Tekshiruvda «AQSH (USPTO)» ni yoqing (+1 kredit).",
+        ],
+        portalUrl: "https://developer.uspto.gov/",
       },
       ipaustralia: {
         title: "IP Australia",
-        lead: "IP Australia TM qidiruvi. Mock: namuna natijalar.",
+        lead: "Avstraliya TM Search. Mock yoki Live.",
+        steps: [
+          "IP Australia developer portalda kalit oling.",
+          "Rejim Live → api_key → Saqlash.",
+          "Tekshiruvda «Avstraliya» ni yoqing (+1 kredit).",
+        ],
+        portalUrl: "https://www.ipaustralia.gov.au/",
       },
       kazpatent: {
         title: "Kazpatent (KZ)",
-        lead: "Tez orada — ommaviy API hozircha yoʻq.",
+        lead: "Hozircha API yoʻq — faqat mock / unavailable.",
+        steps: [
+          "gosreestr.kazpatent.kz da ommaviy REST yoʻq.",
+          "Modulni Live deb sozlamang — hisobotda «manba mavjud emas».",
+          "Qayta koʻrib chiqish: docs/research/kazpatent.md",
+        ],
+        portalUrl: "https://gosreestr.kazpatent.kz/",
       },
     },
   },
@@ -1529,54 +1640,152 @@ export const ruApp: AppCopy = {
     catAi: "AI",
     catAuth: "Вход",
     catData: "Данные",
+    setupOrderTitle: "Рекомендуемый порядок",
+    setupOrderLead:
+      "Сначала mock/test → Adliya → Madrid (страница реестра) → EUIPO → USPTO → IP Australia. Подробно: docs/integrations-setup.md",
+    stepsTitle: "Шаги",
+    portalOpen: "Открыть портал",
+    afterSaveTitle: "После сохранения",
+    registryLink: "Перейти к реестру (sync / Madrid)",
+    fieldLabels: {
+      mode: "Режим",
+      email: "Email",
+      password: "Пароль",
+      from: "From",
+      base_url: "Base URL",
+      api_key: "API-ключ",
+      model: "Модель",
+      notify_to: "Notify to",
+      merchant_id: "Merchant ID",
+      key: "Key",
+      service_id: "Service ID",
+      secret_key: "Secret key",
+      client_id: "Client ID",
+      client_secret: "Client secret",
+      redirect_uri: "Redirect URI",
+      bot_token: "Bot token",
+      chat_id: "Chat ID",
+      access_token: "Access token (Bearer)",
+      api_base: "API base URL",
+    },
     modules: {
       eskiz: {
         title: "SMS (Eskiz)",
         lead: "Коды подтверждения по SMS. Тест: код 00000.",
+        steps: [
+          "Возьмите email/пароль в кабинете Eskiz.",
+          "Режим: Тест (код 00000) или Боевой.",
+          "В боевом заполните email, password, from → Сохранить → Test.",
+        ],
       },
       resend: {
         title: "Email (Resend)",
         lead: "Коды подтверждения и письма по заявкам. Тест: код 00000.",
+        steps: [
+          "Создайте API key на resend.com.",
+          "Тест или Боевой → api_key / from → Сохранить → Test.",
+        ],
+        portalUrl: "https://resend.com/",
       },
       telegram: {
         title: "Telegram",
         lead: "Уведомления о заявках. Тест: только журнал.",
+        steps: [
+          "Получите bot_token у @BotFather.",
+          "Узнайте chat_id → Сохранить → Test.",
+        ],
       },
       openai: {
         title: "OpenAI",
         lead: "Классификация Nice. Mock: локальный запасной вариант.",
+        steps: [
+          "API key на platform.openai.com.",
+          "Mock (без ключа) или Live + api_key → Сохранить.",
+        ],
+        portalUrl: "https://platform.openai.com/",
       },
       payme: {
         title: "Payme",
         lead: "Dev, sandbox или боевой режим.",
+        steps: [
+          "Сначала Dev (mock top-up) — ключи не нужны.",
+          "Sandbox: ключи test.paycom.uz.",
+          "Live: merchant_id + key → Сохранить.",
+        ],
       },
       click: {
         title: "Click",
         lead: "Dev или боевой эквайринг.",
+        steps: [
+          "Dev — mock top-up.",
+          "Live: merchant_id, service_id, secret_key.",
+        ],
       },
       google: {
         title: "Google",
         lead: "Вход и привязка аккаунта.",
+        steps: [
+          "OAuth client в Google Cloud Console.",
+          "client_id, client_secret, redirect_uri → Сохранить.",
+        ],
+        portalUrl: "https://console.cloud.google.com/",
       },
       adliya: {
         title: "Adliya IM",
-        lead: "Импорт реестра. Тест: токен не обязателен.",
+        lead: "Национальный реестр (UZ). Тест: токен не обязателен; для live нужен Bearer.",
+        steps: [
+          "Войдите в im.adliya.uz / API-кабинет.",
+          "DevTools → Network: скопируйте Bearer из запроса к api-ip.adliya.uz.",
+          "Режим Боевой → access_token (+ api_base) → Сохранить → Test.",
+          "Затем на /admin/registry/ запустите sync или JSON import.",
+        ],
+        portalUrl: "https://im.adliya.uz/",
+        afterSave:
+          "После сохранения токена запустите sync на странице реестра. Madrid XML загружается там же.",
       },
       euipo: {
         title: "EUIPO",
-        lead: "Поиск EUIPO TMView. Mock: демо-результаты.",
+        lead: "Поиск по ЕС (EUTM). Mock → Sandbox → Live.",
+        steps: [
+          "Зарегистрируйтесь на dev.euipo.europa.eu.",
+          "Создайте приложение OAuth2 (client credentials).",
+          "Подпишитесь на Trademark Search API (sandbox; live — одобрение ~неделя).",
+          "Режим Sandbox или Live → client_id + client_secret → Сохранить.",
+          "В проверке включите «Европа (EUIPO)» (+1 кредит).",
+        ],
+        portalUrl: "https://dev.euipo.europa.eu/",
+        afterSave:
+          "Mock работает без ключей. Без live-ключей блок покажет «источник недоступен».",
       },
       uspto: {
         title: "USPTO",
-        lead: "API поиска USPTO. Mock: демо-результаты.",
+        lead: "Реестр США. Mock или Live API key.",
+        steps: [
+          "Получите API key на developer.uspto.gov (USPTO-API-KEY).",
+          "Режим Live → api_key → Сохранить.",
+          "В проверке включите «США (USPTO)» (+1 кредит).",
+        ],
+        portalUrl: "https://developer.uspto.gov/",
       },
       ipaustralia: {
         title: "IP Australia",
-        lead: "Поиск TM IP Australia. Mock: демо-результаты.",
+        lead: "Поиск TM Австралии. Mock или Live.",
+        steps: [
+          "Ключ в developer-портале IP Australia.",
+          "Режим Live → api_key → Сохранить.",
+          "В проверке включите «Австралия» (+1 кредит).",
+        ],
+        portalUrl: "https://www.ipaustralia.gov.au/",
       },
       kazpatent: {
         title: "Kazpatent (KZ)",
-        lead: "Скоро — публичного API пока нет.",
+        lead: "Публичного API нет — только mock / unavailable.",
+        steps: [
+          "На gosreestr.kazpatent.kz нет открытого REST.",
+          "Не включайте как Live — в отчёте «источник недоступен».",
+          "Подробности: docs/research/kazpatent.md",
+        ],
+        portalUrl: "https://gosreestr.kazpatent.kz/",
       },
     },
   },
@@ -2104,54 +2313,152 @@ export const enApp: AppCopy = {
     catAi: "AI",
     catAuth: "Sign-in",
     catData: "Data",
+    setupOrderTitle: "Recommended order",
+    setupOrderLead:
+      "Start with mock/test → Adliya → Madrid (registry page) → EUIPO → USPTO → IP Australia. Full guide: docs/integrations-setup.md",
+    stepsTitle: "Steps",
+    portalOpen: "Open portal",
+    afterSaveTitle: "After save",
+    registryLink: "Go to registry (sync / Madrid)",
+    fieldLabels: {
+      mode: "Mode",
+      email: "Email",
+      password: "Password",
+      from: "From",
+      base_url: "Base URL",
+      api_key: "API key",
+      model: "Model",
+      notify_to: "Notify to",
+      merchant_id: "Merchant ID",
+      key: "Key",
+      service_id: "Service ID",
+      secret_key: "Secret key",
+      client_id: "Client ID",
+      client_secret: "Client secret",
+      redirect_uri: "Redirect URI",
+      bot_token: "Bot token",
+      chat_id: "Chat ID",
+      access_token: "Access token (Bearer)",
+      api_base: "API base URL",
+    },
     modules: {
       eskiz: {
         title: "SMS (Eskiz)",
         lead: "Verification codes by SMS. Test: code 00000.",
+        steps: [
+          "Get email/password from the Eskiz dashboard.",
+          "Mode: Test (code 00000) or Live.",
+          "In Live fill email, password, from → Save → Test.",
+        ],
       },
       resend: {
         title: "Email (Resend)",
         lead: "Verification codes and lead emails. Test: code 00000.",
+        steps: [
+          "Create an API key at resend.com.",
+          "Test or Live → api_key / from → Save → Test.",
+        ],
+        portalUrl: "https://resend.com/",
       },
       telegram: {
         title: "Telegram",
         lead: "Lead notifications. Test: log only.",
+        steps: [
+          "Create a bot_token with @BotFather.",
+          "Find chat_id → Save → Test.",
+        ],
       },
       openai: {
         title: "OpenAI",
         lead: "Nice classification. Mock: local fallback.",
+        steps: [
+          "API key at platform.openai.com.",
+          "Mock (no key) or Live + api_key → Save.",
+        ],
+        portalUrl: "https://platform.openai.com/",
       },
       payme: {
         title: "Payme",
         lead: "Dev, sandbox, or live mode.",
+        steps: [
+          "Start with Dev (mock top-up) — no keys needed.",
+          "Sandbox: test.paycom.uz keys.",
+          "Live: merchant_id + key → Save.",
+        ],
       },
       click: {
         title: "Click",
         lead: "Dev or live acquiring.",
+        steps: [
+          "Dev — mock top-up.",
+          "Live: merchant_id, service_id, secret_key.",
+        ],
       },
       google: {
         title: "Google",
         lead: "Sign-in and account linking.",
+        steps: [
+          "Create an OAuth client in Google Cloud Console.",
+          "client_id, client_secret, redirect_uri → Save.",
+        ],
+        portalUrl: "https://console.cloud.google.com/",
       },
       adliya: {
         title: "Adliya IM",
-        lead: "Registry import. Test: token optional.",
+        lead: "National registry (UZ). Test: token optional; live needs Bearer.",
+        steps: [
+          "Sign in to im.adliya.uz / API cabinet.",
+          "DevTools → Network: copy Bearer from an api-ip.adliya.uz request.",
+          "Mode Live → access_token (+ api_base) → Save → Test.",
+          "Then run sync or JSON import on /admin/registry/.",
+        ],
+        portalUrl: "https://im.adliya.uz/",
+        afterSave:
+          "After saving the token, run sync on the registry page. Madrid XML is uploaded there too.",
       },
       euipo: {
         title: "EUIPO",
-        lead: "EUIPO TMView search. Mock: sample results.",
+        lead: "EU (EUTM) search. Mock → Sandbox → Live.",
+        steps: [
+          "Register at dev.euipo.europa.eu.",
+          "Create an OAuth2 client-credentials app.",
+          "Subscribe to Trademark Search API (sandbox; live approval ~1 week).",
+          "Mode Sandbox or Live → client_id + client_secret → Save.",
+          "On check, enable “European Union (EUIPO)” (+1 credit).",
+        ],
+        portalUrl: "https://dev.euipo.europa.eu/",
+        afterSave:
+          "Mock works without keys. Without live keys the block shows “source unavailable”.",
       },
       uspto: {
         title: "USPTO",
-        lead: "USPTO search API. Mock: sample results.",
+        lead: "US registry. Mock or Live API key.",
+        steps: [
+          "Get an API key at developer.uspto.gov (USPTO-API-KEY).",
+          "Mode Live → api_key → Save.",
+          "On check, enable “United States (USPTO)” (+1 credit).",
+        ],
+        portalUrl: "https://developer.uspto.gov/",
       },
       ipaustralia: {
         title: "IP Australia",
-        lead: "IP Australia TM search. Mock: sample results.",
+        lead: "Australian TM search. Mock or Live.",
+        steps: [
+          "Get a key from the IP Australia developer portal.",
+          "Mode Live → api_key → Save.",
+          "On check, enable “Australia” (+1 credit).",
+        ],
+        portalUrl: "https://www.ipaustralia.gov.au/",
       },
       kazpatent: {
         title: "Kazpatent (KZ)",
-        lead: "Coming soon — no public API yet.",
+        lead: "No public API yet — mock / unavailable only.",
+        steps: [
+          "gosreestr.kazpatent.kz has no public REST API.",
+          "Do not treat as Live — report shows “source unavailable”.",
+          "See docs/research/kazpatent.md",
+        ],
+        portalUrl: "https://gosreestr.kazpatent.kz/",
       },
     },
   },

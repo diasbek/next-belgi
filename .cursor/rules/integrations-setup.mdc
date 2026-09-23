@@ -1,0 +1,33 @@
+---
+description: Step-by-step setup for Belgi.ai integrations (Adliya, Madrid, EUIPO, USPTO, IP Australia)
+globs: src/lib/integrations/**/*,src/lib/check/external/**/*,src/lib/registry/**/*,src/components/organisms/IntegrationsPanel.tsx,src/components/organisms/admin/AdminRegistryPanel.tsx,docs/integrations-setup.md,docs/research/kazpatent.md
+alwaysApply: false
+---
+
+# Integrations setup (agent)
+
+Canonical guide: [`docs/integrations-setup.md`](docs/integrations-setup.md).
+
+## When the user asks to connect / configure an office API
+
+1. Follow the **recommended order**: mock → Adliya → Madrid XML → EUIPO → USPTO → IP Australia.
+2. Never suggest scraping Madrid Monitor or WIPO Global Brand Database (ToS forbid automation).
+3. Put credentials in **Admin → Integrations** (`/admin/integrations/`) or documented env vars — never commit secrets.
+4. Madrid bulk import is on **`/admin/registry/`**, not Integrations.
+5. Kazpatent has no public REST API — keep unavailable; see `docs/research/kazpatent.md`.
+6. After wiring an adapter, remind: apply migration `20260923190000_multi_jurisdiction_hub.sql` if not applied; verify `/account/check/` with jurisdiction toggles (+1 credit each for eu/us/au/kz).
+
+## Code map
+
+| Concern | Path |
+|---------|------|
+| Catalog / modes / secrets shape | `src/lib/integrations/types.ts` |
+| Load/save encrypted payload | `src/lib/integrations/store.ts` |
+| Admin UI + setup steps | `src/components/organisms/IntegrationsPanel.tsx` |
+| External search adapters | `src/lib/check/external/*` |
+| Madrid importer | `src/lib/registry/madrid-import.ts` |
+| Sample dump | `scripts/fixtures/madrid-sample.json` |
+
+## UI copy
+
+Module `steps`, `portalUrl`, `fieldLabels` live in `src/i18n/app-copy.ts` → `adminIntegrations`. Keep uz/ru/en in sync when adding a provider.

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
+import { localePath } from "@/i18n/paths";
 import { Button } from "@/components/atoms/Button";
 import { fieldInput } from "@/styles/ui";
 import { DashPageHeader } from "@/components/molecules/DashChrome";
@@ -13,6 +14,7 @@ import {
   type ModuleCatalogItem,
 } from "@/lib/integrations/types";
 import { cn } from "@/lib/cn";
+import Link from "next/link";
 
 type Status = {
   provider: IntegrationProvider;
@@ -117,12 +119,13 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     return map[mode] || mode;
   }
 
-  function moduleTitle(provider: IntegrationProvider) {
-    return copy.adminIntegrations.modules[provider]?.title || provider;
+  function moduleMeta(provider: IntegrationProvider) {
+    return copy.adminIntegrations.modules[provider];
   }
 
-  function moduleLead(provider: IntegrationProvider) {
-    return copy.adminIntegrations.modules[provider]?.lead || "";
+  function fieldLabel(key: string) {
+    if (key === "mode") return copy.adminIntegrations.mode;
+    return copy.adminIntegrations.fieldLabels[key] || key;
   }
 
   function visibleFields(cat: ModuleCatalogItem) {
@@ -202,6 +205,14 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     }
   }
 
+  function moduleTitle(provider: IntegrationProvider) {
+    return moduleMeta(provider)?.title || provider;
+  }
+
+  function moduleLead(provider: IntegrationProvider) {
+    return moduleMeta(provider)?.lead || "";
+  }
+
   const categories: Array<{
     id: ModuleCatalogItem["category"];
     title: string;
@@ -213,13 +224,31 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     { id: "data", title: copy.adminIntegrations.catData },
   ];
 
+  const activeMeta = active ? moduleMeta(active) : null;
+
   return (
     <div>
       <DashPageHeader
         title={copy.adminIntegrations.title}
         lead={copy.adminIntegrations.lead}
       />
-      <p className="mb-4 max-w-2xl text-sm text-ink-muted">
+      <div className="mb-6 max-w-2xl rounded-2xl border border-ink/15 bg-white p-4 sm:p-5">
+        <p className="m-0 text-sm font-semibold text-ink">
+          {copy.adminIntegrations.setupOrderTitle}
+        </p>
+        <p className="m-0 mt-1.5 text-sm leading-relaxed text-ink">
+          {copy.adminIntegrations.setupOrderLead}
+        </p>
+        <p className="m-0 mt-3">
+          <Link
+            href={localePath(locale, "/admin/registry/")}
+            className="text-sm font-semibold text-ink underline-offset-2 hover:underline"
+          >
+            {copy.adminIntegrations.registryLink}
+          </Link>
+        </p>
+      </div>
+      <p className="mb-4 max-w-2xl text-sm text-ink">
         {copy.adminIntegrations.masterKeyNote}
       </p>
       <div className="mb-8">
@@ -332,7 +361,34 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
       >
         {active && catalog ? (
           <div>
-            <p className="mb-4 text-sm text-ink-muted">{moduleLead(active)}</p>
+            <p className="mb-4 text-sm leading-relaxed text-ink">
+              {moduleLead(active)}
+            </p>
+
+            {activeMeta?.steps?.length ? (
+              <div className="mb-4 rounded-xl border border-ink/15 bg-surface-muted p-3 sm:p-4">
+                <p className="m-0 text-xs font-semibold uppercase tracking-wide text-ink">
+                  {copy.adminIntegrations.stepsTitle}
+                </p>
+                <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-ink">
+                  {activeMeta.steps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+                {activeMeta.portalUrl ? (
+                  <p className="m-0 mt-3">
+                    <a
+                      href={activeMeta.portalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-semibold text-ink underline-offset-2 hover:underline"
+                    >
+                      {copy.adminIntegrations.portalOpen} →
+                    </a>
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
 
             {catalog.testOtpHint && form.mode === "test" ? (
               <p className="mb-4 rounded-xl bg-lime/60 px-3 py-2 text-sm text-ink">
@@ -355,10 +411,8 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
               {visibleFields(catalog).map((field) => {
                 if (field.kind === "select") {
                   return (
-                    <label key={field.key} className="text-sm font-medium">
-                      {field.key === "mode"
-                        ? copy.adminIntegrations.mode
-                        : field.key}
+                    <label key={field.key} className="text-sm font-semibold text-ink">
+                      {fieldLabel(field.key)}
                       <select
                         className={`${fieldInput} mt-1`}
                         value={form[field.key] || catalog.defaultMode}
@@ -379,8 +433,8 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
                   );
                 }
                 return (
-                  <label key={field.key} className="text-sm font-medium">
-                    {field.key}
+                  <label key={field.key} className="text-sm font-semibold text-ink">
+                    {fieldLabel(field.key)}
                     <input
                       className={`${fieldInput} mt-1`}
                       type={field.secret ? "password" : "text"}
@@ -405,7 +459,7 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
                 );
               })}
 
-              <label className="flex items-center gap-2 text-sm font-medium">
+              <label className="flex items-center gap-2 text-sm font-semibold text-ink">
                 <input
                   type="checkbox"
                   checked={enabled}
@@ -414,6 +468,27 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
                 {copy.adminIntegrations.enabled}
               </label>
             </div>
+
+            {activeMeta?.afterSave ? (
+              <div className="mt-4 rounded-xl border border-ink/15 bg-white px-3 py-2.5">
+                <p className="m-0 text-xs font-semibold uppercase tracking-wide text-ink">
+                  {copy.adminIntegrations.afterSaveTitle}
+                </p>
+                <p className="m-0 mt-1 text-sm leading-relaxed text-ink">
+                  {activeMeta.afterSave}
+                </p>
+                {active === "adliya" ? (
+                  <p className="m-0 mt-2">
+                    <Link
+                      href={localePath(locale, "/admin/registry/")}
+                      className="text-sm font-semibold text-ink underline-offset-2 hover:underline"
+                    >
+                      {copy.adminIntegrations.registryLink}
+                    </Link>
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
 
             {msg ? (
               <p className="mt-3 text-sm text-success">{msg}</p>

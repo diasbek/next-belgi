@@ -16,6 +16,10 @@ Next.js 16 App Router. Prefer docs under `node_modules/next/dist/docs/` when API
 - Always show the Ministry of Justice disclaimer on reports
 - Final registration advice only via lawyer / agency contact
 
+## Integrations (multi-jurisdiction hub)
+
+Step-by-step setup for Adliya, Madrid bulk, EUIPO, USPTO, IP Australia: [`docs/integrations-setup.md`](docs/integrations-setup.md). Cursor rule: `.cursor/rules/integrations-setup.mdc`. Admin UI: `/admin/integrations/` (+ Madrid upload on `/admin/registry/`).
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

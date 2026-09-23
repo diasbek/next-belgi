@@ -40,6 +40,7 @@ export interface TrademarkCheckInsert {
   verificationCode?: string | null;
   payloadHash?: string | null;
   conclusionDoc?: unknown;
+  jurisdictions?: string[];
 }
 
 export interface NotificationLogInsert {

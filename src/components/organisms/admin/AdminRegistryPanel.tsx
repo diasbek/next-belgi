@@ -40,6 +40,7 @@ import {
   chunkArray,
   extractAdliyaListRaw,
 } from "@/lib/registry/extract-adliya-list";
+import { cn } from "@/lib/cn";
 
 export type AdminRegistryRow = {
   id: string;
@@ -106,6 +107,8 @@ export function AdminRegistryPanel({
   pageSize,
   registryCount,
   importStatus,
+  madridStatus,
+  madridCount,
   syncRunning,
   dbUnavailable,
   statusValues = [],
@@ -117,6 +120,8 @@ export function AdminRegistryPanel({
   pageSize: number;
   registryCount: number;
   importStatus: string;
+  madridStatus?: string | null;
+  madridCount?: number | null;
   syncRunning?: boolean;
   dbUnavailable?: boolean;
   statusValues?: string[];
@@ -178,6 +183,35 @@ export function AdminRegistryPanel({
       };
       if (json.ok) {
         setMsg(`${copy.adminRegistry.syncDone}: +${json.imported ?? 0}`);
+        router.refresh();
+      } else {
+        setMsg(json.error || copy.adminUi.error);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function importMadridFile(file: File) {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const form = new FormData();
+      form.set("file", file);
+      const res = await fetch("/api/admin/registry/madrid/", {
+        method: "POST",
+        body: form,
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        upserted?: number;
+        uzDesignations?: number;
+        error?: string;
+      };
+      if (json.ok) {
+        setMsg(
+          `${copy.adminRegistry.madridDone}: +${json.upserted ?? 0} (UZ ${json.uzDesignations ?? 0})`,
+        );
         router.refresh();
       } else {
         setMsg(json.error || copy.adminUi.error);
@@ -543,6 +577,25 @@ export function AdminRegistryPanel({
             >
               {copy.adminRegistry.pasteImport}
             </Button>
+            <label
+              className={cn(
+                "inline-flex cursor-pointer items-center justify-center rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-ink",
+                busy && "pointer-events-none opacity-50",
+              )}
+            >
+              <input
+                type="file"
+                accept=".xml,.json,.jsonl,application/json,text/xml,application/xml"
+                className="sr-only"
+                disabled={busy}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (file) void importMadridFile(file);
+                }}
+              />
+              {copy.adminRegistry.madridUpload}
+            </label>
             <Button
               type="button"
               variant="secondary"
@@ -668,6 +721,10 @@ export function AdminRegistryPanel({
                     { value: "adliya", label: "adliya" },
                     { value: "manual", label: "manual" },
                     { value: "seed", label: "seed" },
+                    {
+                      value: "madrid",
+                      label: copy.adminRegistry.sourceMadrid || "madrid",
+                    },
                   ],
                 },
                 {
@@ -685,6 +742,15 @@ export function AdminRegistryPanel({
         stats={
           <p className="mb-3 text-xs text-ink-muted">
             {copy.adminRegistry.importStatus}: {importStatus}
+            {madridStatus ? (
+              <>
+                {" · "}
+                {copy.adminRegistry.madridStatus}: {madridStatus}
+                {madridCount != null
+                  ? ` · ${copy.adminRegistry.madridCount}: ${madridCount}`
+                  : ""}
+              </>
+            ) : null}
             {msg ? ` · ${msg}` : ""}
           </p>
         }

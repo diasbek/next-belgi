@@ -19,6 +19,12 @@ export interface TrademarkSourceBlock {
   empty?: boolean;
   emptyText?: string;
   matches: TrademarkMatch[];
+  /** External office / cache miss — block shown but not treated as "clear" */
+  unavailable?: boolean;
+  unavailableText?: string;
+  /** ISO date when office data was fetched */
+  asOf?: string;
+  sourceOffice?: string;
 }
 
 export interface ClassRisk {
@@ -59,6 +65,8 @@ export interface CheckRequest {
   query: string;
   activity: string;
   locale?: string;
+  /** Jurisdiction codes: uz always; wipo local; eu/us/au/kz external */
+  jurisdictions?: string[];
   niceSelection?: {
     terms: { id?: string; classNumber: number; term: string }[];
     customText?: string;

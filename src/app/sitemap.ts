@@ -9,6 +9,7 @@ const indexablePages: PageKey[] = [
   "agency",
   "works",
   "services",
+  "coverage",
   "contacts",
   "privacy",
   "terms",

@@ -11,6 +11,9 @@ export const uzCopy: SiteCopy = {
     worksDescription: "Belgi.ai tekshiruvlari va keys misollari.",
     servicesTitle: "Xizmatlar",
     servicesDescription: "AI tekshiruv va belgini roʻyxatga olishni kuzatib borish.",
+    coverageTitle: "Qamrov",
+    coverageDescription:
+      "Belgi.ai qaysi davlat reestrlari va manbalar boʻyicha tekshiruv qiladi.",
     contactsTitle: "Kontaktlar",
     contactsDescription: "Belgi.ai jamoasi bilan bogʻlaning.",
     checkTitle: "Tovar belgini tekshirish",
@@ -55,6 +58,7 @@ export const uzCopy: SiteCopy = {
   nav: [
     { label: "Agentlik", href: "/agency/" },
     { label: "Xizmatlar", href: "/services/" },
+    { label: "Qamrov", href: "/coverage/" },
     { label: "Kontaktlar", href: "/contacts/" },
   ],
   footer: {
@@ -193,6 +197,47 @@ export const uzCopy: SiteCopy = {
       services: "Xizmatlar",
     },
   },
+  coverage: {
+    title: "Qamrov",
+    lead: "Belgi.ai bir tekshiruvda bir nechta davlat reestrlari va manbalarini qamrab oladi.",
+    disclaimer:
+      "Hisobotlar mavjud ochiq maʼlumotlar va integratsiyalar asosida axboriy bahodir. Reestrlar muntazam yangilanadi; yakuniy qaror vakolatli organ tomonidan qabul qilinadi.",
+    liveLabel: "Faol",
+    plannedLabel: "Rejalashtirilgan",
+    items: [
+      {
+        title: "Oʻzbekiston — Adliya IM",
+        text: "Milliy tovar belgilari reestri. Mahalliy SoT va Adliya importi orqali qidiruv.",
+        status: "live",
+      },
+      {
+        title: "Madrid / WIPO — UZ koʻrsatmalari",
+        text: "Xalqaro roʻyxatdan oʻtishlar boʻyicha Oʻzbekiston designatsiyalari. Madrid XML importi.",
+        status: "live",
+      },
+      {
+        title: "EUIPO (Yevropa Ittifoqi)",
+        text: "EUIPO TMView qidiruvi — qo‘shimcha kredit bilan.",
+        status: "live",
+      },
+      {
+        title: "USPTO (AQSH)",
+        text: "AQSH Patent va savdo belgilar idorasi qidiruvi — qo‘shimcha kredit bilan.",
+        status: "live",
+      },
+      {
+        title: "IP Australia",
+        text: "Avstraliya TM qidiruvi — qo‘shimcha kredit bilan.",
+        status: "live",
+      },
+      {
+        title: "Kazpatent (Qozogʻiston)",
+        text: "Ommaviy API hozircha yoʻq. Integratsiya rejalashtirilgan.",
+        status: "planned",
+      },
+    ],
+    cta: "Tovar belgini tekshirish",
+  },
   contacts: {
     title: "Kontaktlar",
     lead: "Yozing — tekshiruv yoki roʻyxatga olish boʻyicha javob beramiz.",
@@ -238,17 +283,28 @@ export const uzCopy: SiteCopy = {
       confirmClasses: "MKTU sinflari",
       searchResults: "Qidiruv natijalari",
       classRow: "Sinf {n}",
+      jurisdictionsTitle: "Qaysi davlatlar va reestrlar?",
+      jurisdictionsHint: "Qoʻshimcha davlat har biri uchun +1 kredit",
+      jurisUz: "Oʻzbekiston (Adliya)",
+      jurisWipo: "Madrid / WIPO (UZ koʻrsatmalari)",
+      jurisEu: "Yevropa (EUIPO)",
+      jurisUs: "AQSH (USPTO)",
+      jurisAu: "Avstraliya (IP Australia)",
+      jurisKz: "Qozogʻiston (Kazpatent)",
+      creditCost: "{n} kredit",
     },
   },
   report: {
     markTypeLabel: "Belgi",
     classesLabel: "Sinflar",
     registryUz: "UZ reestri",
-    wipo: "WIPO",
+    wipo: "Madrid (WIPO) — UZ koʻrsatmalari",
     internet: "Internet",
     similarityLabel: "Oʻxshashlik",
     nameSimilarity: "Nom boʻyicha oʻxshashlik",
     noMatches: "Mavjud maʼlumotlarga koʻra, shunga oʻxshash belgilari yoʻq",
+    sourceUnavailable: "Manba hozircha mavjud emas",
+    asOfPrefix: "Maʼlumot sanasi",
     conclusionTitle: "Xulosa",
     conclusionLead:
       "Ekspertiza natijalari ushbu nomni roʻyxatga olishga ijobiy javob berishi kerak:",

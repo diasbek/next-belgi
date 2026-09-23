@@ -18,6 +18,17 @@ import {
   storeNiceSelection,
   type ActivityOption,
 } from "@/lib/nice";
+import {
+  optionalJurisdictionCodes,
+  readJurisdictions,
+  storeJurisdictions,
+  toggleJurisdiction,
+} from "@/lib/check/jurisdiction-storage";
+import {
+  JURISDICTIONS,
+  totalCheckCredits,
+  type JurisdictionCode,
+} from "@/lib/check/jurisdictions";
 import { fieldInput } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 
@@ -235,6 +246,9 @@ export function CheckForm({
     initialStep(initialQuery, optionsFromSelectionOrActivity(initialActivity)),
   );
   const [pending, setPending] = useState(false);
+  const [jurisdictions, setJurisdictions] = useState<JurisdictionCode[]>(() =>
+    typeof window !== "undefined" ? readJurisdictions() : (["uz", "wipo"] as JurisdictionCode[]),
+  );
   const brandId = `${idPrefix}-brand`;
   const activityId = `${idPrefix}-activity`;
 
@@ -242,11 +256,25 @@ export function CheckForm({
     void import("@/lib/nice").then((m) => m.loadNiceTerms(locale));
   }, [locale]);
 
+  useEffect(() => {
+    setJurisdictions(readJurisdictions());
+  }, []);
+
   const selection = useMemo(
     () => optionsToSelection(activityOptions),
     [activityOptions],
   );
   const activityText = selectionToActivityString(selection, locale);
+  const creditCost = totalCheckCredits(jurisdictions);
+
+  const jurisLabels: Record<JurisdictionCode, string> = {
+    uz: s.jurisUz || "UZ",
+    wipo: s.jurisWipo || "Madrid / WIPO",
+    eu: s.jurisEu || "EU (EUIPO)",
+    us: s.jurisUs || "US (USPTO)",
+    au: s.jurisAu || "AU (IP Australia)",
+    kz: s.jurisKz || "KZ (Kazpatent)",
+  };
 
   function submitCheck() {
     const q = query.trim();
@@ -255,10 +283,12 @@ export function CheckForm({
     setPending(true);
     trackEvent("check_form_submit");
     storeNiceSelection(selection);
+    storeJurisdictions(jurisdictions);
     const params = new URLSearchParams({ q, activity: a });
     if (selection.classNumbers.length) {
       params.set("nc", selection.classNumbers.join(","));
     }
+    params.set("j", jurisdictions.join(","));
     router.push(`${localePath(locale, actionPath)}?${params.toString()}`);
   }
 
@@ -473,6 +503,65 @@ export function CheckForm({
                     </div>
                   </div>
                 ) : null}
+
+                <div className="mt-4 border-t border-black/5 pt-4">
+                  <p className="m-0 text-xs font-medium text-ink">
+                    {s.jurisdictionsTitle || "Jurisdictions"}
+                  </p>
+                  <p className="m-0 mt-1 text-xs text-ink-muted">
+                    {s.jurisdictionsHint ||
+                      "UZ + Madrid included. Extra offices +1 credit each."}
+                  </p>
+                  <ul className="mt-3 space-y-2">
+                    <li className="flex items-center gap-2 text-sm text-ink">
+                      <input type="checkbox" checked disabled className="size-4" />
+                      <span>{jurisLabels.uz}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm text-ink">
+                      <input type="checkbox" checked disabled className="size-4" />
+                      <span>{jurisLabels.wipo}</span>
+                    </li>
+                    {optionalJurisdictionCodes().map((code) => {
+                      const on = jurisdictions.includes(code);
+                      const extra = JURISDICTIONS[code].extraCredits;
+                      return (
+                        <li
+                          key={code}
+                          className="flex items-center gap-2 text-sm text-ink"
+                        >
+                          <input
+                            type="checkbox"
+                            className="size-4 accent-primary"
+                            checked={on}
+                            onChange={(e) =>
+                              setJurisdictions(
+                                toggleJurisdiction(
+                                  jurisdictions,
+                                  code,
+                                  e.target.checked,
+                                ),
+                              )
+                            }
+                          />
+                          <span>
+                            {jurisLabels[code]}
+                            {extra > 0 ? (
+                              <span className="ml-2 text-xs text-ink-muted">
+                                +{extra}
+                              </span>
+                            ) : null}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <p className="m-0 mt-3 text-xs text-ink-muted">
+                    {(s.creditCost || "{n} credit(s)").replace(
+                      "{n}",
+                      String(creditCost),
+                    )}
+                  </p>
+                </div>
               </div>
               <p className="m-0 flex items-start gap-2 text-xs text-ink-muted">
                 <span

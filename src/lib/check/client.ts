@@ -15,6 +15,11 @@ import {
   hashConclusionPayload,
 } from "@/lib/conclusion";
 import type { ConclusionDocument } from "@/lib/conclusion";
+import { searchExternalJurisdiction } from "./external";
+import {
+  normalizeJurisdictions,
+  type JurisdictionCode,
+} from "./jurisdictions";
 import { buildMockReport, buildReportFromMatches } from "./mock";
 import { searchLocalRegistry } from "./registry-search";
 import type { CheckRequest, CheckResponse, TrademarkReport } from "./types";
@@ -114,6 +119,7 @@ async function persistCheck(params: {
   classification: ActivityClassification;
   report: TrademarkReport;
   source: "mock" | "upstream" | "registry";
+  jurisdictions: JurisdictionCode[];
 }): Promise<{
   checkId: string | null;
   verificationCode: string | null;
@@ -141,6 +147,7 @@ async function persistCheck(params: {
       verificationCode,
       payloadHash,
       conclusionDoc: conclusion,
+      jurisdictions: params.jurisdictions,
     });
     if (!checkId) {
       return { checkId: null, verificationCode: null, conclusion: null };
@@ -152,11 +159,11 @@ async function persistCheck(params: {
   }
 }
 
+const EXTERNAL_CODES: JurisdictionCode[] = ["eu", "us", "au", "kz"];
+
 /**
  * Server-side check client.
- * 1) Classify activity → Nice classes (catalog selection and/or OpenAI / cache / fallback)
- * 2) When BELGI_CHECK_API_URL is set, proxies to upstream; otherwise local registry search.
- * 3) Persist check row when Supabase service role is configured.
+ * Local SoT (Adliya + Madrid) + optional parallel external office searches.
  */
 export async function runTrademarkCheck(
   input: CheckRequest & { userId?: string | null },
@@ -176,22 +183,43 @@ export async function runTrademarkCheck(
 
   const locale = resolveLocale(input.locale);
   const classification = await resolveClassification(input);
+  const jurisdictions = normalizeJurisdictions(input.jurisdictions);
+  const niceClasses =
+    classification.primaryClassNumbers.length > 0
+      ? classification.primaryClassNumbers
+      : classification.classes.map((c) => c.classNumber);
 
   const upstream = process.env.BELGI_CHECK_API_URL?.trim();
   if (!upstream) {
     const matches = await searchLocalRegistry({
       query,
-      niceClasses:
-        classification.primaryClassNumbers.length > 0
-          ? classification.primaryClassNumbers
-          : classification.classes.map((c) => c.classNumber),
+      niceClasses,
     });
+
+    const externalWanted = jurisdictions.filter((j) =>
+      EXTERNAL_CODES.includes(j),
+    );
+    const externalResults = await Promise.all(
+      externalWanted.map(async (code) => {
+        const result = await searchExternalJurisdiction(code, query, {
+          niceClasses,
+        });
+        return { code, result };
+      }),
+    );
+
     const report = buildReportFromMatches({
       query,
       activity,
       classification,
       locale,
       matches,
+      externalBlocks: externalResults.map(({ code, result }) => ({
+        id: code,
+        matches: result.matches,
+        unavailable: result.unavailable,
+        asOf: result.fetchedAt,
+      })),
     });
     const persisted = await persistCheck({
       query,
@@ -201,6 +229,7 @@ export async function runTrademarkCheck(
       classification,
       report,
       source: "registry",
+      jurisdictions,
     });
     return {
       ok: true,
@@ -226,6 +255,7 @@ export async function runTrademarkCheck(
         query,
         activity,
         locale,
+        jurisdictions,
         niceClasses: classification.classes,
         primaryClassNumbers: classification.primaryClassNumbers,
         activityNormalized: classification.activityNormalized,
@@ -257,6 +287,7 @@ export async function runTrademarkCheck(
       classification,
       report,
       source: "upstream",
+      jurisdictions,
     });
 
     return {

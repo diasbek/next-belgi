@@ -54,6 +54,15 @@ export type ConclusionDocument = {
     internetSubtitle: string;
     internet: ConclusionInternetItem[];
     internetEmpty: string;
+    /** Extra jurisdiction blocks (EU, US, AU, …) */
+    extras?: Array<{
+      id: string;
+      title: string;
+      matches: ConclusionMatchCard[];
+      empty: string;
+      unavailable?: boolean;
+      asOf?: string;
+    }>;
   };
   verdict: {
     title: string;

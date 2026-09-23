@@ -1,6 +1,6 @@
 /** Shared registry domain types (local SoT). */
 
-export type RegistrySource = "adliya" | "manual" | "seed";
+export type RegistrySource = "adliya" | "manual" | "seed" | "madrid";
 
 export type RegistryTrademark = {
   id: string;

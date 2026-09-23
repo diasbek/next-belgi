@@ -177,7 +177,17 @@ export function TrademarkReportView({
       {otherSources.map((source) => (
         <div key={source.id} className={cn(drawer ? "mb-5" : "mb-8")}>
           <h3 className="m-0 mb-2 text-base font-semibold">{source.title}</h3>
-          {source.empty || source.matches.length === 0 ? (
+          {source.asOf ? (
+            <p className="m-0 mb-2 text-xs text-ink-muted">
+              {copy.report.asOfPrefix || "As of"}{" "}
+              {new Date(source.asOf).toLocaleDateString(locale)}
+            </p>
+          ) : null}
+          {source.unavailable ? (
+            <p className="m-0 text-sm text-ink-muted">
+              {source.unavailableText || copy.report.sourceUnavailable}
+            </p>
+          ) : source.empty || source.matches.length === 0 ? (
             <p className="m-0 text-sm text-ink-muted">
               {source.emptyText || copy.report.noMatches}
             </p>
@@ -188,9 +198,14 @@ export function TrademarkReportView({
                   key={match.id}
                   className="flex items-center justify-between gap-4 px-3 py-4 sm:px-4"
                 >
-                  <p className="m-0 min-w-0 break-words font-semibold">
-                    {match.name}
-                  </p>
+                  <div className="min-w-0">
+                    <p className="m-0 break-words font-semibold">{match.name}</p>
+                    {match.owner ? (
+                      <p className="m-0 mt-1 text-xs text-ink-muted">
+                        {match.owner}
+                      </p>
+                    ) : null}
+                  </div>
                   <p className="m-0 shrink-0 text-sm">
                     {copy.report.similarityLabel} {match.similarity}%
                   </p>

@@ -340,6 +340,12 @@ export type AppCopy = {
     sortSynced: string;
     sortAsc: string;
     sortDesc: string;
+    madridImport: string;
+    madridStatus: string;
+    madridCount: string;
+    madridUpload: string;
+    madridDone: string;
+    sourceMadrid: string;
   };
   adminAttorneys: {
     title: string;
@@ -443,7 +449,11 @@ export type AppCopy = {
       | "payme"
       | "click"
       | "google"
-      | "adliya",
+      | "adliya"
+      | "euipo"
+      | "uspto"
+      | "ipaustralia"
+      | "kazpatent",
       { title: string; lead: string }
     >;
   };
@@ -836,6 +846,12 @@ export const uzApp: AppCopy = {
     sortSynced: "Sync vaqti",
     sortAsc: "Oʻsish",
     sortDesc: "Kamayish",
+    madridImport: "Madrid import",
+    madridStatus: "Madrid holati",
+    madridCount: "Madrid yozuvlari",
+    madridUpload: "Madrid XML/JSON yuklash",
+    madridDone: "Madrid import yakunlandi",
+    sourceMadrid: "madrid",
   },
   adminAttorneys: {
     title: "Patent vakillari",
@@ -968,6 +984,22 @@ export const uzApp: AppCopy = {
       adliya: {
         title: "Adliya IM",
         lead: "Reestr importi. Sinov: token shart emas.",
+      },
+      euipo: {
+        title: "EUIPO",
+        lead: "EUIPO TMView qidiruvi. Mock: namuna natijalar.",
+      },
+      uspto: {
+        title: "USPTO",
+        lead: "USPTO qidiruv API. Mock: namuna natijalar.",
+      },
+      ipaustralia: {
+        title: "IP Australia",
+        lead: "IP Australia TM qidiruvi. Mock: namuna natijalar.",
+      },
+      kazpatent: {
+        title: "Kazpatent (KZ)",
+        lead: "Tez orada — ommaviy API hozircha yoʻq.",
       },
     },
   },
@@ -1391,6 +1423,12 @@ export const ruApp: AppCopy = {
     sortSynced: "По sync",
     sortAsc: "По возрастанию",
     sortDesc: "По убыванию",
+    madridImport: "Импорт Madrid",
+    madridStatus: "Статус Madrid",
+    madridCount: "Записи Madrid",
+    madridUpload: "Загрузить Madrid XML/JSON",
+    madridDone: "Импорт Madrid завершён",
+    sourceMadrid: "madrid",
   },
   adminAttorneys: {
     title: "Патентные поверенные",
@@ -1523,6 +1561,22 @@ export const ruApp: AppCopy = {
       adliya: {
         title: "Adliya IM",
         lead: "Импорт реестра. Тест: токен не обязателен.",
+      },
+      euipo: {
+        title: "EUIPO",
+        lead: "Поиск EUIPO TMView. Mock: демо-результаты.",
+      },
+      uspto: {
+        title: "USPTO",
+        lead: "API поиска USPTO. Mock: демо-результаты.",
+      },
+      ipaustralia: {
+        title: "IP Australia",
+        lead: "Поиск TM IP Australia. Mock: демо-результаты.",
+      },
+      kazpatent: {
+        title: "Kazpatent (KZ)",
+        lead: "Скоро — публичного API пока нет.",
       },
     },
   },
@@ -1944,6 +1998,12 @@ export const enApp: AppCopy = {
     sortSynced: "Synced at",
     sortAsc: "Ascending",
     sortDesc: "Descending",
+    madridImport: "Madrid import",
+    madridStatus: "Madrid status",
+    madridCount: "Madrid records",
+    madridUpload: "Upload Madrid XML/JSON",
+    madridDone: "Madrid import finished",
+    sourceMadrid: "madrid",
   },
   adminAttorneys: {
     title: "Patent attorneys",
@@ -2076,6 +2136,22 @@ export const enApp: AppCopy = {
       adliya: {
         title: "Adliya IM",
         lead: "Registry import. Test: token optional.",
+      },
+      euipo: {
+        title: "EUIPO",
+        lead: "EUIPO TMView search. Mock: sample results.",
+      },
+      uspto: {
+        title: "USPTO",
+        lead: "USPTO search API. Mock: sample results.",
+      },
+      ipaustralia: {
+        title: "IP Australia",
+        lead: "IP Australia TM search. Mock: sample results.",
+      },
+      kazpatent: {
+        title: "Kazpatent (KZ)",
+        lead: "Coming soon — no public API yet.",
       },
     },
   },

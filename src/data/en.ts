@@ -11,6 +11,9 @@ export const enCopy: SiteCopy = {
     worksDescription: "Belgi.ai check examples and case studies.",
     servicesTitle: "Services",
     servicesDescription: "AI screening and trademark registration support.",
+    coverageTitle: "Coverage",
+    coverageDescription:
+      "Which registries and sources Belgi.ai searches in a single check.",
     contactsTitle: "Contacts",
     contactsDescription: "Get in touch with the Belgi.ai team.",
     checkTitle: "Check a trademark",
@@ -56,6 +59,7 @@ export const enCopy: SiteCopy = {
   nav: [
     { label: "Agency", href: "/agency/" },
     { label: "Services", href: "/services/" },
+    { label: "Coverage", href: "/coverage/" },
     { label: "Contacts", href: "/contacts/" },
   ],
   footer: {
@@ -194,6 +198,47 @@ export const enCopy: SiteCopy = {
       services: "Services",
     },
   },
+  coverage: {
+    title: "Coverage",
+    lead: "Belgi.ai combines multiple national registries and sources in one check.",
+    disclaimer:
+      "Reports are informational assessments based on available open data and integrations. Registries update regularly; the final decision rests with the competent authority.",
+    liveLabel: "Live",
+    plannedLabel: "Planned",
+    items: [
+      {
+        title: "Uzbekistan — Adliya IM",
+        text: "National trademark registry. Search via local SoT and Adliya import.",
+        status: "live",
+      },
+      {
+        title: "Madrid / WIPO — UZ designations",
+        text: "International registrations designating Uzbekistan. Madrid XML import.",
+        status: "live",
+      },
+      {
+        title: "EUIPO (European Union)",
+        text: "EUIPO TMView search — one extra credit.",
+        status: "live",
+      },
+      {
+        title: "USPTO (United States)",
+        text: "USPTO registry search — one extra credit.",
+        status: "live",
+      },
+      {
+        title: "IP Australia",
+        text: "Australian TM search — one extra credit.",
+        status: "live",
+      },
+      {
+        title: "Kazpatent (Kazakhstan)",
+        text: "No public API yet. Integration planned.",
+        status: "planned",
+      },
+    ],
+    cta: "Check a trademark",
+  },
   contacts: {
     title: "Contacts",
     lead: "Write to us — we will reply about checks or registration.",
@@ -239,17 +284,28 @@ export const enCopy: SiteCopy = {
       confirmClasses: "Nice classes",
       searchResults: "Search results",
       classRow: "Class {n}",
+      jurisdictionsTitle: "Which countries and registries?",
+      jurisdictionsHint: "Each extra country costs +1 credit",
+      jurisUz: "Uzbekistan (Adliya)",
+      jurisWipo: "Madrid / WIPO (UZ designations)",
+      jurisEu: "Europe (EUIPO)",
+      jurisUs: "United States (USPTO)",
+      jurisAu: "Australia (IP Australia)",
+      jurisKz: "Kazakhstan (Kazpatent)",
+      creditCost: "{n} credits",
     },
   },
   report: {
     markTypeLabel: "Mark",
     classesLabel: "Classes",
     registryUz: "UZ registry",
-    wipo: "WIPO",
+    wipo: "Madrid (WIPO) — UZ designations",
     internet: "Internet",
     similarityLabel: "Similarity",
     nameSimilarity: "Name similarity",
     noMatches: "Based on available data, no similar marks were found",
+    sourceUnavailable: "Source temporarily unavailable",
+    asOfPrefix: "As of",
     conclusionTitle: "Conclusion",
     conclusionLead:
       "Examination results should support registration of this name:",

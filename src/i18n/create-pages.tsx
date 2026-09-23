@@ -12,6 +12,7 @@ import {
   ServicesPageView,
   ContactsPageView,
 } from "@/views/ContentPageViews";
+import { CoveragePageView } from "@/views/CoveragePageView";
 import {
   LegalDocPageView,
   LegalIndexPageView,
@@ -78,6 +79,19 @@ export function createServicesPage(locale: Locale) {
       return (
         <SiteLayout locale={locale}>
           <ServicesPageView locale={locale} />
+        </SiteLayout>
+      );
+    },
+  };
+}
+
+export function createCoveragePage(locale: Locale) {
+  return {
+    generateMetadata: () => getLocalizedPageMetadata(locale, "coverage"),
+    Page: async function CoveragePage() {
+      return (
+        <SiteLayout locale={locale}>
+          <CoveragePageView locale={locale} />
         </SiteLayout>
       );
     },

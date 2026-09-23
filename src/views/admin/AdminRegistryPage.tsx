@@ -34,6 +34,8 @@ export async function AdminRegistryPage({
   let registryCount = 0;
   let listTotal = 0;
   let importStatus = "—";
+  let madridStatus: string | null = null;
+  let madridCount: number | null = null;
   let syncRunning = false;
   let rows: AdminRegistryRow[] = [];
   let statusValues: string[] = [];
@@ -48,6 +50,16 @@ export async function AdminRegistryPage({
       .select("*")
       .eq("id", 1)
       .maybeSingle();
+    const madridStateReq = db
+      .from("madrid_import_state")
+      .select("*")
+      .eq("id", 1)
+      .maybeSingle();
+    const madridCountReq = db
+      .from("trademarks")
+      .select("id", { count: "exact", head: true })
+      .eq("source", "madrid")
+      .eq("active", true);
     const statusesReq = db.rpc("list_trademark_statuses");
 
     let listReq = db
@@ -80,11 +92,32 @@ export async function AdminRegistryPage({
     const [
       { count: c },
       { data: s },
+      { data: madridState },
+      { count: mCount },
       { data, count: listCount },
       { data: statusData, error: statusErr },
-    ] = await Promise.all([countReq, stateReq, listReq, statusesReq]);
+    ] = await Promise.all([
+      countReq,
+      stateReq,
+      madridStateReq,
+      madridCountReq,
+      listReq,
+      statusesReq,
+    ]);
     registryCount = c ?? 0;
     listTotal = listCount ?? 0;
+    madridCount = mCount ?? 0;
+    madridStatus = madridState
+      ? [
+          String(madridState.status ?? "—"),
+          madridState.last_file ? String(madridState.last_file) : null,
+          madridState.records_uz != null
+            ? `UZ ${madridState.records_uz}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" · ")
+      : "—";
     rows = ((data || []) as Array<AdminRegistryRow & { trademark_mgs?: { class_number: number }[] }>).map(
       (row) => {
         const mgs = Array.isArray(row.trademark_mgs) ? row.trademark_mgs : [];
@@ -156,6 +189,8 @@ export async function AdminRegistryPage({
         pageSize={pageSize}
         registryCount={registryCount}
         importStatus={importStatus}
+        madridStatus={madridStatus}
+        madridCount={madridCount}
         syncRunning={syncRunning}
         dbUnavailable={!db}
         statusValues={statusValues}

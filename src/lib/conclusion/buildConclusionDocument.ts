@@ -99,6 +99,14 @@ export function buildConclusionDocument(params: {
   const internet = params.report.sources.find(
     (s) => s.id === "internet" || s.id === "web",
   );
+  const extraSources = params.report.sources.filter(
+    (s) =>
+      s.id !== "uz" &&
+      s.id !== "wipo" &&
+      s.id !== "madrid" &&
+      s.id !== "internet" &&
+      s.id !== "web",
+  );
 
   const internetItems: ConclusionInternetItem[] = (internet?.matches ?? []).map(
     (m) => ({
@@ -198,6 +206,18 @@ export function buildConclusionDocument(params: {
       internetSubtitle: copy.internetSubtitle,
       internet: internetItemsFinal,
       internetEmpty: copy.emptyMatches,
+      extras: extraSources.map((s) => ({
+        id: s.id,
+        title: s.title,
+        matches: s.unavailable
+          ? []
+          : toMatchCards(s.matches, copy.strongOverlapNote),
+        empty: s.unavailable
+          ? s.unavailableText || copy.emptyMatches
+          : copy.emptyMatches,
+        unavailable: s.unavailable,
+        asOf: s.asOf,
+      })),
     },
     verdict: {
       title: copy.verdictTitle,

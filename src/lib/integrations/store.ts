@@ -111,6 +111,22 @@ function envFallback(
           process.env.ADLIYA_API_BASE?.trim() || "https://api-ip.adliya.uz",
       };
     }
+    case "euipo": {
+      const client_id = process.env.EUIPO_CLIENT_ID?.trim();
+      const client_secret = process.env.EUIPO_CLIENT_SECRET?.trim();
+      if (!client_id || !client_secret) return null;
+      return { mode: silent, client_id, client_secret };
+    }
+    case "uspto": {
+      const api_key = process.env.USPTO_API_KEY?.trim();
+      if (!api_key) return null;
+      return { mode: silent, api_key };
+    }
+    case "ipaustralia": {
+      const api_key = process.env.IPAUSTRALIA_API_KEY?.trim();
+      if (!api_key) return null;
+      return { mode: silent, api_key };
+    }
     default:
       return { mode: silent };
   }
@@ -226,6 +242,10 @@ export async function listIntegrationStatuses(): Promise<IntegrationStatus[]> {
     "google",
     "telegram",
     "adliya",
+    "euipo",
+    "uspto",
+    "ipaustralia",
+    "kazpatent",
   ] as const;
   return Promise.all(providers.map((p) => getIntegrationStatus(p)));
 }

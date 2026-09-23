@@ -4,16 +4,26 @@ import {
   classRisksFromClassification,
   niceClassesFromClassification,
 } from "@/lib/classify";
-import type { TrademarkMatch, TrademarkReport } from "./types";
+import type {
+  TrademarkMatch,
+  TrademarkReport,
+  TrademarkSourceBlock,
+} from "./types";
 
 const copy = {
   uz: {
     defaultActivity: "Bolalar tagliklari",
     markType: "soʻzli",
     registryUz: "Oʻzbekiston reestri",
-    wipo: "WIPO",
+    wipo: "Madrid (WIPO) — UZ koʻrsatmalari",
     internet: "Internet",
+    eu: "Yevropa Ittifoqi (EUIPO)",
+    us: "AQSH (USPTO)",
+    au: "Avstraliya (IP Australia)",
+    kz: "Qozogʻiston (Kazpatent)",
     emptyText: "Mavjud maʼlumotlarga koʻra, oʻxshash belgi topilmadi",
+    unavailableText: "Manba hozircha mavjud emas",
+    asOfPrefix: "Maʼlumot sanasi",
     conclusionTitle: "Xulosa",
     conclusionLead:
       "Ekspertiza natijalari ushbu nomni roʻyxatga olish uchun ijobiy javob berishi kerak:",
@@ -28,9 +38,15 @@ const copy = {
     defaultActivity: "Детские подгузники",
     markType: "словесный",
     registryUz: "Реестр УЗ",
-    wipo: "WIPO",
+    wipo: "Madrid (WIPO) — указания UZ",
     internet: "Internet",
+    eu: "Европейский союз (EUIPO)",
+    us: "США (USPTO)",
+    au: "Австралия (IP Australia)",
+    kz: "Казахстан (Kazpatent)",
     emptyText: "По имеющимся данным, подобных признаков нет",
+    unavailableText: "Источник временно недоступен",
+    asOfPrefix: "Данные на",
     conclusionTitle: "Заключение",
     conclusionLead:
       "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",
@@ -45,9 +61,15 @@ const copy = {
     defaultActivity: "Baby diapers",
     markType: "word",
     registryUz: "UZ registry",
-    wipo: "WIPO",
+    wipo: "Madrid (WIPO) — UZ designations",
     internet: "Internet",
+    eu: "European Union (EUIPO)",
+    us: "United States (USPTO)",
+    au: "Australia (IP Australia)",
+    kz: "Kazakhstan (Kazpatent)",
     emptyText: "Based on available data, no similar marks were found",
+    unavailableText: "Source temporarily unavailable",
+    asOfPrefix: "Data as of",
     conclusionTitle: "Conclusion",
     conclusionLead:
       "Examination results should support registration of this name:",
@@ -60,12 +82,67 @@ const copy = {
   },
 } as const;
 
+export type ExternalBlockInput = {
+  id: string;
+  matches: TrademarkMatch[];
+  unavailable?: boolean;
+  asOf?: string;
+};
+
+function blockTitle(
+  id: string,
+  t: (typeof copy)[Locale],
+): string {
+  switch (id) {
+    case "uz":
+      return t.registryUz;
+    case "wipo":
+      return t.wipo;
+    case "eu":
+      return t.eu;
+    case "us":
+      return t.us;
+    case "au":
+      return t.au;
+    case "kz":
+      return t.kz;
+    case "internet":
+      return t.internet;
+    default:
+      return id.toUpperCase();
+  }
+}
+
+function makeBlock(
+  id: string,
+  t: (typeof copy)[Locale],
+  matches: TrademarkMatch[],
+  opts?: { unavailable?: boolean; asOf?: string },
+): TrademarkSourceBlock {
+  return {
+    id,
+    title: blockTitle(id, t),
+    empty: !opts?.unavailable && matches.length === 0,
+    emptyText: t.emptyText,
+    matches,
+    unavailable: opts?.unavailable,
+    unavailableText: opts?.unavailable ? t.unavailableText : undefined,
+    asOf: opts?.asOf,
+    sourceOffice: blockTitle(id, t),
+  };
+}
+
 export function buildReportFromMatches(params: {
   query: string;
   activity: string;
   classification?: ActivityClassification;
   locale?: Locale;
+  /** Local SoT matches (Adliya + Madrid); split by sourceLabel / source */
   matches: TrademarkMatch[];
+  /** Extra jurisdiction blocks from live adapters */
+  externalBlocks?: ExternalBlockInput[];
+  /** Include internet stub (default true) */
+  includeInternet?: boolean;
 }): TrademarkReport {
   const locale = params.locale ?? "uz";
   const t = copy[locale] ?? copy.uz;
@@ -83,7 +160,33 @@ export function buildReportFromMatches(params: {
     ? classRisksFromClassification(params.classification)
     : [];
 
-  const topSim = params.matches[0]?.similarity ?? 0;
+  const uzMatches = params.matches.filter(
+    (m) => !m.sourceLabel || m.sourceLabel === "UZ",
+  );
+  const wipoMatches = params.matches.filter(
+    (m) => m.sourceLabel === "WIPO" || m.sourceLabel === "Madrid",
+  );
+
+  const sources: TrademarkSourceBlock[] = [
+    makeBlock("uz", t, uzMatches),
+    makeBlock("wipo", t, wipoMatches),
+  ];
+
+  for (const ext of params.externalBlocks || []) {
+    sources.push(
+      makeBlock(ext.id, t, ext.matches, {
+        unavailable: ext.unavailable,
+        asOf: ext.asOf,
+      }),
+    );
+  }
+
+  if (params.includeInternet !== false) {
+    sources.push(makeBlock("internet", t, []));
+  }
+
+  const scored = sources.flatMap((s) => (s.unavailable ? [] : s.matches));
+  const topSim = scored[0]?.similarity ?? 0;
   const positive = topSim < 45;
 
   return {
@@ -91,29 +194,7 @@ export function buildReportFromMatches(params: {
     activity: act,
     markType: t.markType,
     niceClasses,
-    sources: [
-      {
-        id: "uz",
-        title: t.registryUz,
-        empty: params.matches.length === 0,
-        emptyText: t.emptyText,
-        matches: params.matches,
-      },
-      {
-        id: "wipo",
-        title: t.wipo,
-        empty: true,
-        emptyText: t.emptyText,
-        matches: [],
-      },
-      {
-        id: "internet",
-        title: t.internet,
-        empty: true,
-        emptyText: t.emptyText,
-        matches: [],
-      },
-    ],
+    sources,
     conclusion: {
       title: t.conclusionTitle,
       lead: t.conclusionLead,
@@ -162,6 +243,7 @@ export function buildMockReport(
         registeredFrom: "14.06.2024",
         registeredTo: "14.06.2034",
         similarity: 60,
+        sourceLabel: "UZ",
       },
       {
         id: "icoco",
@@ -169,6 +251,7 @@ export function buildMockReport(
         owner: 'OOO "BABY PRO INTERNATIONAL"',
         registeredFrom: "26.03.2026",
         similarity: 32,
+        sourceLabel: "UZ",
       },
       {
         id: "koko",
@@ -176,6 +259,7 @@ export function buildMockReport(
         owner: 'OOO "PAXTAOBOD COSMETIK"',
         registeredFrom: "16.09.2025",
         similarity: 21,
+        sourceLabel: "UZ",
       },
     ],
   });

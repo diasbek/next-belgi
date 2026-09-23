@@ -18,6 +18,7 @@ export type RegistrySearchHit = {
   expired: string | null;
   similarity: number;
   classes_text: string | null;
+  source?: string | null;
 };
 
 /**
@@ -58,8 +59,13 @@ export async function searchLocalRegistry(params: {
     similarity: Math.round(Number(row.similarity || 0) * 100),
     classesText: row.classes_text || undefined,
     imageUrl: logoUrl(row.logo),
-    sourceLabel: "UZ",
+    sourceLabel: sourceToLabel(row.source),
   }));
+}
+
+function sourceToLabel(source: string | null | undefined): string {
+  if (source === "madrid") return "WIPO";
+  return "UZ";
 }
 
 function logoUrl(logo: string | null): string | undefined {
@@ -77,7 +83,7 @@ async function fallbackIlike(
   const q = db
     .from("trademarks")
     .select(
-      "id, number, transliteration, owner, applicant, status, logo, registration_date, expired",
+      "id, number, transliteration, owner, applicant, status, logo, registration_date, expired, source",
     )
     .eq("active", true)
     .or(
@@ -108,7 +114,7 @@ async function fallbackIlike(
         status: row.status || undefined,
         similarity: 40,
         imageUrl: logoUrl(row.logo),
-        sourceLabel: "UZ",
+        sourceLabel: sourceToLabel(row.source),
       }));
   }
 
@@ -121,6 +127,6 @@ async function fallbackIlike(
     status: row.status || undefined,
     similarity: 40,
     imageUrl: logoUrl(row.logo),
-    sourceLabel: "UZ",
+    sourceLabel: sourceToLabel(row.source),
   }));
 }

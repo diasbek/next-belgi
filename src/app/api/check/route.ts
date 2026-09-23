@@ -7,7 +7,7 @@ import {
 } from "@/lib/classify";
 import { requireUserApi } from "@/lib/auth/session";
 import {
-  debitCheckCredit,
+  debitCheckCredits,
   linkCheckEntitlement,
   refundCheckCredit,
 } from "@/lib/billing/credits";
@@ -18,6 +18,10 @@ import {
   parseCheckActionPath,
 } from "@/lib/navigation/safe-next";
 import type { CheckRequest } from "@/lib/check/types";
+import {
+  normalizeJurisdictions,
+  totalCheckCredits,
+} from "@/lib/check/jurisdictions";
 
 const rateMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -48,6 +52,7 @@ export async function POST(request: Request) {
     locale?: string;
     actionPath?: string;
     niceSelection?: CheckRequest["niceSelection"];
+    jurisdictions?: string[];
   } = {};
   try {
     body = (await request.json()) as typeof body;
@@ -60,6 +65,8 @@ export async function POST(request: Request) {
   const activity = (body.activity ?? "").trim();
   const actionPath = parseCheckActionPath(body.actionPath);
   const niceSelection = body.niceSelection;
+  const jurisdictions = normalizeJurisdictions(body.jurisdictions);
+  const creditCost = totalCheckCredits(jurisdictions);
   const resume =
     query && activity
       ? checkResumePath(locale, query, activity, actionPath)
@@ -75,7 +82,6 @@ export async function POST(request: Request) {
   const ip = clientKey(request);
   const appUser = await requireUserApi();
 
-  // Guest: soft preview (mock only, no debit) — client shows blurred result + auth CTA
   if (!appUser) {
     if (!checkRateLimit(`guest:${ip}`, 8)) {
       return NextResponse.json(
@@ -104,13 +110,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
 
-  const debit = await debitCheckCredit(appUser.id);
+  const debit = await debitCheckCredits(appUser.id, creditCost);
   if (!debit.ok) {
     const status = debit.error === "insufficient_credits" ? 402 : 503;
     return NextResponse.json(
       {
         ok: false,
         error: debit.error,
+        creditCost,
         redirect: `${localePath(locale, "/account/billing/")}?next=${encodeURIComponent(resume)}`,
       },
       { status },
@@ -122,17 +129,22 @@ export async function POST(request: Request) {
     activity,
     locale: body.locale,
     niceSelection,
+    jurisdictions,
     userId: appUser.id,
   });
 
   if (!result.ok) {
-    await refundCheckCredit(debit.ledgerId);
+    for (const id of debit.ledgerIds) {
+      await refundCheckCredit(id);
+    }
     const status = result.error === "missing_fields" ? 400 : 502;
     return NextResponse.json(result, { status });
   }
 
   if (!result.checkId) {
-    await refundCheckCredit(debit.ledgerId);
+    for (const id of debit.ledgerIds) {
+      await refundCheckCredit(id);
+    }
     return NextResponse.json(
       { ok: false, error: "persist_failed" },
       { status: 500 },
@@ -148,6 +160,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ...result,
     preview: false,
-    balanceAfter: appUser.balance - 1,
+    creditCost,
+    balanceAfter: appUser.balance - creditCost,
   });
 }

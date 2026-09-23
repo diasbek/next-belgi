@@ -32,6 +32,8 @@ export interface SiteCopy {
     worksDescription: string;
     servicesTitle: string;
     servicesDescription: string;
+    coverageTitle: string;
+    coverageDescription: string;
     contactsTitle: string;
     contactsDescription: string;
     checkTitle: string;
@@ -126,6 +128,19 @@ export interface SiteCopy {
       services: string;
     };
   };
+  coverage: {
+    title: string;
+    lead: string;
+    disclaimer: string;
+    liveLabel: string;
+    plannedLabel: string;
+    items: Array<{
+      title: string;
+      text: string;
+      status: "live" | "planned";
+    }>;
+    cta: string;
+  };
   contacts: {
     title: string;
     lead: string;
@@ -167,6 +182,15 @@ export interface SiteCopy {
       confirmClasses: string;
       searchResults: string;
       classRow: string;
+      jurisdictionsTitle: string;
+      jurisdictionsHint: string;
+      jurisUz: string;
+      jurisWipo: string;
+      jurisEu: string;
+      jurisUs: string;
+      jurisAu: string;
+      jurisKz: string;
+      creditCost: string;
     };
   };
   report: {
@@ -178,6 +202,8 @@ export interface SiteCopy {
     similarityLabel: string;
     nameSimilarity: string;
     noMatches: string;
+    sourceUnavailable: string;
+    asOfPrefix: string;
     conclusionTitle: string;
     conclusionLead: string;
     recommendationsTitle: string;

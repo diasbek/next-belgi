@@ -22,6 +22,29 @@ export async function debitCheckCredit(
   return { ok: true, ledgerId: String(data) };
 }
 
+/** Debit N credits (base + extra jurisdictions). Rolls back on failure. */
+export async function debitCheckCredits(
+  userId: string,
+  amount: number,
+): Promise<
+  | { ok: true; ledgerIds: string[]; ledgerId: string }
+  | { ok: false; error: string }
+> {
+  const n = Math.max(1, Math.floor(amount));
+  const ledgerIds: string[] = [];
+  for (let i = 0; i < n; i++) {
+    const d = await debitCheckCredit(userId);
+    if (!d.ok) {
+      for (const id of ledgerIds) {
+        await refundCheckCredit(id);
+      }
+      return d;
+    }
+    ledgerIds.push(d.ledgerId);
+  }
+  return { ok: true, ledgerIds, ledgerId: ledgerIds[0]! };
+}
+
 export async function refundCheckCredit(ledgerId: string): Promise<boolean> {
   const db = getServiceDb();
   if (!db) return false;

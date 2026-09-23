@@ -55,28 +55,36 @@ export async function insertTrademarkCheck(
 
   async function write(
     classificationSource: TrademarkCheckInsert["classificationSource"],
+    includeJurisdictions = true,
   ) {
-    return client
-      .from("trademark_checks")
-      .insert({
-        user_id: input.userId ?? null,
-        query: input.query,
-        activity_raw: input.activityRaw,
-        activity_normalized: input.activityNormalized ?? null,
-        locale: input.locale ?? "uz",
-        nice_classes: input.niceClasses,
-        classification_source: classificationSource ?? null,
-        report: input.report,
-        source: input.source,
-        verification_code: input.verificationCode ?? null,
-        payload_hash: input.payloadHash ?? null,
-        conclusion_doc: input.conclusionDoc ?? null,
-      })
-      .select("id")
-      .maybeSingle();
+    const row: Record<string, unknown> = {
+      user_id: input.userId ?? null,
+      query: input.query,
+      activity_raw: input.activityRaw,
+      activity_normalized: input.activityNormalized ?? null,
+      locale: input.locale ?? "uz",
+      nice_classes: input.niceClasses,
+      classification_source: classificationSource ?? null,
+      report: input.report,
+      source: input.source,
+      verification_code: input.verificationCode ?? null,
+      payload_hash: input.payloadHash ?? null,
+      conclusion_doc: input.conclusionDoc ?? null,
+    };
+    if (includeJurisdictions) {
+      row.jurisdictions = input.jurisdictions ?? ["uz", "wipo"];
+    }
+    return client.from("trademark_checks").insert(row).select("id").maybeSingle();
   }
 
   let { data, error } = await write(input.classificationSource);
+
+  if (error && /jurisdictions/i.test(error.message)) {
+    console.warn(
+      "[db:trademark_checks:insert] jurisdictions column missing — retry without",
+    );
+    ({ data, error } = await write(input.classificationSource, false));
+  }
 
   // Older DBs only allow openai|cache|fallback — retry with a compatible value
   // until migration 20260923010000_check_classification_sources is applied.

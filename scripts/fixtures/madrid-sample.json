@@ -1,0 +1,26 @@
+[
+  {
+    "irn": "1234567",
+    "mark": "AL RIZQ",
+    "owner": "Example Holdings Ltd",
+    "status": "Registered",
+    "classes": [3, 5],
+    "designations": ["UZ"]
+  },
+  {
+    "irn": "7654321",
+    "mark": "SABLE",
+    "owner": "Sable Brands International SA",
+    "status": "Registered",
+    "classes": [30, 35, 43],
+    "designations": ["UZ", "KZ"]
+  },
+  {
+    "irn": "9988776",
+    "mark": "CRAFERS",
+    "owner": "Mas'uliyati Cheklangan Jamiyat",
+    "status": "Registered",
+    "classes": [30, 35, 43],
+    "designations": ["UZ"]
+  }
+]

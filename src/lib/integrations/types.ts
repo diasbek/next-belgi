@@ -7,6 +7,10 @@ export const INTEGRATION_PROVIDERS = [
   "google",
   "telegram",
   "adliya",
+  "euipo",
+  "uspto",
+  "ipaustralia",
+  "kazpatent",
 ] as const;
 
 export type IntegrationProvider = (typeof INTEGRATION_PROVIDERS)[number];
@@ -71,6 +75,26 @@ export type AdliyaSecrets = {
   api_base?: string;
 };
 
+export type EuipoSecrets = {
+  mode?: "live" | "sandbox" | "mock";
+  client_id?: string;
+  client_secret?: string;
+};
+
+export type UsptoSecrets = {
+  mode?: "live" | "mock";
+  api_key?: string;
+};
+
+export type IpAustraliaSecrets = {
+  mode?: "live" | "mock";
+  api_key?: string;
+};
+
+export type KazpatentSecrets = {
+  mode?: "mock";
+};
+
 export type IntegrationPayloadMap = {
   eskiz: EskizSecrets;
   openai: OpenAiSecrets;
@@ -80,6 +104,10 @@ export type IntegrationPayloadMap = {
   google: GoogleSecrets;
   telegram: TelegramSecrets;
   adliya: AdliyaSecrets;
+  euipo: EuipoSecrets;
+  uspto: UsptoSecrets;
+  ipaustralia: IpAustraliaSecrets;
+  kazpatent: KazpatentSecrets;
 };
 
 export type ModuleFieldKind = "text" | "password" | "select" | "toggle";
@@ -353,6 +381,101 @@ export const MODULE_CATALOG: ModuleCatalogItem[] = [
       { key: "api_base", kind: "text" },
     ],
   },
+  {
+    provider: "euipo",
+    category: "data",
+    defaultMode: "mock",
+    modes: [
+      { value: "mock", labelKey: "modeMock" },
+      { value: "sandbox", labelKey: "modeSandbox" },
+      { value: "live", labelKey: "modeLive" },
+    ],
+    fields: [
+      {
+        key: "mode",
+        kind: "select",
+        options: [
+          { value: "mock", labelKey: "modeMock" },
+          { value: "sandbox", labelKey: "modeSandbox" },
+          { value: "live", labelKey: "modeLive" },
+        ],
+      },
+      {
+        key: "client_id",
+        kind: "text",
+        requiredInModes: ["sandbox", "live"],
+      },
+      {
+        key: "client_secret",
+        kind: "password",
+        secret: true,
+        requiredInModes: ["sandbox", "live"],
+      },
+    ],
+  },
+  {
+    provider: "uspto",
+    category: "data",
+    defaultMode: "mock",
+    modes: [
+      { value: "mock", labelKey: "modeMock" },
+      { value: "live", labelKey: "modeLive" },
+    ],
+    fields: [
+      {
+        key: "mode",
+        kind: "select",
+        options: [
+          { value: "mock", labelKey: "modeMock" },
+          { value: "live", labelKey: "modeLive" },
+        ],
+      },
+      {
+        key: "api_key",
+        kind: "password",
+        secret: true,
+        requiredInModes: ["live"],
+      },
+    ],
+  },
+  {
+    provider: "ipaustralia",
+    category: "data",
+    defaultMode: "mock",
+    modes: [
+      { value: "mock", labelKey: "modeMock" },
+      { value: "live", labelKey: "modeLive" },
+    ],
+    fields: [
+      {
+        key: "mode",
+        kind: "select",
+        options: [
+          { value: "mock", labelKey: "modeMock" },
+          { value: "live", labelKey: "modeLive" },
+        ],
+      },
+      {
+        key: "api_key",
+        kind: "password",
+        secret: true,
+        requiredInModes: ["live"],
+      },
+    ],
+  },
+  {
+    provider: "kazpatent",
+    category: "data",
+    defaultMode: "mock",
+    modes: [{ value: "mock", labelKey: "modeMock" }],
+    fields: [
+      {
+        key: "mode",
+        kind: "select",
+        options: [{ value: "mock", labelKey: "modeMock" }],
+      },
+    ],
+  },
 ];
 
 export function getModuleCatalog(
@@ -379,6 +502,10 @@ const SECRET_FIELD_HINTS: Record<IntegrationProvider, string[]> = {
   google: ["client_secret"],
   telegram: ["bot_token"],
   adliya: ["access_token"],
+  euipo: ["client_secret"],
+  uspto: ["api_key"],
+  ipaustralia: ["api_key"],
+  kazpatent: [],
 };
 
 export function maskValue(value: string | undefined | null): string | null {
@@ -458,6 +585,17 @@ export function isPayloadConfigured(
     case "adliya":
       if (mode === "test") return true;
       return Boolean(payload.access_token);
+    case "euipo":
+      if (mode === "mock") return true;
+      return Boolean(payload.client_id && payload.client_secret);
+    case "uspto":
+      if (mode === "mock") return true;
+      return Boolean(payload.api_key);
+    case "ipaustralia":
+      if (mode === "mock") return true;
+      return Boolean(payload.api_key);
+    case "kazpatent":
+      return true;
     default:
       return false;
   }

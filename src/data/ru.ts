@@ -11,6 +11,9 @@ export const ruCopy: SiteCopy = {
     worksDescription: "Кейсы и примеры проверок Belgi.ai.",
     servicesTitle: "Услуги",
     servicesDescription: "AI-проверка и сопровождение регистрации знака.",
+    coverageTitle: "Охват",
+    coverageDescription:
+      "Какие реестры и источники проверяет Belgi.ai в одной проверке.",
     contactsTitle: "Контакты",
     contactsDescription: "Свяжитесь с командой Belgi.ai.",
     checkTitle: "Проверка товарного знака",
@@ -56,6 +59,7 @@ export const ruCopy: SiteCopy = {
   nav: [
     { label: "Агентство", href: "/agency/" },
     { label: "Услуги", href: "/services/" },
+    { label: "Охват", href: "/coverage/" },
     { label: "Контакты", href: "/contacts/" },
   ],
   footer: {
@@ -194,6 +198,47 @@ export const ruCopy: SiteCopy = {
       services: "Услуги",
     },
   },
+  coverage: {
+    title: "Охват",
+    lead: "Belgi.ai объединяет несколько национальных реестров и источников в одной проверке.",
+    disclaimer:
+      "Отчёты — информационная оценка по доступным открытым данным и интеграциям. Реестры обновляются регулярно; окончательное решение принимает уполномоченный орган.",
+    liveLabel: "Активно",
+    plannedLabel: "Планируется",
+    items: [
+      {
+        title: "Узбекистан — Adliya IM",
+        text: "Национальный реестр товарных знаков. Поиск по локальному SoT и импорту Adliya.",
+        status: "live",
+      },
+      {
+        title: "Madrid / WIPO — указания UZ",
+        text: "Международные регистрации с указанием Узбекистана. Импорт Madrid XML.",
+        status: "live",
+      },
+      {
+        title: "EUIPO (Европейский союз)",
+        text: "Поиск EUIPO TMView — за дополнительный кредит.",
+        status: "live",
+      },
+      {
+        title: "USPTO (США)",
+        text: "Поиск в реестре USPTO — за дополнительный кредит.",
+        status: "live",
+      },
+      {
+        title: "IP Australia",
+        text: "Поиск в реестре Австралии — за дополнительный кредит.",
+        status: "live",
+      },
+      {
+        title: "Kazpatent (Казахстан)",
+        text: "Публичного API пока нет. Интеграция планируется.",
+        status: "planned",
+      },
+    ],
+    cta: "Проверить товарный знак",
+  },
   contacts: {
     title: "Контакты",
     lead: "Напишите нам — ответим по проверке или регистрации знака.",
@@ -239,17 +284,28 @@ export const ruCopy: SiteCopy = {
       confirmClasses: "Классы МКТУ",
       searchResults: "Результаты поиска",
       classRow: "Класс {n}",
+      jurisdictionsTitle: "Какие страны и реестры?",
+      jurisdictionsHint: "Каждая дополнительная страна — +1 кредит",
+      jurisUz: "Узбекистан (Adliya)",
+      jurisWipo: "Madrid / WIPO (указания UZ)",
+      jurisEu: "Европа (EUIPO)",
+      jurisUs: "США (USPTO)",
+      jurisAu: "Австралия (IP Australia)",
+      jurisKz: "Казахстан (Kazpatent)",
+      creditCost: "{n} кредитов",
     },
   },
   report: {
     markTypeLabel: "Знак",
     classesLabel: "Классы",
     registryUz: "Реестр УЗ",
-    wipo: "WIPO",
+    wipo: "Madrid (WIPO) — указания UZ",
     internet: "Интернет",
     similarityLabel: "Схожесть",
     nameSimilarity: "Сходство по названию",
     noMatches: "По имеющимся данным, подобных признаков нет",
+    sourceUnavailable: "Источник временно недоступен",
+    asOfPrefix: "Данные на",
     conclusionTitle: "Заключение",
     conclusionLead:
       "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",

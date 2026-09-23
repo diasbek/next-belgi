@@ -428,6 +428,24 @@ export function ConclusionPdfDocument({
           viewColLabel={copy.viewLabel}
         />
 
+        {(data.sections.extras || []).map((extra) => (
+          <View key={extra.id}>
+            <SectionBar title={extra.title} />
+            {extra.asOf ? (
+              <Text style={[styles.empty, { marginBottom: 2 }]}>
+                {extra.asOf}
+              </Text>
+            ) : null}
+            <MatchCards
+              cards={extra.matches}
+              empty={extra.empty}
+              ownerLabel={copy.ownerLabel}
+              termLabel={copy.termLabel}
+              viewColLabel={copy.viewLabel}
+            />
+          </View>
+        ))}
+
         <SectionBar title={data.sections.internetTitle} />
         <View style={styles.emptyBox}>
           <Text style={[styles.empty, { marginBottom: 2 }]}>

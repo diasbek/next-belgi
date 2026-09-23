@@ -15,6 +15,7 @@ import {
   checkResumePath,
 } from "@/lib/navigation/safe-next";
 import { readNiceSelection } from "@/lib/nice";
+import { readJurisdictions } from "@/lib/check/jurisdiction-storage";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
 import { CheckForm } from "@/components/molecules/CheckForm";
@@ -59,6 +60,7 @@ export function CheckPageView({
     (async () => {
       try {
         const niceSelection = readNiceSelection() ?? undefined;
+        const jurisdictions = readJurisdictions();
         const [res] = await Promise.all([
           fetch("/api/check/", {
             method: "POST",
@@ -69,6 +71,7 @@ export function CheckPageView({
               locale,
               actionPath,
               niceSelection,
+              jurisdictions,
             }),
           }),
           minDelay,

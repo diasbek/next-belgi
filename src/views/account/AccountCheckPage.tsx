@@ -38,7 +38,7 @@ export async function AccountCheckPage({
           appUser.balance <= 0 ? (
             <Link
               href={localePath(locale, "/account/billing/")}
-              className="text-sm font-medium text-ink underline-offset-2 hover:underline"
+              className="text-sm font-semibold text-ink underline-offset-2 hover:underline"
             >
               {copy.overview.topUp}
             </Link>

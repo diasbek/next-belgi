@@ -75,7 +75,7 @@ export const btnPrimary =
   "inline-flex min-h-[var(--tap-min)] cursor-pointer items-center justify-center rounded-[var(--radius-pill)] border-0 bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60";
 
 export const btnSecondary =
-  "inline-flex min-h-[var(--tap-min)] cursor-pointer items-center justify-center rounded-[var(--radius-pill)] border border-primary/20 bg-white px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-surface-muted";
+  "inline-flex min-h-[var(--tap-min)] cursor-pointer items-center justify-center rounded-[var(--radius-pill)] border border-ink/25 bg-white px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-surface-muted";
 
 export const btnGhost =
   "inline-flex min-h-[var(--tap-min)] cursor-pointer items-center justify-center rounded-[var(--radius-pill)] border-0 bg-transparent px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-black/5";
@@ -87,7 +87,7 @@ export const btnHeroPrimary = btnPrimary;
 export const btnHeroSecondary = btnSecondary;
 
 export const fieldInput =
-  "min-h-14 w-full rounded-[var(--radius-lg)] border border-border bg-white px-4 text-base text-ink outline-none placeholder:text-ink-muted/70 focus:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary/20 sm:px-5";
+  "min-h-14 w-full rounded-[var(--radius-lg)] border-2 border-[#7a7e74] bg-white px-4 text-base text-ink outline-none placeholder:text-[#3a3e38] focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/30 sm:px-5";
 
 export const focusRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2";

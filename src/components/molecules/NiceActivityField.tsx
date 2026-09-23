@@ -60,15 +60,18 @@ function buildSelectStyles(
     ...base,
     minHeight: compact ? "3.5rem" : "var(--tap-min)",
     borderRadius: compact ? "var(--radius-lg)" : "var(--radius-md)",
-    borderColor: state.isFocused
-      ? "color-mix(in srgb, var(--color-primary) 40%, transparent)"
-      : "var(--color-border)",
-    boxShadow: "none",
+      borderColor: state.isFocused
+        ? "var(--color-primary)"
+        : "#7a7e74",
+    boxShadow: state.isFocused
+      ? "0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent)"
+      : "none",
+    borderWidth: 2,
     backgroundColor: "#fff",
     ":hover": {
       borderColor: state.isFocused
-        ? "color-mix(in srgb, var(--color-primary) 40%, transparent)"
-        : "var(--color-border)",
+        ? "var(--color-primary)"
+        : "#5c6058",
     },
   }),
   valueContainer: (base) => ({
@@ -95,7 +98,7 @@ function buildSelectStyles(
   }),
   placeholder: (base) => ({
     ...base,
-    color: "rgb(26 28 24 / 0.45)",
+    color: "#3a3e38",
     fontSize: "0.9375rem",
   }),
   input: (base) => ({ ...base, margin: 0, padding: 0 }),
@@ -119,8 +122,8 @@ function buildSelectStyles(
     ...base,
     padding: compact ? "0 0.5rem" : base.padding,
   }),
-  dropdownIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.4)" }),
-  clearIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.4)" }),
+  dropdownIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.55)" }),
+  clearIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.55)" }),
   };
 }
 

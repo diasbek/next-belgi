@@ -42,10 +42,7 @@ export function CheckPageView({
   const canRun = Boolean(query && activity);
 
   useEffect(() => {
-    if (!canRun) {
-      setRunning(false);
-      return;
-    }
+    if (!canRun) return;
 
     let cancelled = false;
     const boot = window.setTimeout(() => {
@@ -142,6 +139,7 @@ export function CheckPageView({
       actionPath={actionPath}
       initialQuery={query}
       initialActivity={activity}
+      hideTitle={embedded}
     />
   );
 

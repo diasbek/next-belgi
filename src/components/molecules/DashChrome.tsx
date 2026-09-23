@@ -58,9 +58,7 @@ export function DashPageHeader({
           ) : null}
         </div>
         {lead ? (
-          <p className="mt-1 max-w-xl text-sm text-ink-muted sm:text-base">
-            {lead}
-          </p>
+          <p className="mt-1 max-w-xl text-sm text-ink sm:text-base">{lead}</p>
         ) : null}
       </div>
       {action ? (

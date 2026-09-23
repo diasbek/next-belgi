@@ -40,6 +40,8 @@ interface CheckFormProps {
   className?: string;
   /** Single-row form (home / result). Default is multi-step stepper. */
   compact?: boolean;
+  /** Hide page H1 when parent already shows a dash header (account shell). */
+  hideTitle?: boolean;
   initialQuery?: string;
   initialActivity?: string;
   idPrefix?: string;
@@ -114,25 +116,22 @@ function StepperHeader({
               i < items.length - 1 &&
                 "after:absolute after:top-4 after:left-[calc(50%+1.25rem)] after:right-[calc(-50%+1.25rem)] after:h-0.5 after:content-['']",
               i < items.length - 1 &&
-                (done || active ? "after:bg-lime" : "after:bg-black/10"),
+                (done || active ? "after:bg-primary/50" : "after:bg-ink/25"),
             )}
           >
             <span
               className={cn(
                 "relative z-10 flex size-8 items-center justify-center rounded-full text-sm font-semibold",
-                done && "bg-lime text-ink",
-                active && "bg-lime text-ink ring-4 ring-lime/30",
-                !done && !active && "bg-[#eceee8] text-ink-muted",
+                done && "bg-lime text-ink ring-1 ring-ink/20",
+                active && "bg-lime text-ink ring-4 ring-primary/25",
+                !done && !active && "bg-[#e8eae4] text-ink ring-1 ring-ink/25",
               )}
               aria-current={active ? "step" : undefined}
             >
               {done ? "✓" : item.n}
             </span>
             <span
-              className={cn(
-                "mt-2 max-w-[7.5rem] text-[0.7rem] font-medium leading-snug sm:text-xs",
-                active || done ? "text-ink" : "text-ink-muted",
-              )}
+              className="mt-2 max-w-[7.5rem] text-[0.7rem] font-semibold leading-snug text-ink sm:text-xs"
             >
               {item.label}
             </span>
@@ -158,16 +157,16 @@ function SummaryPanel({
 }) {
   const s = getContent(locale).check.stepper;
   return (
-    <aside className="rounded-2xl bg-[#f3f4f1] p-4 sm:p-5">
+    <aside className="rounded-2xl border border-ink/15 bg-white p-4 sm:p-5">
       <p className="m-0 text-sm font-semibold text-ink">{s.yourCheck}</p>
 
       <div className="mt-4">
         <div className="flex items-start justify-between gap-2">
-          <p className="m-0 text-xs text-ink-muted">{s.brandLabel}</p>
+          <p className="m-0 text-xs font-medium text-ink">{s.brandLabel}</p>
           <button
             type="button"
             onClick={onEditBrand}
-            className="shrink-0 text-xs font-medium text-ink-muted underline-offset-2 hover:underline"
+            className="shrink-0 text-xs font-semibold text-ink underline-offset-2 hover:underline"
           >
             {s.change}
           </button>
@@ -178,7 +177,7 @@ function SummaryPanel({
       </div>
 
       <div className="mt-4">
-        <p className="m-0 text-xs text-ink-muted">
+        <p className="m-0 text-xs font-medium text-ink">
           {s.selectedCount.replace("{n}", String(options.length))}
         </p>
         {options.length ? (
@@ -220,6 +219,7 @@ export function CheckForm({
   submitLabel,
   className,
   compact,
+  hideTitle,
   initialQuery = "",
   initialActivity = "",
   idPrefix = "check",
@@ -247,7 +247,9 @@ export function CheckForm({
   );
   const [pending, setPending] = useState(false);
   const [jurisdictions, setJurisdictions] = useState<JurisdictionCode[]>(() =>
-    typeof window !== "undefined" ? readJurisdictions() : (["uz", "wipo"] as JurisdictionCode[]),
+    typeof window !== "undefined"
+      ? readJurisdictions()
+      : (["uz", "wipo"] as JurisdictionCode[]),
   );
   const brandId = `${idPrefix}-brand`;
   const activityId = `${idPrefix}-activity`;
@@ -255,10 +257,6 @@ export function CheckForm({
   useEffect(() => {
     void import("@/lib/nice").then((m) => m.loadNiceTerms(locale));
   }, [locale]);
-
-  useEffect(() => {
-    setJurisdictions(readJurisdictions());
-  }, []);
 
   const selection = useMemo(
     () => optionsToSelection(activityOptions),
@@ -368,28 +366,34 @@ export function CheckForm({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="mb-6 flex flex-col gap-1 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="m-0 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-            {s.title}
-          </h1>
-          <p className="m-0 mt-1.5 max-w-xl text-sm text-ink-muted sm:text-base">
-            {lead}
-          </p>
+      {hideTitle ? (
+        <p className="m-0 mb-5 max-w-xl text-sm leading-relaxed text-ink sm:mb-6 sm:text-base">
+          {lead}
+        </p>
+      ) : (
+        <div className="mb-6 flex flex-col gap-1 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="m-0 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
+              {s.title}
+            </h1>
+            <p className="m-0 mt-1.5 max-w-xl text-sm leading-relaxed text-ink sm:text-base">
+              {lead}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="mb-5 sm:mb-6">
         <StepperHeader locale={locale} step={step} />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_2px_rgb(26_28_24/0.04)]">
+      <div className="overflow-hidden rounded-2xl border-2 border-[#9ea398] bg-white shadow-[0_2px_8px_rgb(26_28_24/0.08)]">
         <div className="p-4 sm:p-6">
           {step === 1 ? (
             <div className="mx-auto max-w-lg py-2 sm:py-4">
               <label
                 htmlFor={brandId}
-                className="mb-2 block text-sm font-medium text-ink"
+                className="mb-2 block text-sm font-semibold text-ink"
               >
                 {s.brandLabel}
               </label>
@@ -430,7 +434,9 @@ export function CheckForm({
                     inputId={activityId}
                   />
                 </div>
-                <p className="m-0 mt-3 text-xs text-ink-muted">{s.multiHint}</p>
+                <p className="m-0 mt-3 text-xs leading-relaxed text-ink-muted">
+                  {s.multiHint}
+                </p>
               </div>
               <SummaryPanel
                 locale={locale}
@@ -444,10 +450,12 @@ export function CheckForm({
 
           {step === 3 ? (
             <div className="mx-auto max-w-lg space-y-5 py-2">
-              <div className="rounded-2xl border border-black/5 bg-[#f8f9f6] p-4 sm:p-5">
+              <div className="rounded-2xl border border-ink/15 bg-white p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="m-0 text-xs text-ink-muted">{s.brandLabel}</p>
+                    <p className="m-0 text-xs font-medium text-ink">
+                      {s.brandLabel}
+                    </p>
                     <p className="m-0 mt-1 text-xl font-semibold text-ink">
                       {query.trim()}
                     </p>
@@ -455,19 +463,21 @@ export function CheckForm({
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="text-xs font-medium text-ink-muted underline-offset-2 hover:underline"
+                    className="text-xs font-semibold text-ink underline-offset-2 hover:underline"
                   >
                     {s.change}
                   </button>
                 </div>
 
-                <div className="mt-4 border-t border-black/5 pt-4">
+                <div className="mt-4 border-t border-ink/10 pt-4">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="m-0 text-xs text-ink-muted">{s.confirmGoods}</p>
+                    <p className="m-0 text-xs font-medium text-ink">
+                      {s.confirmGoods}
+                    </p>
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      className="text-xs font-medium text-ink-muted underline-offset-2 hover:underline"
+                      className="text-xs font-semibold text-ink underline-offset-2 hover:underline"
                     >
                       {s.change}
                     </button>
@@ -477,7 +487,7 @@ export function CheckForm({
                       <li key={o.value} className="text-sm text-ink">
                         {o.label}
                         {o.kind === "term" && o.classNumber ? (
-                          <span className="ml-2 text-xs text-ink-muted">
+                          <span className="ml-2 text-xs font-medium text-ink-muted">
                             · {s.niceChip.replace("{n}", String(o.classNumber))}
                           </span>
                         ) : null}
@@ -487,15 +497,15 @@ export function CheckForm({
                 </div>
 
                 {selection.classNumbers.length ? (
-                  <div className="mt-4 border-t border-black/5 pt-4">
-                    <p className="m-0 text-xs text-ink-muted">
+                  <div className="mt-4 border-t border-ink/10 pt-4">
+                    <p className="m-0 text-xs font-medium text-ink">
                       {s.confirmClasses}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {selection.classNumbers.map((n) => (
                         <span
                           key={n}
-                          className="inline-flex rounded-full bg-lime px-2.5 py-1 text-xs font-semibold text-ink"
+                          className="inline-flex rounded-full bg-lime px-2.5 py-1 text-xs font-semibold text-ink ring-1 ring-ink/10"
                         >
                           {s.niceChip.replace("{n}", String(n))}
                         </span>
@@ -504,58 +514,74 @@ export function CheckForm({
                   </div>
                 ) : null}
 
-                <div className="mt-4 border-t border-black/5 pt-4">
-                  <p className="m-0 text-xs font-medium text-ink">
+                <div className="mt-4 border-t border-ink/10 pt-4">
+                  <p className="m-0 text-sm font-semibold text-ink">
                     {s.jurisdictionsTitle || "Jurisdictions"}
                   </p>
-                  <p className="m-0 mt-1 text-xs text-ink-muted">
+                  <p className="m-0 mt-1 text-xs leading-relaxed text-ink-muted">
                     {s.jurisdictionsHint ||
                       "UZ + Madrid included. Extra offices +1 credit each."}
                   </p>
                   <ul className="mt-3 space-y-2">
-                    <li className="flex items-center gap-2 text-sm text-ink">
-                      <input type="checkbox" checked disabled className="size-4" />
-                      <span>{jurisLabels.uz}</span>
+                    <li className="flex items-center gap-3 rounded-xl border border-ink/15 bg-surface-muted px-3 py-2.5 text-sm text-ink">
+                      <input
+                        type="checkbox"
+                        checked
+                        disabled
+                        className="size-4 accent-primary"
+                      />
+                      <span className="font-medium">{jurisLabels.uz}</span>
                     </li>
-                    <li className="flex items-center gap-2 text-sm text-ink">
-                      <input type="checkbox" checked disabled className="size-4" />
-                      <span>{jurisLabels.wipo}</span>
+                    <li className="flex items-center gap-3 rounded-xl border border-ink/15 bg-surface-muted px-3 py-2.5 text-sm text-ink">
+                      <input
+                        type="checkbox"
+                        checked
+                        disabled
+                        className="size-4 accent-primary"
+                      />
+                      <span className="font-medium">{jurisLabels.wipo}</span>
                     </li>
                     {optionalJurisdictionCodes().map((code) => {
                       const on = jurisdictions.includes(code);
                       const extra = JURISDICTIONS[code].extraCredits;
                       return (
-                        <li
-                          key={code}
-                          className="flex items-center gap-2 text-sm text-ink"
-                        >
-                          <input
-                            type="checkbox"
-                            className="size-4 accent-primary"
-                            checked={on}
-                            onChange={(e) =>
-                              setJurisdictions(
-                                toggleJurisdiction(
-                                  jurisdictions,
-                                  code,
-                                  e.target.checked,
-                                ),
-                              )
-                            }
-                          />
-                          <span>
-                            {jurisLabels[code]}
-                            {extra > 0 ? (
-                              <span className="ml-2 text-xs text-ink-muted">
-                                +{extra}
-                              </span>
-                            ) : null}
-                          </span>
+                        <li key={code}>
+                          <label
+                            className={cn(
+                              "flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors",
+                              on
+                                ? "border-primary/40 bg-row-selected text-ink"
+                                : "border-ink/15 bg-white text-ink hover:border-ink/30",
+                            )}
+                          >
+                            <input
+                              type="checkbox"
+                              className="size-4 accent-primary"
+                              checked={on}
+                              onChange={(e) =>
+                                setJurisdictions(
+                                  toggleJurisdiction(
+                                    jurisdictions,
+                                    code,
+                                    e.target.checked,
+                                  ),
+                                )
+                              }
+                            />
+                            <span className="font-medium">
+                              {jurisLabels[code]}
+                              {extra > 0 ? (
+                                <span className="ml-2 text-xs font-semibold text-ink-muted">
+                                  +{extra}
+                                </span>
+                              ) : null}
+                            </span>
+                          </label>
                         </li>
                       );
                     })}
                   </ul>
-                  <p className="m-0 mt-3 text-xs text-ink-muted">
+                  <p className="m-0 mt-3 text-sm font-semibold text-ink">
                     {(s.creditCost || "{n} credit(s)").replace(
                       "{n}",
                       String(creditCost),
@@ -563,10 +589,10 @@ export function CheckForm({
                   </p>
                 </div>
               </div>
-              <p className="m-0 flex items-start gap-2 text-xs text-ink-muted">
+              <p className="m-0 flex items-start gap-2 text-xs leading-relaxed text-ink">
                 <span
                   aria-hidden
-                  className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-black/15 text-[0.65rem] font-semibold"
+                  className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-ink/30 text-[0.65rem] font-semibold text-ink"
                 >
                   i
                 </span>
@@ -576,7 +602,7 @@ export function CheckForm({
           ) : null}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/5 px-4 py-4 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-ink/10 bg-[#eceee8] px-4 py-4 sm:px-6">
           {step > 1 ? (
             <Button
               type="button"
@@ -613,21 +639,21 @@ export function CheckForm({
       </div>
 
       {step === 1 ? (
-        <p className="m-0 mt-4 text-center text-xs text-ink-muted">
+        <p className="m-0 mt-4 text-center text-sm font-medium text-ink">
           {s.nextGoodsHint}
         </p>
       ) : null}
       {step === 2 ? (
-        <p className="m-0 mt-4 text-center text-xs text-ink-muted">
+        <p className="m-0 mt-4 text-center text-sm font-medium text-ink">
           {s.nextConfirmHint}
         </p>
       ) : null}
       {step === 3 ? (
-        <p className="m-0 mt-4 text-center text-xs text-ink-muted">
+        <p className="m-0 mt-4 text-center text-sm font-medium text-ink">
           {s.nextRunHint}
         </p>
       ) : null}
-      <p className="m-0 mt-4 text-center text-xs leading-relaxed text-ink-muted">
+      <p className="m-0 mt-3 text-center text-xs leading-relaxed text-[#2e322c]">
         {copy.ui.checkFormNote}
       </p>
     </div>

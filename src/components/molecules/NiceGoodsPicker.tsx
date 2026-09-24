@@ -97,12 +97,14 @@ export function NiceGoodsPicker({
   return (
     <div>
       <div className="relative">
-        <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink-muted">
+        <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-ink-muted">
           <IconSearch />
         </span>
         <input
           id={id}
-          type="search"
+          type="text"
+          inputMode="search"
+          enterKeyHint="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
@@ -113,7 +115,10 @@ export function NiceGoodsPicker({
             }
           }}
           placeholder={copy.ui.activitySearchHint}
-          className={cn(fieldInput, "pl-10 pr-10")}
+          className={cn(
+            fieldInput,
+            "pl-11 pr-11 sm:pl-12 sm:pr-12",
+          )}
           autoComplete="off"
           autoFocus
         />
@@ -121,7 +126,7 @@ export function NiceGoodsPicker({
           <button
             type="button"
             onClick={() => setQ("")}
-            className="absolute inset-y-0 right-2 flex items-center rounded-full px-2 text-lg leading-none text-ink-muted hover:text-ink"
+            className="absolute inset-y-0 right-2.5 flex items-center justify-center rounded-full px-2.5 text-lg leading-none text-ink-muted hover:text-ink sm:right-3"
             aria-label="Clear"
           >
             ×

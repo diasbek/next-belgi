@@ -23,7 +23,6 @@ import { readJurisdictions } from "@/lib/check/jurisdiction-storage";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
 import { CheckForm } from "@/components/molecules/CheckForm";
-import { cn } from "@/lib/cn";
 import { section, sectionTitle, sectionViewportCenter } from "@/styles/ui";
 
 /** Minimum time the analysis UI stays visible, even if the API is instant. */
@@ -207,50 +206,35 @@ export function CheckPageView({
   }
 
   if (running) {
+    const stepLabel = pipelineSteps[activeStep] ?? pipelineSteps[0] ?? "";
+    const stepNo = String(activeStep + 1).padStart(2, "0");
+    const totalNo = String(pipelineSteps.length).padStart(2, "0");
     const body = (
       <>
         <div
           className="mx-auto mb-6 h-14 w-14 animate-spin rounded-full border-4 border-lime border-t-primary sm:mb-8 sm:h-16 sm:w-16"
           aria-hidden
         />
-        <p className="m-0 mb-6 text-base font-medium text-ink sm:mb-8 sm:text-lg">
+        <p className="m-0 mb-8 text-base font-medium text-ink sm:mb-10 sm:text-lg">
           {copy.check.searchingTitle}
         </p>
-        <p className="sr-only" aria-live="polite">
-          {pipelineSteps[activeStep]}
-        </p>
-        <ol
-          className="m-0 list-none space-y-2 p-0 text-left text-sm text-ink sm:space-y-2.5 sm:text-base"
+        <div
+          className="mx-auto w-full max-w-md"
           aria-busy="true"
+          aria-live="polite"
         >
-          {pipelineSteps.map((item, index) => {
-            const done = index < activeStep;
-            const current = index === activeStep;
-            return (
-              <li
-                key={`${index}-${item}`}
-                className={cn(
-                  "flex items-start gap-3 rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5",
-                  current && "bg-lime/40 font-medium text-ink",
-                  done && "bg-surface-muted text-ink-muted",
-                  !done && !current && "bg-surface-muted/60 text-ink-muted/70",
-                )}
-              >
-                <span
-                  className={cn(
-                    "mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums",
-                    current && "bg-primary text-white",
-                    done && "bg-ink/15 text-ink",
-                    !done && !current && "bg-black/5 text-ink-muted",
-                  )}
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span>{item}</span>
-              </li>
-            );
-          })}
-        </ol>
+          <div
+            key={activeStep}
+            className="rounded-2xl bg-lime/50 px-5 py-4 text-left sm:px-6 sm:py-5"
+          >
+            <p className="m-0 text-xs font-semibold tabular-nums text-ink/50">
+              {stepNo} / {totalNo}
+            </p>
+            <p className="m-0 mt-2 text-base font-semibold leading-snug text-ink sm:text-lg">
+              {stepLabel}
+            </p>
+          </div>
+        </div>
       </>
     );
     if (embedded) {

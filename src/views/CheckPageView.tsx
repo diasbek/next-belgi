@@ -10,6 +10,10 @@ import {
   storeReport,
   storeCheckMeta,
 } from "@/lib/check/storage";
+import {
+  isPreviewSafeReport,
+  toPreviewReport,
+} from "@/lib/check/preview-report";
 import { trackEvent } from "@/lib/analytics/events";
 import {
   checkResumePath,
@@ -95,18 +99,23 @@ export function CheckPageView({
           trackEvent("check_error");
           return;
         }
-        storeReport(json.report, Boolean(json.preview));
+        const isPreview = Boolean(json.preview);
+        const report =
+          isPreview && !isPreviewSafeReport(json.report)
+            ? toPreviewReport(json.report, locale)
+            : json.report;
+        storeReport(report, isPreview);
         storeCheckMeta({
-          checkId: json.checkId ?? null,
-          verificationCode: json.verificationCode ?? null,
-          conclusion: json.conclusion ?? null,
+          checkId: isPreview ? null : (json.checkId ?? null),
+          verificationCode: isPreview ? null : (json.verificationCode ?? null),
+          conclusion: isPreview ? null : (json.conclusion ?? null),
         });
         trackEvent("check_success", {
           source: json.source,
-          preview: Boolean(json.preview),
+          preview: isPreview,
         });
         const params = new URLSearchParams({ q: query, activity });
-        if (json.checkId) params.set("checkId", json.checkId);
+        if (!isPreview && json.checkId) params.set("checkId", json.checkId);
         const resultPath =
           actionPath === "/account/check/"
             ? "/account/check/result/"

@@ -41,11 +41,11 @@ const uz: ConclusionCopy = {
   title: "TOVAR BELGISI QIDIRUV XIZMATI HISOBOTI",
   appearanceWord: "so‘zli",
   markLabel: "Belgi",
-  classLabel: "TXHK sinfi",
+  classLabel: "MKTU sinfi",
   issuedLabel: "Berilgan sanasi",
   reportLabel: "Hisobot sanasi",
   methodologyIntro:
-    "Qidiruv O‘zbekiston Respublikasida ro‘yxatdan o‘tgan/ustuvorligi bo‘lgan va xalqaro Madrid bitimi kelishuviga ko‘ra himoyaga ega tovar belgilari ochiq bazalaridan foydalanib o‘tkazildi. Dastlabki qidiruv ixtiyoriy, ammo tavsiya etilgan jarayon bo‘lib, tovar belgisini ro‘yxatdan o‘tkazish uchun ariza topshirishdan oldin milliy va xalqaro ma’lumotlar bazalarida o‘xshash belgilari mavjudligi to‘g‘risida ma’lumot olish imkonini beradi.",
+    "Qidiruv O‘zbekiston Respublikasida ro‘yxatdan o‘tgan/ustuvorligi bo‘lgan va xalqaro Madrid bitimi kelishuviga ko‘ra himoyaga ega tovar belgilari ochiq bazalaridan foydalanib o‘tkazildi. Dastlabki qidiruv ixtiyoriy, ammo tavsiya etilgan jarayon bo‘lib, tovar belgisini ro‘yxatdan o‘tkazish uchun ariza topshirishdan oldin milliy va xalqaro ma’lumotlar bazalarida o‘xshash belgilar bor-yo‘qligini bilish imkonini beradi.",
   excludedTitle: "Qidiruv vaqtida quyidagilar hisobga olinmadi:",
   excluded: [
     "hisobot berilayotgan sanada Adliya vazirligiga kelib tushgan arizalar;",
@@ -55,7 +55,7 @@ const uz: ConclusionCopy = {
   madridTitle: "2. Xalqaro Madrid bazasi (WIPO)",
   internetTitle: "3. Internet",
   internetSubtitle: "(Hammaga ma’lum/mashhur nomlar)",
-  emptyMatches: "Mavjud ma’lumotlarga ko‘ra o‘xshash belgilari mavjud emas.",
+  emptyMatches: "Mavjud ma’lumotlarga ko‘ra o‘xshash belgilar topilmadi.",
   ownerLabel: "Huquq egasi",
   termLabel: "Muddati",
   viewLabel: "Ko‘rinishi",

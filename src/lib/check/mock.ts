@@ -26,12 +26,12 @@ const copy = {
     asOfPrefix: "Maʼlumot sanasi",
     conclusionTitle: "Xulosa",
     conclusionLead:
-      "Ekspertiza natijalari ushbu nomni roʻyxatga olish uchun ijobiy javob berishi kerak:",
-    recommendationsTitle: "Tovar belgini roʻyxatga olish boʻyicha tavsiyalar",
+      "Ekspertiza natijalari boʻyicha ushbu nomni roʻyxatga olish ehtimoli:",
+    recommendationsTitle: "Tovar belgisini roʻyxatga olish boʻyicha tavsiyalar",
     replaceHint: "Boshqa nomga almashtiring",
     lawyerRole: "Yurist",
     disclaimer:
-      "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan oʻxshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, roʻyxatga olish toʻgʻrisida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi.",
+      "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan oʻxshashligini axborot baholashini bajaradi. Tekshiruv natijasi yuridik xulosa, roʻyxatga olish toʻgʻrisida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi.",
     niceFallback: ["[3] taglik", "[5] nam salfetka"],
   },
   ru: {

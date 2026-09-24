@@ -22,8 +22,10 @@ import {
   type StoredCheckMeta,
 } from "@/lib/check/storage";
 import { ConclusionPdfButton } from "@/components/pdf/conclusion/ConclusionPdfButton";
+import { ReportPreviewTeaser } from "@/components/organisms/ReportPreviewTeaser";
 import type { ConclusionDocument } from "@/lib/conclusion";
 import type { TrademarkReport } from "@/lib/check/types";
+import { isPreviewSafeReport, toPreviewReport } from "@/lib/check/preview-report";
 import { section, sectionDense } from "@/styles/ui";
 
 function isReport(value: unknown): value is TrademarkReport {
@@ -34,6 +36,10 @@ function isReport(value: unknown): value is TrademarkReport {
       typeof (value as TrademarkReport).query === "string" &&
       Array.isArray((value as TrademarkReport).sources),
   );
+}
+
+function sanitizeStoredPreview(report: TrademarkReport, locale: Locale): TrademarkReport {
+  return isPreviewSafeReport(report) ? report : toPreviewReport(report, locale);
 }
 
 export function CheckResultPageView({
@@ -75,8 +81,15 @@ export function CheckResultPageView({
         (!query || stored.query === query) &&
         (!activity || !stored.activity || stored.activity === activity)
       ) {
-        setReport(stored);
-        setPreview(readStoredReportPreview());
+        const isPreview = readStoredReportPreview();
+        const safe = isPreview
+          ? sanitizeStoredPreview(stored, locale)
+          : stored;
+        if (isPreview && safe !== stored) {
+          storeReport(safe, true);
+        }
+        setReport(safe);
+        setPreview(isPreview);
         setCheckMeta(meta);
         setNotFound(false);
         setLoading(false);
@@ -149,7 +162,7 @@ export function CheckResultPageView({
     return () => {
       cancelled = true;
     };
-  }, [checkId, query, activity]);
+  }, [checkId, query, activity, locale]);
 
   const checkFormPath = actionPath;
   const resultEmptyHref = localePath(locale, actionPath);
@@ -218,6 +231,14 @@ export function CheckResultPageView({
     />
   );
 
+  const previewBody = (
+    <ReportPreviewTeaser
+      query={report.query}
+      niceClasses={report.niceClasses}
+      markType={report.markType}
+    />
+  );
+
   const content = (
     <>
       <CheckForm
@@ -239,7 +260,7 @@ export function CheckResultPageView({
             className="pointer-events-none max-h-[min(70vh,42rem)] overflow-hidden select-none"
             aria-hidden
           >
-            <div className="blur-[7px] sm:blur-md">{reportBody}</div>
+            <div className="blur-[7px] sm:blur-md">{previewBody}</div>
             <div
               className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/90 to-transparent"
               aria-hidden

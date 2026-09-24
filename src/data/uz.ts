@@ -2,11 +2,11 @@ import type { SiteCopy } from "./types";
 
 export const uzCopy: SiteCopy = {
   meta: {
-    homeTitle: "Tovar belgilarni AI tekshiruvi",
+    homeTitle: "Tovar belgilarini AI tekshiruvi",
     homeDescription:
-      "Oʻzbekistonda tovar belgilarni AI orqali tekshirish. Oʻxshash belgilarni toping va ariza topshirishdan oldin xavfni baholang.",
+      "Oʻzbekistonda tovar belgilarini AI orqali tekshirish. Oʻxshash belgilarni toping va ariza topshirishdan oldin xavfni baholang.",
     agencyTitle: "Agentlik",
-    agencyDescription: "Belgi.ai jamoasi va tovar belgini roʻyxatga olish haqida.",
+    agencyDescription: "Belgi.ai jamoasi va tovar belgisini roʻyxatga olish haqida.",
     worksTitle: "Ishlar",
     worksDescription: "Belgi.ai tekshiruvlari va keys misollari.",
     servicesTitle: "Xizmatlar",
@@ -16,14 +16,14 @@ export const uzCopy: SiteCopy = {
       "Belgi.ai qaysi davlat reestrlari va manbalar boʻyicha tekshiruv qiladi.",
     contactsTitle: "Kontaktlar",
     contactsDescription: "Belgi.ai jamoasi bilan bogʻlaning.",
-    checkTitle: "Tovar belgini tekshirish",
+    checkTitle: "Tovar belgisini tekshirish",
     checkDescription: "Brend nomi va faoliyat turini kiriting.",
-    checkResultTitle: "Tovar belgi boʻyicha hisobot",
+    checkResultTitle: "Tovar belgisi boʻyicha hisobot",
     checkResultDescription: "Oʻxshashlik va xavf darajasi boʻyicha AI-hisobot.",
     loginTitle: "Kirish",
     loginDescription: "Belgi.ai shaxsiy kabinetiga kirish.",
     registerTitle: "Roʻyxatdan oʻtish",
-    registerDescription: "Belgi.ai hisobini yaratish.",
+    registerDescription: "Belgi.ai akkauntini yaratish.",
     privacyTitle: "Maxfiylik siyosati",
     privacyDescription: "Belgi.ai shaxsiy maʼlumotlarni qanday qayta ishlaydi.",
     termsTitle: "Foydalanish shartlari",
@@ -32,7 +32,7 @@ export const uzCopy: SiteCopy = {
   },
   ui: {
     check: "Tekshirish",
-    checkTrademark: "Tovar belgini tekshirish",
+    checkTrademark: "Tovar belgisini tekshirish",
     login: "Kirish",
     menu: "Menyu",
     close: "Yopish",
@@ -53,7 +53,7 @@ export const uzCopy: SiteCopy = {
     affectedClassChip: "Sinf {n}",
     contactLawyer: "Bogʻlanish",
     checkFormNote:
-      "Natija — Adliya reestri va AI bahosi asosidagi axboriy hisobot, yuridik xulosa emas.",
+      "Natija — Adliya reestri va AI bahosi asosidagi axborot hisobot, yuridik xulosa emas.",
   },
   nav: [
     { label: "Agentlik", href: "/agency/" },
@@ -62,16 +62,16 @@ export const uzCopy: SiteCopy = {
     { label: "Kontaktlar", href: "/contacts/" },
   ],
   footer: {
-    blurb: "Oʻzbekistonda tovar belgilarni AI tekshiruvi.",
+    blurb: "Oʻzbekistonda tovar belgilarini AI tekshiruvi.",
     privacy: "Maxfiylik",
     terms: "Shartlar",
     contacts: "Kontaktlar",
   },
   home: {
-    heroTitle: "Oʻzbekistonda tovar belgilarni AI orqali tekshirish.",
+    heroTitle: "Oʻzbekistonda tovar belgilarini AI orqali tekshirish.",
     heroLead:
-      "Brend nomi va tovar yoki xizmatni kiriting. Tizim oʻxshash tovar belgilarni topadi, tahlil qiladi va ariza topshirishdan oldin xavf darajasini koʻrsatadi.",
-    heroCta: "Tovar belgini tekshirish",
+      "Brend nomi va tovar yoki xizmatni kiriting. Tizim oʻxshash tovar belgilarini topadi, tahlil qiladi va ariza topshirishdan oldin xavf darajasini koʻrsatadi.",
+    heroCta: "Tovar belgisini tekshirish",
     sampleCards: [
       {
         name: "Al Rizq",
@@ -93,16 +93,16 @@ export const uzCopy: SiteCopy = {
       { title: "Natija bir necha daqiqada" },
       { title: "Tushunarli AI-hisobot" },
     ],
-    checkTitle: "Ariza topshirishdan oldin tovar belgini tekshiring",
+    checkTitle: "Ariza topshirishdan oldin tovar belgisini tekshiring",
     checkLead:
-      "Tizim oʻxshash tovar belgilarni topadi, tahlil qiladi va ariza topshirishdan oldin xavf darajasini koʻrsatadi.",
+      "Tizim oʻxshash tovar belgilarini topadi, tahlil qiladi va ariza topshirishdan oldin xavf darajasini koʻrsatadi.",
     processTitle: "Brendingizni qanday roʻyxatga olamiz",
     processLead: "Oddiy va tushunarli jarayon — barcha ishni oʻzimiz olamiz",
     processSteps: [
       {
         id: "search",
         title: "Dastlabki qidiruv",
-        text: "Belginingizni milliy va xalqaro tovar belgilari bazasida tekshiramiz. Oʻtkazib yuborish mumkin — lekin oldindan bilgan maʼqul.",
+        text: "Belgingizni milliy va xalqaro tovar belgilari bazasida tekshiramiz. Bu bosqichni oʻtkazib yuborish mumkin, lekin oldindan bilgan maʼqul.",
         duration: "Belgi turiga bogʻliq",
       },
       {
@@ -136,10 +136,10 @@ export const uzCopy: SiteCopy = {
         duration: "1 kun",
       },
     ],
-    analysisTitle: "AI yordamida tovar belgining intellektual tahlili",
+    analysisTitle: "AI yordamida tovar belgisining intellektual tahlili",
     analysisLead: "Tizim bajaradi:",
     analysisSteps: [
-      { id: "1", number: 1, title: "Nomni normallashtirish" },
+      { id: "1", number: 1, title: "Nomni standartlashtirish" },
       { id: "2", number: 2, title: "Tilni aniqlash" },
       { id: "3", number: 3, title: "Transliteratsiya" },
       { id: "4", number: 4, title: "MKTU aniqlash" },
@@ -149,13 +149,13 @@ export const uzCopy: SiteCopy = {
       { id: "8", number: 8, title: "Semantik mosliklarni qidirish" },
       { id: "9", number: 9, title: "Tovar/xizmatlar tahlili" },
       { id: "10", number: 10, title: "Topilgan belgilarni reytinglash" },
-      { id: "11", number: 11, title: "Risk Score hisoblash" },
+      { id: "11", number: 11, title: "Xavf ballini hisoblash" },
       { id: "12", number: 12, title: "AI xulosasini shakllantirish." },
     ],
   },
   agency: {
     title: "Agentlik",
-    lead: "Oʻzbekistonda tovar belgini tekshirish va roʻyxatga olishda yordam beramiz.",
+    lead: "Oʻzbekistonda tovar belgisini tekshirish va roʻyxatga olishda yordam beramiz.",
     body: [
       "Belgi.ai reestrlar boʻyicha AI-qidiruvni va intellektual mulk yuristlari ishini birlashtiradi.",
       "Arizani dastlabki tekshiruvdan guvohnoma olishgacha kuzatib boramiz.",
@@ -172,7 +172,7 @@ export const uzCopy: SiteCopy = {
     items: [
       {
         title: "AI-tekshiruv",
-        text: "Oʻxshash belgilarni qidirish, Risk Score va tushunarli hisobot bir necha daqiqada.",
+        text: "Oʻxshash belgilarni qidirish, xavf balli va tushunarli hisobot bir necha daqiqada.",
       },
       {
         title: "Ariza tayyorlash",
@@ -185,7 +185,7 @@ export const uzCopy: SiteCopy = {
     ],
     attorneysTitle: "Patent vakillari",
     attorneysLead:
-      "Adliya vazirligining rasmiy reyestridan patent vakillari (патентные поверенные) roʻyxati.",
+      "Adliya vazirligining rasmiy reyestridan patent vakillari roʻyxati.",
     attorneysSource: "Manba: im.adliya.uz/patent-attorney",
     attorneysSearch: "Ism, hudud yoki xizmat boʻyicha qidirish…",
     attorneysEmpty: "Hech narsa topilmadi. Soʻrovni oʻzgartiring.",
@@ -201,7 +201,7 @@ export const uzCopy: SiteCopy = {
     title: "Qamrov",
     lead: "Belgi.ai bir tekshiruvda bir nechta davlat reestrlari va manbalarini qamrab oladi.",
     disclaimer:
-      "Hisobotlar mavjud ochiq maʼlumotlar va integratsiyalar asosida axboriy bahodir. Reestrlar muntazam yangilanadi; yakuniy qaror vakolatli organ tomonidan qabul qilinadi.",
+      "Hisobotlar mavjud ochiq maʼlumotlar va integratsiyalar asosidagi axborot bahodir. Reestrlar muntazam yangilanadi; yakuniy qaror vakolatli organ tomonidan qabul qilinadi.",
     liveLabel: "Faol",
     plannedLabel: "Rejalashtirilgan",
     items: [
@@ -236,7 +236,7 @@ export const uzCopy: SiteCopy = {
         status: "planned",
       },
     ],
-    cta: "Tovar belgini tekshirish",
+    cta: "Tovar belgisini tekshirish",
   },
   contacts: {
     title: "Kontaktlar",
@@ -246,12 +246,12 @@ export const uzCopy: SiteCopy = {
     successText: "Tez orada bogʻlanamiz.",
   },
   check: {
-    title: "Tovar belgini tekshirish",
+    title: "Tovar belgisini tekshirish",
     lead: "Nom va faoliyat turini kiriting — tizim hisobot tayyorlaydi.",
-    searchingTitle: "Tizim oʻxshash tovar belgilarni qidirmoqda",
+    searchingTitle: "Tizim oʻxshash tovar belgilarini qidirmoqda",
     searchingItems: [
-      "Tizim oʻxshash tovar belgilarni qidirmoqda",
-      "Xavf bahosini oling",
+      "Tizim oʻxshash tovar belgilarini qidirmoqda",
+      "Xavf baholanmoqda",
       "AI tegishli MKTU sinflarini aniqlaydi",
     ],
     errorTitle: "Tekshiruv amalga oshmadi",
@@ -274,7 +274,8 @@ export const uzCopy: SiteCopy = {
       back: "Orqaga",
       continue: "Davom etish",
       startCheck: "Tekshiruvni boshlash",
-      creditNote: "Kredit muvaffaqiyatli ishga tushganda yechiladi.",
+      creditNote:
+        "Kredit tekshiruv muvaffaqiyatli ishga tushganda yechib olinadi.",
       nextGoodsHint: "Keyingi qadam — tovar va xizmatlar.",
       nextConfirmHint: "Keyingi qadam — maʼlumotlarni tasdiqlash.",
       nextRunHint: "Keyingi qadam — tekshiruvni ishga tushirish.",
@@ -302,17 +303,17 @@ export const uzCopy: SiteCopy = {
     internet: "Internet",
     similarityLabel: "Oʻxshashlik",
     nameSimilarity: "Nom boʻyicha oʻxshashlik",
-    noMatches: "Mavjud maʼlumotlarga koʻra, shunga oʻxshash belgilari yoʻq",
+    noMatches: "Mavjud maʼlumotlarga koʻra, shunga oʻxshash belgilar topilmadi",
     sourceUnavailable: "Manba hozircha mavjud emas",
     asOfPrefix: "Maʼlumot sanasi",
     conclusionTitle: "Xulosa",
     conclusionLead:
-      "Ekspertiza natijalari ushbu nomni roʻyxatga olishga ijobiy javob berishi kerak:",
-    recommendationsTitle: "Tovar belgini roʻyxatga olish boʻyicha tavsiyalar",
+      "Ekspertiza natijalari boʻyicha ushbu nomni roʻyxatga olish ehtimoli:",
+    recommendationsTitle: "Tovar belgisini roʻyxatga olish boʻyicha tavsiyalar",
     replaceHint: "Boshqa nomga almashtiring",
     specialistHint: "yoki mutaxassisga murojaat qiling",
     disclaimer:
-      "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan o‘xshashligini axboriy baholashni bajaradi. Tekshiruv natijasi yuridik xulosa, ro‘yxatga olish to‘g‘risida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi. Adliya vazirligi / vakolatli organ hisobot xulosalari bilan kelishmasligi mumkin, chunki reestrlar muntazam yangilanadi.",
+      "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan o‘xshashligini axborot baholashini bajaradi. Tekshiruv natijasi yuridik xulosa, ro‘yxatga olish to‘g‘risida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi. Adliya vazirligi / vakolatli organ hisobot xulosalari bilan kelishmasligi mumkin, chunki reestrlar muntazam yangilanadi.",
     lawyersTitle: "Yuristlar",
     registeredPrefix: "Roʻyxat",
     classSuffix: "sinf",
@@ -338,7 +339,7 @@ export const uzCopy: SiteCopy = {
     title: "Foydalanish shartlari",
     body: [
       "Belgi.ai AI-hisobotlari axborot xarakteriga ega va yuridik xulosa yoki oferta hisoblanmaydi.",
-      "Tovar belgini roʻyxatga olish boʻyicha yakuniy qarorni vakolatli organ qabul qiladi.",
+      "Tovar belgisini roʻyxatga olish boʻyicha yakuniy qarorni vakolatli organ qabul qiladi.",
       "Xizmatdan foydalanib, maxfiylik siyosati bilan tanishganingizni tasdiqlaysiz.",
     ],
   },

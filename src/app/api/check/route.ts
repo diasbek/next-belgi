@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { runTrademarkCheck } from "@/lib/check/client";
-import { buildReportFromMatches } from "@/lib/check/mock";
-import { buildDemoSearchBundle } from "@/lib/check/demo/invent";
 import {
   classifyActivity,
   resolveActivityClassification,
@@ -24,6 +22,7 @@ import {
   totalCheckCredits,
 } from "@/lib/check/jurisdictions";
 import { isDemoMode } from "@/lib/settings/demo-mode";
+import { buildGuestPreviewReport } from "@/lib/check/preview-report";
 
 const rateMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -98,43 +97,20 @@ export async function POST(request: Request) {
     });
     const classification =
       fromSelection ?? (await classifyActivity({ activity, locale }));
-    const niceClasses =
-      classification.primaryClassNumbers.length > 0
-        ? classification.primaryClassNumbers
-        : classification.classes.map((c) => c.classNumber);
 
-    if (await isDemoMode()) {
-      const demo = await buildDemoSearchBundle({
-        query,
-        activity,
-        niceClasses,
-        jurisdictions,
-        locale,
-      });
-      const report = buildReportFromMatches({
-        query,
-        activity,
-        classification,
-        locale,
-        matches: demo.matches,
-        externalBlocks: demo.externalBlocks,
-      });
-      return NextResponse.json({
-        ok: true,
-        preview: true,
-        demoMode: true,
-        source: "mock",
-        report,
-        loginRedirect: `${localePath(locale, "/login/")}?next=${encodeURIComponent(resume)}`,
-      });
-    }
-
-    const { buildMockReport } = await import("@/lib/check/mock");
-    const report = buildMockReport(query, activity, classification, locale);
+    // Guests never receive match/owner/score data — blur is cosmetic only.
+    // No mock invent, no live registry, no demo OpenAI for unauthenticated.
+    const report = buildGuestPreviewReport({
+      query,
+      activity,
+      classification,
+      locale,
+    });
     return NextResponse.json({
       ok: true,
       preview: true,
       source: "mock",
+      demoMode: await isDemoMode(),
       report,
       loginRedirect: `${localePath(locale, "/login/")}?next=${encodeURIComponent(resume)}`,
     });

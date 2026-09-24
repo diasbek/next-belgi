@@ -79,7 +79,7 @@ export interface CheckResponse {
   report?: TrademarkReport;
   error?: string;
   source?: "upstream" | "mock" | "registry";
-  /** Guest teaser — full check requires auth + credit */
+  /** Guest teaser — server returns redacted shell only; full check needs auth + credit */
   preview?: boolean;
   /** Global admin Demo Mode — synthetic multi-jurisdiction hits */
   demoMode?: boolean;

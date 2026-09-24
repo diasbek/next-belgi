@@ -104,37 +104,55 @@ function StepperHeader({
   ];
 
   return (
-    <ol className="m-0 flex list-none items-start justify-between gap-2 p-0 sm:gap-4">
+    <ol className="m-0 grid list-none grid-cols-3 p-0">
       {items.map((item, i) => {
         const done = step > item.n;
         const active = step === item.n;
+        // Connector after this step lights when current step is active or already passed
+        const lineAfterOn = step >= item.n;
+        const lineBeforeOn = i > 0 && step >= items[i - 1]!.n;
+
         return (
-          <li
-            key={item.n}
-            className={cn(
-              "relative flex min-w-0 flex-1 flex-col items-center text-center",
-              i < items.length - 1 &&
-                "after:absolute after:top-4 after:left-[calc(50%+1.25rem)] after:right-[calc(-50%+1.25rem)] after:h-0.5 after:content-['']",
-              i < items.length - 1 &&
-                (done || active ? "after:bg-primary/50" : "after:bg-ink/25"),
-            )}
-          >
-            <span
-              className={cn(
-                "relative z-10 flex size-8 items-center justify-center rounded-full text-sm font-semibold",
-                done && "bg-lime text-ink ring-1 ring-ink/20",
-                active && "bg-lime text-ink ring-4 ring-primary/25",
-                !done && !active && "bg-[#e8eae4] text-ink ring-1 ring-ink/25",
+          <li key={item.n} className="min-w-0">
+            <div className="flex h-11 items-center">
+              {i > 0 ? (
+                <span
+                  aria-hidden
+                  className={cn(
+                    "h-0.5 min-w-0 flex-1",
+                    lineBeforeOn ? "bg-primary/50" : "bg-ink/25",
+                  )}
+                />
+              ) : (
+                <span aria-hidden className="min-w-0 flex-1" />
               )}
-              aria-current={active ? "step" : undefined}
-            >
-              {done ? "✓" : item.n}
-            </span>
-            <span
-              className="mt-2 max-w-[7.5rem] text-[0.7rem] font-semibold leading-snug text-ink sm:text-xs"
-            >
+              <span
+                className={cn(
+                  "relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold leading-none",
+                  done && "bg-lime text-ink ring-1 ring-ink/20",
+                  active &&
+                    "bg-lime text-ink ring-2 ring-primary/40 ring-offset-2 ring-offset-[var(--color-surface,#fff)]",
+                  !done && !active && "bg-[#e8eae4] text-ink ring-1 ring-ink/25",
+                )}
+                aria-current={active ? "step" : undefined}
+              >
+                {done ? "✓" : item.n}
+              </span>
+              {i < items.length - 1 ? (
+                <span
+                  aria-hidden
+                  className={cn(
+                    "h-0.5 min-w-0 flex-1",
+                    lineAfterOn ? "bg-primary/50" : "bg-ink/25",
+                  )}
+                />
+              ) : (
+                <span aria-hidden className="min-w-0 flex-1" />
+              )}
+            </div>
+            <p className="m-0 mt-2 px-1 text-center text-[0.7rem] font-semibold leading-snug text-ink sm:text-xs">
               {item.label}
-            </span>
+            </p>
           </li>
         );
       })}

@@ -213,6 +213,23 @@ export interface SiteCopy {
     notFoundTitle: string;
     notFoundLead: string;
     loading: string;
+    assessmentTitle: string;
+    assessmentDisclaimer: string;
+    showCalculator: string;
+    hideCalculator: string;
+    legendPoor: string;
+    legendNeeds: string;
+    legendGood: string;
+    classChanceLabel: string;
+    metricLabel: string;
+    scoreLabel: string;
+    weightLabel: string;
+    contributionLabel: string;
+    metricSim: string;
+    metricCls: string;
+    metricPhn: string;
+    metricCnt: string;
+    metricSts: string;
   };
   login: {
     title: string;

@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/config";
 import type { ActivityClassification } from "@/lib/classify";
 import { niceClassesFromClassification } from "@/lib/classify";
+import { scoreAssessmentFromSources } from "./assessment-score";
 import {
   parseQueryClassNumbers,
   scoreConflictFromSources,
@@ -200,6 +201,7 @@ export function buildReportFromMatches(params: {
 
   const queryClassNumbers = parseQueryClassNumbers(niceClasses);
   const scored = scoreConflictFromSources(sources, queryClassNumbers);
+  const assessment = scoreAssessmentFromSources(sources, queryClassNumbers);
   const classRisks =
     scored.classRisks.length > 0
       ? scored.classRisks.filter((c) => c.classNumber > 0)
@@ -209,13 +211,13 @@ export function buildReportFromMatches(params: {
         }));
 
   const lead =
-    scored.overallConflict >= 70
+    assessment.score < 50
       ? t.conclusionLeadNegative
-      : scored.overallConflict >= 45
+      : assessment.score < 90
         ? t.conclusionLeadCaution
         : t.conclusionLeadPositive;
 
-  const replaceHint = scored.positive ? t.keepHint : t.replaceHint;
+  const replaceHint = assessment.positive ? t.keepHint : t.replaceHint;
 
   return {
     query: q,
@@ -226,12 +228,13 @@ export function buildReportFromMatches(params: {
     conclusion: {
       title: t.conclusionTitle,
       lead,
-      positive: scored.positive,
+      positive: assessment.positive,
     },
     classRisks:
       classRisks.length > 0
         ? classRisks
         : [{ classNumber: 0, percent: scored.overallConflict }],
+    assessment,
     recommendations: {
       title: t.recommendationsTitle,
       replaceHint,

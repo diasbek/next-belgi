@@ -209,12 +209,24 @@ export function CheckPageView({
     const stepLabel = pipelineSteps[activeStep] ?? pipelineSteps[0] ?? "";
     const stepNo = String(activeStep + 1).padStart(2, "0");
     const totalNo = String(pipelineSteps.length).padStart(2, "0");
+    const progress = Math.round(
+      ((activeStep + 1) / Math.max(1, pipelineSteps.length)) * 100,
+    );
     const body = (
       <>
         <div
-          className="mx-auto mb-6 h-14 w-14 animate-spin rounded-full border-4 border-lime border-t-primary sm:mb-8 sm:h-16 sm:w-16"
+          className="relative mx-auto mb-6 size-20 sm:mb-8 sm:size-24"
           aria-hidden
-        />
+        >
+          <span className="check-ring-pulse absolute inset-0 rounded-full border-2 border-lime" />
+          <span className="check-ring-pulse check-ring-pulse--late absolute inset-0 rounded-full border-2 border-lime" />
+          <span className="check-scan-arc absolute inset-0 rounded-full" />
+          <span className="absolute inset-[7px] flex items-center justify-center rounded-full bg-white">
+            <span className="text-sm font-semibold tabular-nums text-ink sm:text-base">
+              {progress}%
+            </span>
+          </span>
+        </div>
         <p className="m-0 mb-8 text-base font-medium text-ink sm:mb-10 sm:text-lg">
           {copy.check.searchingTitle}
         </p>
@@ -225,7 +237,7 @@ export function CheckPageView({
         >
           <div
             key={activeStep}
-            className="rounded-2xl bg-lime/50 px-5 py-4 text-left sm:px-6 sm:py-5"
+            className="check-step-card rounded-2xl bg-lime/50 px-5 py-4 text-left shadow-[0_12px_32px_-20px_rgba(26,28,24,0.45)] sm:px-6 sm:py-5"
           >
             <p className="m-0 text-xs font-semibold tabular-nums text-ink/50">
               {stepNo} / {totalNo}
@@ -233,6 +245,31 @@ export function CheckPageView({
             <p className="m-0 mt-2 text-base font-semibold leading-snug text-ink sm:text-lg">
               {stepLabel}
             </p>
+          </div>
+          <div className="relative mt-4 h-1.5 overflow-hidden rounded-full bg-lime/40">
+            <div
+              className="relative h-full overflow-hidden rounded-full bg-primary transition-[width] duration-700 ease-out"
+              style={{ width: `${progress}%` }}
+            >
+              <span className="check-bar-shimmer absolute inset-0" aria-hidden />
+            </div>
+          </div>
+          <div
+            className="mt-3 flex items-center justify-center gap-1.5"
+            aria-hidden
+          >
+            {pipelineSteps.map((_, i) => (
+              <span
+                key={i}
+                className={
+                  i < activeStep
+                    ? "size-1.5 rounded-full bg-primary/70 transition-colors duration-500"
+                    : i === activeStep
+                      ? "check-dot-active size-1.5 rounded-full bg-primary"
+                      : "size-1.5 rounded-full bg-ink/15 transition-colors duration-500"
+                }
+              />
+            ))}
           </div>
         </div>
       </>

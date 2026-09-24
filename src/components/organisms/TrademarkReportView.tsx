@@ -8,6 +8,7 @@ import { createRequestId } from "@/lib/form/utils";
 import { submitLead } from "@/lib/form/submitLead";
 import { mapRiskToChance } from "@/lib/conclusion";
 import { Button } from "@/components/atoms/Button";
+import { RegistrationScoreGauge } from "@/components/organisms/RegistrationScoreGauge";
 import { ReportServiceUpsell } from "@/components/organisms/ReportServiceUpsell";
 import {
   cardLime,
@@ -232,29 +233,71 @@ export function TrademarkReportView({
                 : copy.report.conclusionLeadNegative) ||
               copy.report.conclusionLead}
           </p>
-          <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
-            {(report.classRisks || []).map((risk) => {
-              const chance = mapRiskToChance(risk);
-              const mid = Math.round(
-                (chance.chanceMin + chance.chanceMax) / 2,
-              );
-              return (
-                <div
-                  key={risk.classNumber}
-                  className="flex h-20 w-[calc(50%-0.25rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-2.5 sm:h-24 sm:w-28 sm:p-3"
-                >
-                  <span className="text-xs text-ink-muted">
-                    {risk.classNumber > 0
+          {report.assessment ? (
+            <RegistrationScoreGauge
+              assessment={report.assessment}
+              compact={drawer}
+              labels={{
+                title: copy.report.assessmentTitle,
+                disclaimer: copy.report.assessmentDisclaimer,
+                showCalculator: copy.report.showCalculator,
+                hideCalculator: copy.report.hideCalculator,
+                legendPoor: copy.report.legendPoor,
+                legendNeeds: copy.report.legendNeeds,
+                legendGood: copy.report.legendGood,
+                classChanceLabel: copy.report.classChanceLabel,
+                metricLabel: copy.report.metricLabel,
+                scoreLabel: copy.report.scoreLabel,
+                weightLabel: copy.report.weightLabel,
+                contributionLabel: copy.report.contributionLabel,
+                metricNames: {
+                  SIM: copy.report.metricSim,
+                  CLS: copy.report.metricCls,
+                  PHN: copy.report.metricPhn,
+                  CNT: copy.report.metricCnt,
+                  STS: copy.report.metricSts,
+                },
+              }}
+              classChips={(report.classRisks || []).map((risk) => {
+                const chance = mapRiskToChance(risk);
+                const mid = Math.round(
+                  (chance.chanceMin + chance.chanceMax) / 2,
+                );
+                return {
+                  key: String(risk.classNumber),
+                  label:
+                    risk.classNumber > 0
                       ? `${risk.classNumber} ${copy.report.classSuffix}`
-                      : copy.report.classSuffix}
-                  </span>
-                  <span className="text-xl font-semibold sm:text-2xl">
-                    {mid}%
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                      : copy.report.classSuffix,
+                  percent: mid,
+                };
+              })}
+            />
+          ) : (
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
+              {(report.classRisks || []).map((risk) => {
+                const chance = mapRiskToChance(risk);
+                const mid = Math.round(
+                  (chance.chanceMin + chance.chanceMax) / 2,
+                );
+                return (
+                  <div
+                    key={risk.classNumber}
+                    className="flex h-20 w-[calc(50%-0.25rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-2.5 sm:h-24 sm:w-28 sm:p-3"
+                  >
+                    <span className="text-xs text-ink-muted">
+                      {risk.classNumber > 0
+                        ? `${risk.classNumber} ${copy.report.classSuffix}`
+                        : copy.report.classSuffix}
+                    </span>
+                    <span className="text-xl font-semibold sm:text-2xl">
+                      {mid}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="rounded-[var(--radius-md)] bg-primary p-4 text-white sm:p-5 md:p-6">

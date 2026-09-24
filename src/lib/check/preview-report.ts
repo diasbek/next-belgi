@@ -102,6 +102,7 @@ export function toPreviewReport(
 /** True if payload has no match/owner/risk leakage suitable for guest preview. */
 export function isPreviewSafeReport(report: TrademarkReport): boolean {
   if ((report.classRisks?.length ?? 0) > 0) return false;
+  if (report.assessment) return false;
   if ((report.lawyers?.length ?? 0) > 0) return false;
   if ((report.recommendations?.alternatives?.length ?? 0) > 0) return false;
   for (const source of report.sources || []) {

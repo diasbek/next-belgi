@@ -40,6 +40,23 @@ export interface ReportLawyer {
   imageUrl?: string;
 }
 
+export type AssessmentMetricId = "SIM" | "CLS" | "PHN" | "CNT" | "STS";
+export type AssessmentTone = "poor" | "needs" | "good";
+
+export interface AssessmentMetric {
+  id: AssessmentMetricId;
+  score: number;
+  weight: number;
+  tone: AssessmentTone;
+}
+
+/** Composite registration outlook (0–100, higher = better). */
+export interface RegistrationAssessment {
+  score: number;
+  metrics: AssessmentMetric[];
+  positive: boolean;
+}
+
 export interface TrademarkReport {
   query: string;
   activity: string;
@@ -52,6 +69,8 @@ export interface TrademarkReport {
     positive: boolean;
   };
   classRisks: ClassRisk[];
+  /** PageSpeed-style multi-metric registration outlook */
+  assessment?: RegistrationAssessment;
   recommendations: {
     title: string;
     replaceHint: string;

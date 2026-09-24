@@ -37,3 +37,115 @@ body {
 .skip-link:focus {
   left: 0;
 }
+
+/* Check pipeline loader */
+@keyframes check-scan-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes check-ring-pulse {
+  0% {
+    transform: scale(0.62);
+    opacity: 0.85;
+  }
+  70%,
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
+
+@keyframes check-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes check-bar-shimmer {
+  from {
+    background-position: -150% 0;
+  }
+  to {
+    background-position: 250% 0;
+  }
+}
+
+@keyframes check-dot-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 1;
+  }
+}
+
+.check-scan-arc {
+  animation: check-scan-spin 1.1s cubic-bezier(0.6, 0.15, 0.4, 0.85) infinite;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 210deg,
+    color-mix(in srgb, var(--color-lime) 70%, var(--color-primary)) 290deg,
+    var(--color-primary) 360deg
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 7px),
+    #000 calc(100% - 6px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 7px),
+    #000 calc(100% - 6px)
+  );
+}
+
+.check-ring-pulse {
+  animation: check-ring-pulse 2.4s ease-out infinite;
+}
+
+.check-ring-pulse--late {
+  animation-delay: 1.2s;
+}
+
+.check-step-card {
+  animation: check-step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.check-bar-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: check-bar-shimmer 1.6s linear infinite;
+}
+
+.check-dot-active {
+  animation: check-dot-breathe 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .check-scan-arc,
+  .check-ring-pulse,
+  .check-ring-pulse--late,
+  .check-bar-shimmer,
+  .check-dot-active {
+    animation: none;
+  }
+  .check-step-card {
+    animation-duration: 0.01s;
+  }
+}

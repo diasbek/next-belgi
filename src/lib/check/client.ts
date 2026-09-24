@@ -25,6 +25,7 @@ import {
   parseQueryClassNumbers,
   scoreConflictFromSources,
 } from "./conflict-risk";
+import { scoreAssessmentFromSources } from "./assessment-score";
 import { buildMockReport, buildReportFromMatches } from "./mock";
 import { pickReportLawyers } from "./report-lawyers";
 import { searchLocalRegistry } from "./registry-search";
@@ -55,28 +56,26 @@ function applyClassificationToReport(
   locale: Locale,
 ): TrademarkReport {
   const niceClasses = niceClassesFromClassification(classification);
-  const scored = scoreConflictFromSources(
-    report.sources,
-    parseQueryClassNumbers(niceClasses),
-  );
+  const queryClasses = parseQueryClassNumbers(niceClasses);
+  const scored = scoreConflictFromSources(report.sources, queryClasses);
+  const assessment = scoreAssessmentFromSources(report.sources, queryClasses);
   const classRisks =
     scored.classRisks.filter((c) => c.classNumber > 0).length > 0
       ? scored.classRisks.filter((c) => c.classNumber > 0)
-      : parseQueryClassNumbers(niceClasses)
-          .slice(0, 3)
-          .map((classNumber) => ({
-            classNumber,
-            percent: scored.overallConflict,
-          }));
+      : queryClasses.slice(0, 3).map((classNumber) => ({
+          classNumber,
+          percent: scored.overallConflict,
+        }));
 
   return {
     ...report,
     activity: classification.activityNormalized || report.activity,
     niceClasses,
     classRisks,
+    assessment,
     conclusion: {
       ...report.conclusion,
-      positive: scored.positive,
+      positive: assessment.positive,
     },
     lawyers:
       report.lawyers?.length > 0
@@ -120,6 +119,10 @@ function normalizeUpstream(
     classRisks: Array.isArray(data.classRisks)
       ? data.classRisks
       : base.classRisks,
+    assessment:
+      data.assessment && typeof data.assessment === "object"
+        ? data.assessment
+        : base.assessment,
     lawyers:
       Array.isArray(data.lawyers) && data.lawyers.length > 0
         ? data.lawyers
@@ -137,25 +140,35 @@ function normalizeUpstream(
       : base.niceClasses,
   };
 
-  // If upstream didn't send conflict-aware classRisks, recompute from matches
-  if (!Array.isArray(data.classRisks) || data.classRisks.length === 0) {
-    const scored = scoreConflictFromSources(
+  // Recompute conflict + assessment when upstream omitted them
+  const needsRescore =
+    !Array.isArray(data.classRisks) ||
+    data.classRisks.length === 0 ||
+    !data.assessment;
+
+  if (needsRescore) {
+    const queryClasses = parseQueryClassNumbers(merged.niceClasses);
+    const scored = scoreConflictFromSources(merged.sources, queryClasses);
+    const assessment = scoreAssessmentFromSources(
       merged.sources,
-      parseQueryClassNumbers(merged.niceClasses),
+      queryClasses,
     );
-    merged.classRisks =
-      scored.classRisks.filter((c) => c.classNumber > 0).length > 0
-        ? scored.classRisks.filter((c) => c.classNumber > 0)
-        : parseQueryClassNumbers(merged.niceClasses)
-            .slice(0, 3)
-            .map((classNumber) => ({
+    if (!Array.isArray(data.classRisks) || data.classRisks.length === 0) {
+      merged.classRisks =
+        scored.classRisks.filter((c) => c.classNumber > 0).length > 0
+          ? scored.classRisks.filter((c) => c.classNumber > 0)
+          : queryClasses.slice(0, 3).map((classNumber) => ({
               classNumber,
               percent: scored.overallConflict,
             }));
-    merged.conclusion = {
-      ...merged.conclusion,
-      positive: scored.positive,
-    };
+    }
+    if (!data.assessment) {
+      merged.assessment = assessment;
+      merged.conclusion = {
+        ...merged.conclusion,
+        positive: assessment.positive,
+      };
+    }
   }
 
   if (!Array.isArray(data.niceClasses) || data.niceClasses.length === 0) {

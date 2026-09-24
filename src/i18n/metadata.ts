@@ -10,7 +10,6 @@ const metaKeyByPage: Record<
   keyof ReturnType<typeof getContent>["meta"]
 > = {
   home: "homeTitle",
-  agency: "agencyTitle",
   works: "worksTitle",
   services: "servicesTitle",
   coverage: "coverageTitle",
@@ -28,7 +27,6 @@ const descKeyByPage: Record<
   keyof ReturnType<typeof getContent>["meta"]
 > = {
   home: "homeDescription",
-  agency: "agencyDescription",
   works: "worksDescription",
   services: "servicesDescription",
   coverage: "coverageDescription",

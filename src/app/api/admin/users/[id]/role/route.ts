@@ -22,7 +22,12 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
-  if (body.role !== "user" && body.role !== "admin") {
+  if (
+    body.role !== "user" &&
+    body.role !== "admin" &&
+    body.role !== "attorney" &&
+    body.role !== "org_admin"
+  ) {
     return NextResponse.json({ ok: false, error: "invalid_role" }, { status: 400 });
   }
 

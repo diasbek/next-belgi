@@ -7,7 +7,7 @@ import {
 import { getServiceDb } from "@/lib/db/client";
 import { displayAuthEmail } from "@/lib/otp/normalize";
 
-export type ProfileRole = "user" | "admin";
+export type ProfileRole = "user" | "admin" | "attorney" | "org_admin";
 
 export interface AppUser {
   id: string;
@@ -120,6 +120,31 @@ export async function requireUserApi(): Promise<AppUser | null> {
 export async function requireAdminApi(): Promise<AppUser | null> {
   const appUser = await getAppUser();
   if (!appUser || appUser.profile.role !== "admin") return null;
+  return appUser;
+}
+
+export async function requireAttorneyApi(): Promise<AppUser | null> {
+  const appUser = await getAppUser();
+  if (
+    !appUser ||
+    (appUser.profile.role !== "attorney" && appUser.profile.role !== "admin")
+  ) {
+    return null;
+  }
+  return appUser;
+}
+
+export async function requireAttorney(
+  loginPath = "/login/",
+  forbiddenPath = "/",
+): Promise<AppUser> {
+  const appUser = await requireUser(loginPath);
+  if (
+    appUser.profile.role !== "attorney" &&
+    appUser.profile.role !== "admin"
+  ) {
+    redirect(forbiddenPath);
+  }
   return appUser;
 }
 

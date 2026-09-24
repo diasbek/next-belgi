@@ -5,8 +5,6 @@ export const enCopy: SiteCopy = {
     homeTitle: "AI trademark check",
     homeDescription:
       "AI trademark screening in Uzbekistan. Find similar marks and assess risk before filing.",
-    agencyTitle: "Agency",
-    agencyDescription: "About the Belgi.ai team and trademark registration.",
     worksTitle: "Work",
     worksDescription: "Belgi.ai check examples and case studies.",
     servicesTitle: "Services",
@@ -57,7 +55,6 @@ export const enCopy: SiteCopy = {
       "The result is an informational report based on the Adliya registry and an AI estimate — not a legal opinion.",
   },
   nav: [
-    { label: "Agency", href: "/agency/" },
     { label: "Services", href: "/services/" },
     { label: "Coverage", href: "/coverage/" },
     { label: "Contacts", href: "/contacts/" },
@@ -152,14 +149,6 @@ export const enCopy: SiteCopy = {
       { id: "10", number: 10, title: "Ranking of found marks" },
       { id: "11", number: 11, title: "Risk Score calculation" },
       { id: "12", number: 12, title: "AI conclusion drafting" },
-    ],
-  },
-  agency: {
-    title: "Agency",
-    lead: "We help check and register trademarks in Uzbekistan.",
-    body: [
-      "Belgi.ai combines AI registry search with intellectual property lawyers.",
-      "We support the application from preliminary check to certificate.",
     ],
   },
   works: {

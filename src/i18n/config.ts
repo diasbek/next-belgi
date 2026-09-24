@@ -46,7 +46,6 @@ export function parseLocale(
 
 export type PageKey =
   | "home"
-  | "agency"
   | "works"
   | "services"
   | "coverage"
@@ -61,7 +60,6 @@ export type PageKey =
 
 export const pagePaths: Record<PageKey, string> = {
   home: "/",
-  agency: "/agency/",
   works: "/works/",
   services: "/services/",
   coverage: "/coverage/",

@@ -5,8 +5,6 @@ export const ruCopy: SiteCopy = {
     homeTitle: "AI-проверка товарных знаков",
     homeDescription:
       "AI-сервис проверки товарных знаков в Узбекистане. Найдите похожие знаки и оцените риск до подачи заявки.",
-    agencyTitle: "Агентство",
-    agencyDescription: "О команде Belgi.ai и регистрации товарных знаков.",
     worksTitle: "Работы",
     worksDescription: "Кейсы и примеры проверок Belgi.ai.",
     servicesTitle: "Услуги",
@@ -57,7 +55,6 @@ export const ruCopy: SiteCopy = {
       "Результат — информационный отчёт по реестру Adliya и оценке ИИ, не юридическое заключение.",
   },
   nav: [
-    { label: "Агентство", href: "/agency/" },
     { label: "Услуги", href: "/services/" },
     { label: "Охват", href: "/coverage/" },
     { label: "Контакты", href: "/contacts/" },
@@ -152,14 +149,6 @@ export const ruCopy: SiteCopy = {
       { id: "10", number: 10, title: "Ранжирование найденных знаков" },
       { id: "11", number: 11, title: "Расчёт Risk Score" },
       { id: "12", number: 12, title: "Формирование AI-заключения" },
-    ],
-  },
-  agency: {
-    title: "Агентство",
-    lead: "Помогаем проверить и зарегистрировать товарный знак в Узбекистане.",
-    body: [
-      "Belgi.ai сочетает AI-поиск по реестрам и работу юристов по интеллектуальной собственности.",
-      "Мы сопровождаем заявку от предварительной проверки до получения свидетельства.",
     ],
   },
   works: {

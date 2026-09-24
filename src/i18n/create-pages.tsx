@@ -7,11 +7,16 @@ import { CheckResultPageView } from "@/views/CheckResultPageView";
 import { LoginPage } from "@/views/LoginPage";
 import { RegisterPage } from "@/views/RegisterPage";
 import {
-  AgencyPageView,
   WorksPageView,
   ServicesPageView,
   ContactsPageView,
 } from "@/views/ContentPageViews";
+import { ServiceDetailView } from "@/views/ServicesViews";
+import {
+  getServiceDetail,
+  isServiceSlug,
+  type ServiceSlug,
+} from "@/data/services-catalog";
 import { CoveragePageView } from "@/views/CoveragePageView";
 import {
   LegalDocPageView,
@@ -46,19 +51,6 @@ export function createHomePage(locale: Locale) {
   };
 }
 
-export function createAgencyPage(locale: Locale) {
-  return {
-    generateMetadata: () => getLocalizedPageMetadata(locale, "agency"),
-    Page: async function AgencyPage() {
-      return (
-        <SiteLayout locale={locale}>
-          <AgencyPageView locale={locale} />
-        </SiteLayout>
-      );
-    },
-  };
-}
-
 export function createWorksPage(locale: Locale) {
   return {
     generateMetadata: () => getLocalizedPageMetadata(locale, "works"),
@@ -79,6 +71,59 @@ export function createServicesPage(locale: Locale) {
       return (
         <SiteLayout locale={locale}>
           <ServicesPageView locale={locale} />
+        </SiteLayout>
+      );
+    },
+  };
+}
+
+export function createServiceDetailPage(locale: Locale) {
+  return {
+    generateMetadata: async ({
+      params,
+    }: {
+      params: Promise<{ slug: string }>;
+    }) => {
+      const { slug } = await params;
+      if (!isServiceSlug(slug)) {
+        return getLocalizedPageMetadata(locale, "services");
+      }
+      const detail = getServiceDetail(locale, slug as ServiceSlug);
+      const path = `/services/${slug}/`;
+      const alternates = getLocalizedAlternates(path);
+      return createPageMetadata(
+        detail.title,
+        detail.short,
+        localePath(locale, path),
+        {
+          ogLocale: ogLocale[locale],
+          alternates: Object.fromEntries(
+            Object.entries(alternates).map(([lang, href]) => [
+              lang,
+              canonicalPageUrl(href),
+            ]),
+          ),
+        },
+      );
+    },
+    Page: async function ServiceDetailPage({
+      params,
+      searchParams,
+    }: {
+      params: Promise<{ slug: string }>;
+      searchParams: Promise<Record<string, string | string[] | undefined>>;
+    }) {
+      const { slug } = await params;
+      const sp = await searchParams;
+      if (!isServiceSlug(slug)) notFound();
+      const checkId = String(sp.checkId ?? "") || null;
+      return (
+        <SiteLayout locale={locale}>
+          <ServiceDetailView
+            locale={locale}
+            slug={slug}
+            checkId={checkId}
+          />
         </SiteLayout>
       );
     },

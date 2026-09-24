@@ -11,6 +11,7 @@ export function accountNav(copy: AppCopy): AppShellNavItem[] {
     { href: "/account/check/", label: copy.nav.newCheck },
     { href: "/account/history/", label: copy.nav.history },
     { href: "/account/billing/", label: copy.nav.billing },
+    { href: "/account/attorney/", label: copy.nav.attorneyQueue },
     { href: "/account/profile/", label: copy.nav.profile },
   ];
 }
@@ -23,6 +24,8 @@ export function adminNav(copy: AppCopy): AppShellNavItem[] {
     { href: "/admin/plans/", label: copy.nav.plans },
     { href: "/admin/checks/", label: copy.nav.checks },
     { href: "/admin/leads/", label: copy.nav.leads },
+    { href: "/admin/orders/", label: copy.nav.orders },
+    { href: "/admin/organizations/", label: copy.nav.organizations },
     { href: "/admin/registry/", label: copy.nav.registry },
     { href: "/admin/attorneys/", label: copy.nav.attorneys },
     { href: "/admin/ledger/", label: copy.nav.ledger },

@@ -125,6 +125,36 @@ const nextConfig = {
         destination: "/:path*",
         permanent: true,
       },
+      {
+        source: "/agency",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/agency/",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/ru/agency",
+        destination: "/ru/",
+        permanent: true,
+      },
+      {
+        source: "/ru/agency/",
+        destination: "/ru/",
+        permanent: true,
+      },
+      {
+        source: "/en/agency",
+        destination: "/en/",
+        permanent: true,
+      },
+      {
+        source: "/en/agency/",
+        destination: "/en/",
+        permanent: true,
+      },
     ];
   },
   async headers() {

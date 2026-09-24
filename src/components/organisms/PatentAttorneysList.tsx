@@ -2,6 +2,8 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import type { PatentAttorney } from "@/data/patent-attorneys";
+import type { Locale } from "@/i18n/config";
+import { AttachAttorneyButton } from "@/components/organisms/AttachAttorneyButton";
 import { fieldInput } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 
@@ -20,9 +22,15 @@ type Labels = {
 export function PatentAttorneysList({
   attorneys,
   labels,
+  locale,
+  orderId,
+  showAttach,
 }: {
   attorneys: PatentAttorney[];
   labels: Labels;
+  locale?: Locale;
+  orderId?: string | null;
+  showAttach?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const deferred = useDeferredValue(query.trim().toLowerCase());
@@ -82,6 +90,9 @@ export function PatentAttorneysList({
                 <th className="px-4 py-3 font-medium">
                   {labels.columns.services}
                 </th>
+                {showAttach && locale ? (
+                  <th className="px-4 py-3 font-medium"> </th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
@@ -125,6 +136,15 @@ export function PatentAttorneysList({
                   <td className="px-4 py-3 text-ink/75">
                     {attorney.services.join(", ")}
                   </td>
+                  {showAttach && locale ? (
+                    <td className="px-4 py-3">
+                      <AttachAttorneyButton
+                        locale={locale}
+                        attorneyId={attorney.id}
+                        orderId={orderId}
+                      />
+                    </td>
+                  ) : null}
                 </tr>
               ))}
             </tbody>

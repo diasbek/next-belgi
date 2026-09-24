@@ -7,6 +7,7 @@ import type { TrademarkReport } from "@/lib/check/types";
 import { createRequestId } from "@/lib/form/utils";
 import { submitLead } from "@/lib/form/submitLead";
 import { Button } from "@/components/atoms/Button";
+import { ReportServiceUpsell } from "@/components/organisms/ReportServiceUpsell";
 import {
   cardLime,
   gridSpanHalf,
@@ -33,12 +34,14 @@ export function TrademarkReportView({
   headerActions,
   density = "page",
   showLawyers = true,
+  checkId,
 }: {
   locale: Locale;
   report: TrademarkReport;
   headerActions?: React.ReactNode;
   density?: "page" | "drawer";
   showLawyers?: boolean;
+  checkId?: string | null;
 }) {
   const copy = getContent(locale);
   const uzSource = report.sources.find((s) => s.id === "uz");
@@ -256,6 +259,14 @@ export function TrademarkReportView({
           </p>
         </div>
       </div>
+
+      {density === "page" ? (
+        <ReportServiceUpsell
+          locale={locale}
+          checkId={checkId}
+          className={drawer ? "mb-5" : "mb-8"}
+        />
+      ) : null}
 
       {showLawyers && report.lawyers?.length ? (
         <div

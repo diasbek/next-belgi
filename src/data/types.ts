@@ -26,8 +26,6 @@ export interface SiteCopy {
   meta: {
     homeTitle: string;
     homeDescription: string;
-    agencyTitle: string;
-    agencyDescription: string;
     worksTitle: string;
     worksDescription: string;
     servicesTitle: string;
@@ -100,11 +98,6 @@ export interface SiteCopy {
     analysisTitle: string;
     analysisLead: string;
     analysisSteps: AnalysisStep[];
-  };
-  agency: {
-    title: string;
-    lead: string;
-    body: string[];
   };
   works: {
     title: string;

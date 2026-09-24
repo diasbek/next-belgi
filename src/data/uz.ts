@@ -5,8 +5,6 @@ export const uzCopy: SiteCopy = {
     homeTitle: "Tovar belgilarini AI tekshiruvi",
     homeDescription:
       "Oʻzbekistonda tovar belgilarini AI orqali tekshirish. Oʻxshash belgilarni toping va ariza topshirishdan oldin xavfni baholang.",
-    agencyTitle: "Agentlik",
-    agencyDescription: "Belgi.ai jamoasi va tovar belgisini roʻyxatga olish haqida.",
     worksTitle: "Ishlar",
     worksDescription: "Belgi.ai tekshiruvlari va keys misollari.",
     servicesTitle: "Xizmatlar",
@@ -56,7 +54,6 @@ export const uzCopy: SiteCopy = {
       "Natija — Adliya reestri va AI bahosi asosidagi axborot hisobot, yuridik xulosa emas.",
   },
   nav: [
-    { label: "Agentlik", href: "/agency/" },
     { label: "Xizmatlar", href: "/services/" },
     { label: "Qamrov", href: "/coverage/" },
     { label: "Kontaktlar", href: "/contacts/" },
@@ -151,14 +148,6 @@ export const uzCopy: SiteCopy = {
       { id: "10", number: 10, title: "Topilgan belgilarni reytinglash" },
       { id: "11", number: 11, title: "Risk Score hisoblash" },
       { id: "12", number: 12, title: "AI xulosasini shakllantirish" },
-    ],
-  },
-  agency: {
-    title: "Agentlik",
-    lead: "Oʻzbekistonda tovar belgisini tekshirish va roʻyxatga olishda yordam beramiz.",
-    body: [
-      "Belgi.ai reestrlar boʻyicha AI-qidiruvni va intellektual mulk yuristlari ishini birlashtiradi.",
-      "Arizani dastlabki tekshiruvdan guvohnoma olishgacha kuzatib boramiz.",
     ],
   },
   works: {

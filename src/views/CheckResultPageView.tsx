@@ -225,6 +225,7 @@ export function CheckResultPageView({
     <TrademarkReportView
       locale={locale}
       report={report}
+      checkId={checkId || null}
       headerActions={
         !preview && checkMeta?.conclusion ? (
           <ConclusionPdfButton

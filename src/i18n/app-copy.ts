@@ -19,6 +19,7 @@ export type AppCopy = {
     history: string;
     billing: string;
     profile: string;
+    attorneyQueue: string;
     more: string;
     accountMenu: string;
     dashboard: string;
@@ -27,6 +28,8 @@ export type AppCopy = {
     plans: string;
     checks: string;
     leads: string;
+    orders: string;
+    organizations: string;
     registry: string;
     attorneys: string;
     ledger: string;
@@ -280,6 +283,17 @@ export type AppCopy = {
     emptyLead: string;
     detailTitle: string;
     saveStatus: string;
+    allStatuses: string;
+  };
+  adminOrders: {
+    title: string;
+    lead: string;
+    colService: string;
+    colStatus: string;
+    colContact: string;
+    colDate: string;
+    empty: string;
+    emptyLead: string;
     allStatuses: string;
   };
   adminRegistry: {
@@ -538,6 +552,7 @@ export const uzApp: AppCopy = {
     history: "Tekshiruvlar tarixi",
     billing: "Toʻlov va kreditlar",
     profile: "Profil",
+    attorneyQueue: "Vakil navbati",
     more: "Yana",
     accountMenu: "Kabinet",
     dashboard: "Boshqaruv",
@@ -546,6 +561,8 @@ export const uzApp: AppCopy = {
     plans: "Tariflar",
     checks: "Tekshiruvlar",
     leads: "Murojaatlar",
+    orders: "Buyurtmalar",
+    organizations: "B2B tashkilotlar",
     registry: "Reestr",
     attorneys: "Patent vakillari",
     ledger: "Kredit jurnali",
@@ -804,6 +821,17 @@ export const uzApp: AppCopy = {
     emptyLead: "Hali soʻrovlar yoʻq.",
     detailTitle: "Murojaat",
     saveStatus: "Holatni saqlash",
+    allStatuses: "Barcha holatlar",
+  },
+  adminOrders: {
+    title: "Xizmat buyurtmalari",
+    lead: "Paket, himoya, B2B va vakil bogʻlash soʻrovlari.",
+    colService: "Xizmat",
+    colStatus: "Holat",
+    colContact: "Kontakt",
+    colDate: "Sana",
+    empty: "Buyurtmalar yoʻq",
+    emptyLead: "Hali xizmat buyurtmalari yoʻq.",
     allStatuses: "Barcha holatlar",
   },
   adminRegistry: {
@@ -1220,6 +1248,7 @@ export const ruApp: AppCopy = {
     history: "История проверок",
     billing: "Оплата и кредиты",
     profile: "Профиль",
+    attorneyQueue: "Очередь поверенного",
     more: "Ещё",
     accountMenu: "Аккаунт",
     dashboard: "Дашборд",
@@ -1228,6 +1257,8 @@ export const ruApp: AppCopy = {
     plans: "Тарифы",
     checks: "Проверки",
     leads: "Заявки",
+    orders: "Заказы",
+    organizations: "B2B организации",
     registry: "Реестр",
     attorneys: "Патентные поверенные",
     ledger: "Леджер",
@@ -1486,6 +1517,17 @@ export const ruApp: AppCopy = {
     emptyLead: "Пока нет обращений.",
     detailTitle: "Заявка",
     saveStatus: "Сохранить статус",
+    allStatuses: "Все статусы",
+  },
+  adminOrders: {
+    title: "Заказы услуг",
+    lead: "Пакет, защита ИС, B2B и привязка поверенного.",
+    colService: "Услуга",
+    colStatus: "Статус",
+    colContact: "Контакт",
+    colDate: "Дата",
+    empty: "Заказов нет",
+    emptyLead: "Пока нет заказов услуг.",
     allStatuses: "Все статусы",
   },
   adminRegistry: {
@@ -1902,6 +1944,7 @@ export const enApp: AppCopy = {
     history: "Check history",
     billing: "Billing & credits",
     profile: "Profile",
+    attorneyQueue: "Attorney queue",
     more: "More",
     accountMenu: "Account",
     dashboard: "Dashboard",
@@ -1910,6 +1953,8 @@ export const enApp: AppCopy = {
     plans: "Plans",
     checks: "Checks",
     leads: "Leads",
+    orders: "Orders",
+    organizations: "B2B orgs",
     registry: "Registry",
     attorneys: "Patent attorneys",
     ledger: "Ledger",
@@ -2166,6 +2211,17 @@ export const enApp: AppCopy = {
     emptyLead: "No requests yet.",
     detailTitle: "Lead",
     saveStatus: "Save status",
+    allStatuses: "All statuses",
+  },
+  adminOrders: {
+    title: "Service orders",
+    lead: "Filing packages, IP protection, B2B, and attorney attach.",
+    colService: "Service",
+    colStatus: "Status",
+    colContact: "Contact",
+    colDate: "Date",
+    empty: "No orders",
+    emptyLead: "No service orders yet.",
     allStatuses: "All statuses",
   },
   adminRegistry: {

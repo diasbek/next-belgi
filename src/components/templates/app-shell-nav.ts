@@ -32,6 +32,7 @@ export function adminNav(copy: AppCopy): AppShellNavItem[] {
     { href: "/admin/notifications/", label: copy.nav.notifications },
     { href: "/admin/sessions/", label: copy.nav.sessions },
     { href: "/admin/integrations/", label: copy.nav.integrations },
+    { href: "/admin/explore/", label: copy.nav.explore },
     { href: "/admin/settings/", label: copy.nav.settings },
   ];
 }

@@ -37,6 +37,7 @@ export type AppCopy = {
     sessions: string;
     settings: string;
     integrations: string;
+    explore: string;
   };
   overview: {
     title: string;
@@ -490,6 +491,49 @@ export type AppCopy = {
       }
     >;
   };
+  adminExplore: {
+    title: string;
+    lead: string;
+    officeLabel: string;
+    officeEu: string;
+    officeUs: string;
+    officeAu: string;
+    officeKz: string;
+    kazDisabled: string;
+    notConfiguredBadge: string;
+    notConfiguredTitle: string;
+    notConfiguredLead: string;
+    openIntegrations: string;
+    queryLabel: string;
+    queryPlaceholder: string;
+    limitLabel: string;
+    niceClasses: string;
+    niceClassesHint: string;
+    clearClasses: string;
+    skipCache: string;
+    search: string;
+    searching: string;
+    idleTitle: string;
+    idleLead: string;
+    emptyTitle: string;
+    emptyLead: string;
+    unavailableTitle: string;
+    unavailableLead: string;
+    resultsCount: string;
+    fromCache: string;
+    live: string;
+    colMark: string;
+    colOwner: string;
+    colStatus: string;
+    colClasses: string;
+    colSimilarity: string;
+    colSource: string;
+    detailTitle: string;
+    registeredFrom: string;
+    registeredTo: string;
+    showRaw: string;
+    hideRaw: string;
+  };
   login: {
     title: string;
     lead: string;
@@ -570,6 +614,7 @@ export const uzApp: AppCopy = {
     sessions: "Sessiyalar",
     settings: "Sozlamalar",
     integrations: "Integratsiyalar",
+    explore: "Reestrlar API",
   },
   overview: {
     title: "Kabinet",
@@ -1162,6 +1207,51 @@ export const uzApp: AppCopy = {
       },
     },
   },
+  adminExplore: {
+    title: "Reestrlar API",
+    lead: "Xalqaro ofislarga jonli soʻrov — kredit yechilmaydi. Credentiallar Integratsiyalarda.",
+    officeLabel: "Ofis",
+    officeEu: "EUIPO (EU)",
+    officeUs: "USPTO (US)",
+    officeAu: "IP Australia",
+    officeKz: "Kazpatent",
+    kazDisabled: "API yoʻq",
+    notConfiguredBadge: "sozlanmagan",
+    notConfiguredTitle: "Ofis sozlanmagan",
+    notConfiguredLead:
+      "Avval Integratsiyalarda client credentials qoʻying va rejimni tanlang.",
+    openIntegrations: "Integratsiyalarga oʻtish",
+    queryLabel: "Belgi",
+    queryPlaceholder: "Masalan: NOVA",
+    limitLabel: "Limit",
+    niceClasses: "MKTU sinflari",
+    niceClassesHint: "Ixtiyoriy filtr. Boʻsh = barcha sinflar.",
+    clearClasses: "Tozalash",
+    skipCache: "Keshni o‘tkazib yuborish (jonli so‘rov)",
+    search: "Qidirish",
+    searching: "Qidirilmoqda…",
+    idleTitle: "Soʻrov yuboring",
+    idleLead: "Ofisni tanlang, belgini kiriting va Qidirish ni bosing.",
+    emptyTitle: "Moslik topilmadi",
+    emptyLead: "API javob berdi, lekin o‘xshash belgilar yo‘q.",
+    unavailableTitle: "Manba mavjud emas",
+    unavailableLead:
+      "Auth, tarmoq yoki ofis xatosi. Integratsiya Testini tekshiring.",
+    resultsCount: "{count} ta natija",
+    fromCache: "Kesh",
+    live: "Jonli",
+    colMark: "Belgi",
+    colOwner: "Egasi",
+    colStatus: "Holat",
+    colClasses: "Sinflar",
+    colSimilarity: "O‘xshashlik",
+    colSource: "Manba",
+    detailTitle: "Natija",
+    registeredFrom: "Roʻyxatdan",
+    registeredTo: "Amal qiladi",
+    showRaw: "JSON ko‘rsatish",
+    hideRaw: "JSON yashirish",
+  },
   login: {
     title: "Kirish",
     lead: "Email yoki telefon va parol bilan kabinetga kiring.",
@@ -1273,6 +1363,7 @@ export const ruApp: AppCopy = {
     sessions: "Сессии",
     settings: "Настройки",
     integrations: "Интеграции",
+    explore: "Реестры API",
   },
   overview: {
     title: "Кабинет",
@@ -1865,6 +1956,51 @@ export const ruApp: AppCopy = {
       },
     },
   },
+  adminExplore: {
+    title: "Реестры API",
+    lead: "Живые запросы в иностранные офисы — без списания кредитов. Ключи в Интеграциях.",
+    officeLabel: "Офис",
+    officeEu: "EUIPO (EU)",
+    officeUs: "USPTO (US)",
+    officeAu: "IP Australia",
+    officeKz: "Kazpatent",
+    kazDisabled: "нет API",
+    notConfiguredBadge: "не настроено",
+    notConfiguredTitle: "Офис не настроен",
+    notConfiguredLead:
+      "Сначала укажите client credentials в Интеграциях и выберите режим.",
+    openIntegrations: "Перейти к интеграциям",
+    queryLabel: "Обозначение",
+    queryPlaceholder: "Например: NOVA",
+    limitLabel: "Лимит",
+    niceClasses: "Классы МКТУ",
+    niceClassesHint: "Необязательный фильтр. Пусто = все классы.",
+    clearClasses: "Сбросить",
+    skipCache: "Без кеша (живой запрос)",
+    search: "Искать",
+    searching: "Поиск…",
+    idleTitle: "Отправьте запрос",
+    idleLead: "Выберите офис, введите обозначение и нажмите Искать.",
+    emptyTitle: "Совпадений нет",
+    emptyLead: "API ответил, но похожих знаков не найдено.",
+    unavailableTitle: "Источник недоступен",
+    unavailableLead:
+      "Ошибка auth, сети или офиса. Проверьте Test в Интеграциях.",
+    resultsCount: "{count} результатов",
+    fromCache: "Кеш",
+    live: "Live",
+    colMark: "Знак",
+    colOwner: "Владелец",
+    colStatus: "Статус",
+    colClasses: "Классы",
+    colSimilarity: "Сходство",
+    colSource: "Источник",
+    detailTitle: "Результат",
+    registeredFrom: "С",
+    registeredTo: "По",
+    showRaw: "Показать JSON",
+    hideRaw: "Скрыть JSON",
+  },
   login: {
     title: "Вход",
     lead: "Войдите в кабинет по email или телефону и паролю.",
@@ -1976,6 +2112,7 @@ export const enApp: AppCopy = {
     sessions: "Sessions",
     settings: "Settings",
     integrations: "Integrations",
+    explore: "Office explorer",
   },
   overview: {
     title: "Account",
@@ -2565,6 +2702,51 @@ export const enApp: AppCopy = {
         portalUrl: "https://gosreestr.kazpatent.kz/",
       },
     },
+  },
+  adminExplore: {
+    title: "Office explorer",
+    lead: "Live queries to foreign IP offices — no credit charge. Credentials live under Integrations.",
+    officeLabel: "Office",
+    officeEu: "EUIPO (EU)",
+    officeUs: "USPTO (US)",
+    officeAu: "IP Australia",
+    officeKz: "Kazpatent",
+    kazDisabled: "no API",
+    notConfiguredBadge: "not set",
+    notConfiguredTitle: "Office not configured",
+    notConfiguredLead:
+      "Add client credentials under Integrations and pick a mode first.",
+    openIntegrations: "Open Integrations",
+    queryLabel: "Mark",
+    queryPlaceholder: "e.g. NOVA",
+    limitLabel: "Limit",
+    niceClasses: "Nice classes",
+    niceClassesHint: "Optional filter. Empty = all classes.",
+    clearClasses: "Clear",
+    skipCache: "Skip cache (live request)",
+    search: "Search",
+    searching: "Searching…",
+    idleTitle: "Run a query",
+    idleLead: "Pick an office, enter a mark, then Search.",
+    emptyTitle: "No matches",
+    emptyLead: "The API responded, but no similar marks were found.",
+    unavailableTitle: "Source unavailable",
+    unavailableLead:
+      "Auth, network, or office error. Check Test under Integrations.",
+    resultsCount: "{count} results",
+    fromCache: "Cache",
+    live: "Live",
+    colMark: "Mark",
+    colOwner: "Owner",
+    colStatus: "Status",
+    colClasses: "Classes",
+    colSimilarity: "Similarity",
+    colSource: "Source",
+    detailTitle: "Result",
+    registeredFrom: "From",
+    registeredTo: "To",
+    showRaw: "Show JSON",
+    hideRaw: "Hide JSON",
   },
   login: {
     title: "Sign in",

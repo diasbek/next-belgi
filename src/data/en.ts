@@ -306,9 +306,16 @@ export const enCopy: SiteCopy = {
     asOfPrefix: "As of",
     conclusionTitle: "Conclusion",
     conclusionLead:
-      "Examination results should support registration of this name:",
+      "Based on available data, the chance of registration looks relatively high:",
+    conclusionLeadPositive:
+      "Based on available data, the chance of registration looks relatively high:",
+    conclusionLeadCaution:
+      "Similar marks were found — review carefully; indicative outlook:",
+    conclusionLeadNegative:
+      "High similarity and/or class overlap — registration chance looks low:",
     recommendationsTitle: "Trademark registration recommendations",
     replaceHint: "Consider a different name",
+    keepHint: "You may keep the name while refining classes and filing",
     specialistHint: "or consult a specialist",
     disclaimer:
       "Belgi.ai performs automated search and an informational assessment of similarity between the designation and trademarks and applications in available sources. The check result is not a legal opinion, a registration decision, or a guarantee of legal protection. The final decision is made by the competent state authority. The Ministry of Justice / competent authority may disagree with the report conclusions because registries are updated regularly.",

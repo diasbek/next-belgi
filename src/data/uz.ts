@@ -306,9 +306,16 @@ export const uzCopy: SiteCopy = {
     asOfPrefix: "Maʼlumot sanasi",
     conclusionTitle: "Xulosa",
     conclusionLead:
-      "Ekspertiza natijalari boʻyicha ushbu nomni roʻyxatga olish ehtimoli:",
+      "Mavjud maʼlumotlarga koʻra, roʻyxatga olish ehtimoli nisbatan yuqori:",
+    conclusionLeadPositive:
+      "Mavjud maʼlumotlarga koʻra, roʻyxatga olish ehtimoli nisbatan yuqori:",
+    conclusionLeadCaution:
+      "Oʻxshash belgilar topildi — ehtiyotkorlik bilan baholang; ehtimoliy baho:",
+    conclusionLeadNegative:
+      "Yuqori oʻxshashlik va/yoki sinflar kesishuvi — roʻyxatga olish ehtimoli past:",
     recommendationsTitle: "Tovar belgisini roʻyxatga olish boʻyicha tavsiyalar",
     replaceHint: "Boshqa nomga almashtiring",
+    keepHint: "Nomni saqlab, sinflar va arizani aniqlashtiring",
     specialistHint: "yoki mutaxassisga murojaat qiling",
     disclaimer:
       "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan o‘xshashligini axborot baholashini bajaradi. Tekshiruv natijasi yuridik xulosa, ro‘yxatga olish to‘g‘risida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi. Adliya vazirligi / vakolatli organ hisobot xulosalari bilan kelishmasligi mumkin, chunki reestrlar muntazam yangilanadi.",

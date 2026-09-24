@@ -8,9 +8,14 @@ import {
 } from "./ConclusionPdfDocument";
 import { hydrateConclusionImages } from "./hydrateConclusionImages";
 
-export async function downloadConclusionPdf(
+export type ConclusionPdfBlob = {
+  blob: Blob;
+  filename: string;
+};
+
+export async function buildConclusionPdfBlob(
   data: ConclusionDocument,
-): Promise<void> {
+): Promise<ConclusionPdfBlob> {
   ensureConclusionPdfFonts();
 
   const withImages = await hydrateConclusionImages(data);
@@ -37,6 +42,14 @@ export async function downloadConclusionPdf(
     /[^\w\-./а-яА-ЯёЁ]+/gi,
     "_",
   );
+
+  return { blob, filename: `${safeNumber}.pdf` };
+}
+
+export async function downloadConclusionPdf(
+  data: ConclusionDocument,
+): Promise<void> {
+  const { blob, filename } = await buildConclusionPdfBlob(data);
   const { triggerBlobDownload } = await import("./triggerBlobDownload");
-  await triggerBlobDownload(blob, `${safeNumber}.pdf`, "application/pdf");
+  await triggerBlobDownload(blob, filename, "application/pdf");
 }

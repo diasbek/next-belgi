@@ -24,7 +24,11 @@ export type ConclusionCopy = {
   verdictLead: string;
   disclaimer: string;
   verifyLabel: string;
+  openPdf: string;
+  pdfPreviewTitle: string;
   downloadPdf: string;
+  closePdf: string;
+  pdfPreviewUnavailable: string;
   downloading: string;
   downloadFailed: string;
   previewWatermark: string;
@@ -67,7 +71,12 @@ const uz: ConclusionCopy = {
   disclaimer:
     "Adliya vazirligi ekspertiza fikri ushbu xulosadan farq qilishi hamda yuqorida ko‘rsatilgan tovar belgilari bazalari muntazam ravishda yangilanib turishini inobatga olib, ushbu hisobotdagi xulosa o‘z kuchini yo‘qotishi mumkin. Belgi.ai avtomatlashtirilgan qidiruv va o‘xshashlik bahosini beradi; bu yuridik xulosa yoki ro‘yxatga olish kafolati emas.",
   verifyLabel: "Hisobot haqiqiyligini tekshirish",
+  openPdf: "PDF ochish",
+  pdfPreviewTitle: "Hisobot PDF",
   downloadPdf: "PDF yuklab olish",
+  closePdf: "Yopish",
+  pdfPreviewUnavailable:
+    "Brauzerda PDF koʻrinmasligi mumkin. Yuklab oling yoki ulashing.",
   downloading: "PDF tayyorlanmoqda…",
   downloadFailed: "PDF yuklab boʻlmadi. Qayta urinib koʻring.",
   previewWatermark: "PREVIEW",
@@ -110,7 +119,12 @@ const ru: ConclusionCopy = {
   disclaimer:
     "Заключение экспертизы Министерства юстиции может отличаться от данного отчёта; базы товарных знаков регулярно обновляются, поэтому выводы могут утратить актуальность. Belgi.ai выполняет автоматизированный поиск и оценку сходства; результат не является юридическим заключением и не гарантирует регистрацию.",
   verifyLabel: "Проверить подлинность отчёта",
+  openPdf: "Открыть PDF",
+  pdfPreviewTitle: "Отчёт PDF",
   downloadPdf: "Скачать PDF",
+  closePdf: "Закрыть",
+  pdfPreviewUnavailable:
+    "В этом браузере превью PDF может быть недоступно. Скачайте файл.",
   downloading: "Готовим PDF…",
   downloadFailed: "Не удалось скачать PDF. Попробуйте ещё раз.",
   previewWatermark: "PREVIEW",
@@ -153,7 +167,12 @@ const en: ConclusionCopy = {
   disclaimer:
     "The Ministry of Justice examination opinion may differ from this report; trademark databases are updated regularly, so conclusions may become outdated. Belgi.ai provides an automated similarity estimate; it is not a legal opinion and does not guarantee registration.",
   verifyLabel: "Verify report authenticity",
+  openPdf: "Open PDF",
+  pdfPreviewTitle: "Report PDF",
   downloadPdf: "Download PDF",
+  closePdf: "Close",
+  pdfPreviewUnavailable:
+    "PDF preview may not work in this browser. Download the file instead.",
   downloading: "Preparing PDF…",
   downloadFailed: "Could not download PDF. Please try again.",
   previewWatermark: "PREVIEW",

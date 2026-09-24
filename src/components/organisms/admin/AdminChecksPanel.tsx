@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { getConclusionCopy } from "@/lib/conclusion/copy";
@@ -24,6 +24,7 @@ import {
   statusToneFromValue,
 } from "@/components/atoms/admin/StatusBadge";
 import { Button } from "@/components/atoms/Button";
+import { ConclusionPdfLightbox } from "@/components/pdf/conclusion/ConclusionPdfLightbox";
 import {
   formatAdminDate,
   shortId,
@@ -87,6 +88,15 @@ function asConclusion(value: unknown): ConclusionDocument | null {
   return null;
 }
 
+function prefersPdfDownloadFallback() {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  return (
+    /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
+
 function AdminCheckPdfButton({
   locale,
   checkId,
@@ -98,37 +108,75 @@ function AdminCheckPdfButton({
 }) {
   const copy = getConclusionCopy(locale);
   const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [blob, setBlob] = useState<Blob | null>(null);
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [filename, setFilename] = useState("belgi.pdf");
   const [failed, setFailed] = useState(false);
+  const iosFallback = prefersPdfDownloadFallback();
 
-  async function onClick() {
+  useEffect(() => {
+    return () => {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    };
+  }, [blobUrl]);
+
+  async function resolveDoc(): Promise<ConclusionDocument> {
+    if (conclusion) return conclusion;
+    const res = await fetch(
+      `/api/account/checks/${encodeURIComponent(checkId)}/`,
+      { credentials: "include" },
+    );
+    const json = (await res.json()) as {
+      ok?: boolean;
+      conclusion?: ConclusionDocument | null;
+    };
+    if (!res.ok || !json.ok || !json.conclusion) {
+      throw new Error("no_conclusion");
+    }
+    return json.conclusion;
+  }
+
+  async function ensureBlob() {
+    if (blob && blobUrl) return { blob, url: blobUrl, filename };
+    const doc = await resolveDoc();
+    const { buildConclusionPdfBlob } = await import(
+      "@/components/pdf/conclusion/downloadConclusionPdf"
+    );
+    const built = await buildConclusionPdfBlob(doc);
+    const url = URL.createObjectURL(built.blob);
+    setBlob(built.blob);
+    setFilename(built.filename);
+    setBlobUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return url;
+    });
+    return { blob: built.blob, url, filename: built.filename };
+  }
+
+  async function onOpen() {
     if (busy) return;
     setBusy(true);
     setFailed(false);
+    setOpen(true);
     try {
-      let doc = conclusion;
-      if (!doc) {
-        const res = await fetch(
-          `/api/account/checks/${encodeURIComponent(checkId)}/`,
-          { credentials: "include" },
-        );
-        const json = (await res.json()) as {
-          ok?: boolean;
-          conclusion?: ConclusionDocument | null;
-        };
-        if (!res.ok || !json.ok || !json.conclusion) {
-          setFailed(true);
-          return;
-        }
-        doc = json.conclusion;
-      }
-      const { downloadConclusionPdf } = await import(
-        "@/components/pdf/conclusion/downloadConclusionPdf"
-      );
-      await downloadConclusionPdf(doc);
+      await ensureBlob();
     } catch {
       setFailed(true);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function onDownload() {
+    try {
+      const ready = await ensureBlob();
+      const { triggerBlobDownload } = await import(
+        "@/components/pdf/conclusion/triggerBlobDownload"
+      );
+      await triggerBlobDownload(ready.blob, ready.filename, "application/pdf");
+    } catch {
+      setFailed(true);
     }
   }
 
@@ -137,16 +185,36 @@ function AdminCheckPdfButton({
       <Button
         type="button"
         className="w-full"
-        disabled={busy}
-        onClick={() => void onClick()}
+        disabled={busy && !open}
+        onClick={() => void onOpen()}
       >
-        {busy ? copy.downloading : copy.downloadPdf}
+        {busy && !blobUrl ? copy.downloading : copy.openPdf}
       </Button>
-      {failed ? (
+      {failed && !open ? (
         <p className="m-0 text-center text-xs text-danger" role="alert">
           {copy.downloadFailed}
         </p>
       ) : null}
+      <ConclusionPdfLightbox
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next);
+          if (!next) setFailed(false);
+        }}
+        blobUrl={blobUrl}
+        busy={busy}
+        preferDownloadFallback={
+          iosFallback || failed || (!busy && open && !blobUrl)
+        }
+        labels={{
+          title: copy.pdfPreviewTitle,
+          download: copy.downloadPdf,
+          close: copy.closePdf,
+          loading: copy.downloading,
+          unavailable: failed ? copy.downloadFailed : copy.pdfPreviewUnavailable,
+        }}
+        onDownload={() => void onDownload()}
+      />
     </div>
   );
 }

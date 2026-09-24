@@ -199,8 +199,12 @@ export interface SiteCopy {
     asOfPrefix: string;
     conclusionTitle: string;
     conclusionLead: string;
+    conclusionLeadPositive: string;
+    conclusionLeadCaution: string;
+    conclusionLeadNegative: string;
     recommendationsTitle: string;
     replaceHint: string;
+    keepHint: string;
     specialistHint: string;
     disclaimer: string;
     lawyersTitle: string;

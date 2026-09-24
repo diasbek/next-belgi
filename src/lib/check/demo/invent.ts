@@ -42,33 +42,45 @@ function asMatchList(value: unknown): InventedMatch[] {
 function fallbackMatches(
   query: string,
   jurisdictions: JurisdictionCode[],
+  niceClasses: number[] = [],
 ): InventedPayload {
   const q = query.trim() || "Mark";
   const upper = q.toUpperCase();
+  const classes =
+    niceClasses.length > 0
+      ? niceClasses
+      : [35, 25, 3];
+  const fmt = (n: number, label: string) =>
+    `[${String(n).padStart(2, "0")}] ${label}`;
 
   const uz: InventedMatch[] = [
     {
-      name: upper,
+      name: upper.replace(/е/gi, "э").slice(0, 24) || `${upper}Э`,
       owner: 'OOO "DEMO TRADE UZ"',
       status: "Registered",
-      classesText: "[35] Advertising",
-      similarity: 74,
+      // High sim + overlap with first query class → strong conflict demo
+      classesText: fmt(classes[0]!, "Goods/services"),
+      similarity: 92,
       registeredFrom: "12.03.2022",
     },
     {
       name: `${q} PLUS`,
       owner: 'MChJ "Demo Brands"',
       status: "Pending",
-      classesText: "[25] Clothing",
-      similarity: 51,
+      classesText: fmt(classes[1] ?? classes[0]!, "Related goods"),
+      similarity: 81,
       registeredFrom: "01.08.2024",
     },
     {
       name: `${upper} GROUP`,
       owner: "Demo Hygiene LLC",
       status: "Registered",
-      classesText: "[03] Cosmetics",
-      similarity: 38,
+      // Different class — name-only conflict
+      classesText: fmt(
+        classes.find((c) => c !== classes[0]) ?? 42,
+        "Other class",
+      ),
+      similarity: 54,
       registeredFrom: "18.11.2021",
     },
   ];
@@ -78,16 +90,16 @@ function fallbackMatches(
       name: `IR-${upper.slice(0, 8)}`,
       owner: "Madrid Demo SA",
       status: "Protected",
-      classesText: "[09] Software",
-      similarity: 62,
+      classesText: fmt(classes[0]!, "International"),
+      similarity: 78,
       registeredFrom: "15.06.2021",
     },
     {
       name: `${q} INTERNATIONAL`,
       owner: "WIPO Demo Holdings AG",
       status: "Designated",
-      classesText: "[35] Services",
-      similarity: 44,
+      classesText: fmt(classes[Math.min(1, classes.length - 1)]!, "Services"),
+      similarity: 61,
       registeredFrom: "03.02.2023",
     },
     {
@@ -95,7 +107,7 @@ function fallbackMatches(
       owner: "Global Marks Demo B.V.",
       status: "Protected",
       classesText: "[42] Tech services",
-      similarity: 29,
+      similarity: 33,
       registeredFrom: "22.09.2020",
     },
   ];
@@ -108,8 +120,8 @@ function fallbackMatches(
         name: `${q} ${code.toUpperCase()}`,
         owner: `Demo Owner ${code.toUpperCase()}`,
         status: "Registered",
-        classesText: "[35] Services",
-        similarity: 55,
+        classesText: fmt(classes[0]!, "Services"),
+        similarity: 68,
       },
       {
         name: `${q}${code}`,
@@ -127,8 +139,9 @@ function ensureLocalHits(
   invented: InventedPayload,
   query: string,
   jurisdictions: JurisdictionCode[],
+  niceClasses: number[] = [],
 ): InventedPayload {
-  const fallback = fallbackMatches(query, jurisdictions);
+  const fallback = fallbackMatches(query, jurisdictions, niceClasses);
   return {
     uz: invented.uz.length > 0 ? invented.uz : fallback.uz,
     wipo: invented.wipo.length > 0 ? invented.wipo : fallback.wipo,
@@ -242,6 +255,8 @@ async function inventWithOpenAi(params: {
               "uz = national Uzbekistan (Adliya) registry hits — ALWAYS 2-4 items, never empty.",
               "wipo = Madrid/WIPO international registrations designating UZ — ALWAYS 2-4 items, never empty.",
               "Each hit: name, owner, status, classesText, similarity (1-99), registeredFrom (optional date string).",
+              "At least one uz hit MUST use a Nice class from niceClasses with similarity >= 80 (name conflict in same class).",
+              "Include 1-2 hits without class overlap (different Nice class) with lower similarity.",
               "For each requested external jurisdiction in blocks return 2-3 hits.",
               "Names should be phonetically or visually similar to the query.",
             ].join(" "),
@@ -297,9 +312,10 @@ export async function buildDemoSearchBundle(params: {
   const q = params.query.trim();
   const invented = ensureLocalHits(
     (await inventWithOpenAi(params)) ??
-      fallbackMatches(q, params.jurisdictions),
+      fallbackMatches(q, params.jurisdictions, params.niceClasses),
     q,
     params.jurisdictions,
+    params.niceClasses,
   );
 
   const matches: TrademarkMatch[] = [

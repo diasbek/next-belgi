@@ -1,9 +1,11 @@
 import type { Locale } from "@/i18n/config";
 import type { ActivityClassification } from "@/lib/classify";
+import { niceClassesFromClassification } from "@/lib/classify";
 import {
-  classRisksFromClassification,
-  niceClassesFromClassification,
-} from "@/lib/classify";
+  parseQueryClassNumbers,
+  scoreConflictFromSources,
+} from "./conflict-risk";
+import { pickReportLawyers } from "./report-lawyers";
 import type {
   TrademarkMatch,
   TrademarkReport,
@@ -25,10 +27,15 @@ const copy = {
     unavailableText: "Manba hozircha mavjud emas",
     asOfPrefix: "Maʼlumot sanasi",
     conclusionTitle: "Xulosa",
-    conclusionLead:
-      "Ekspertiza natijalari boʻyicha ushbu nomni roʻyxatga olish ehtimoli:",
+    conclusionLeadPositive:
+      "Mavjud maʼlumotlarga koʻra, roʻyxatga olish ehtimoli nisbatan yuqori:",
+    conclusionLeadCaution:
+      "Oʻxshash belgilar topildi — ehtiyotkorlik bilan baholang; ehtimoliy baho:",
+    conclusionLeadNegative:
+      "Yuqori oʻxshashlik va/yoki sinflar kesishuvi — roʻyxatga olish ehtimoli past:",
     recommendationsTitle: "Tovar belgisini roʻyxatga olish boʻyicha tavsiyalar",
     replaceHint: "Boshqa nomga almashtiring",
+    keepHint: "Nomni saqlab, sinflar va arizani aniqlashtiring",
     lawyerRole: "Yurist",
     disclaimer:
       "Belgi.ai avtomatlashtirilgan qidiruv va belgining mavjud manbalardagi tovar belgilari va arizalar bilan oʻxshashligini axborot baholashini bajaradi. Tekshiruv natijasi yuridik xulosa, roʻyxatga olish toʻgʻrisida qaror yoki huquqiy muhofaza kafolati emas. Yakuniy qarorni vakolatli davlat organi qabul qiladi.",
@@ -48,10 +55,15 @@ const copy = {
     unavailableText: "Источник временно недоступен",
     asOfPrefix: "Данные на",
     conclusionTitle: "Заключение",
-    conclusionLead:
-      "Результаты экспертизы должны дать положительный ответ на регистрацию этого имени:",
+    conclusionLeadPositive:
+      "По имеющимся данным, вероятность регистрации относительно высокая:",
+    conclusionLeadCaution:
+      "Найдены похожие обозначения — оценивайте осторожно; ориентировочная оценка:",
+    conclusionLeadNegative:
+      "Высокое сходство и/или пересечение классов — вероятность регистрации низкая:",
     recommendationsTitle: "Рекомендации по регистрации товарного знака",
     replaceHint: "Замените на другое название",
+    keepHint: "Можно сохранить имя, уточнив классы и заявку",
     lawyerRole: "Юрист",
     disclaimer:
       "Belgi.ai выполняет автоматизированный поиск и информационную оценку сходства обозначения с товарными знаками и заявками, содержащимися в доступных источниках. Результат проверки не является юридическим заключением, решением о регистрации или гарантией предоставления правовой охраны. Окончательное решение принимается уполномоченным государственным органом.",
@@ -71,10 +83,15 @@ const copy = {
     unavailableText: "Source temporarily unavailable",
     asOfPrefix: "Data as of",
     conclusionTitle: "Conclusion",
-    conclusionLead:
-      "Examination results should support registration of this name:",
+    conclusionLeadPositive:
+      "Based on available data, the chance of registration looks relatively high:",
+    conclusionLeadCaution:
+      "Similar marks were found — review carefully; indicative outlook:",
+    conclusionLeadNegative:
+      "High similarity and/or class overlap — registration chance looks low:",
     recommendationsTitle: "Trademark registration recommendations",
     replaceHint: "Consider a different name",
+    keepHint: "You may keep the name while refining classes and filing",
     lawyerRole: "Lawyer",
     disclaimer:
       "Belgi.ai performs automated search and an informational assessment of similarity between the designation and trademarks and applications in available sources. The check result is not a legal opinion, a registration decision, or a guarantee of legal protection. The final decision is made by the competent state authority.",
@@ -156,10 +173,6 @@ export function buildReportFromMatches(params: {
     ? niceClassesFromClassification(params.classification)
     : [...t.niceFallback];
 
-  const classRisks = params.classification
-    ? classRisksFromClassification(params.classification)
-    : [];
-
   const uzMatches = params.matches.filter(
     (m) => !m.sourceLabel || m.sourceLabel === "UZ",
   );
@@ -185,9 +198,24 @@ export function buildReportFromMatches(params: {
     sources.push(makeBlock("internet", t, []));
   }
 
-  const scored = sources.flatMap((s) => (s.unavailable ? [] : s.matches));
-  const topSim = scored[0]?.similarity ?? 0;
-  const positive = topSim < 45;
+  const queryClassNumbers = parseQueryClassNumbers(niceClasses);
+  const scored = scoreConflictFromSources(sources, queryClassNumbers);
+  const classRisks =
+    scored.classRisks.length > 0
+      ? scored.classRisks.filter((c) => c.classNumber > 0)
+      : queryClassNumbers.slice(0, 3).map((classNumber) => ({
+          classNumber,
+          percent: scored.overallConflict,
+        }));
+
+  const lead =
+    scored.overallConflict >= 70
+      ? t.conclusionLeadNegative
+      : scored.overallConflict >= 45
+        ? t.conclusionLeadCaution
+        : t.conclusionLeadPositive;
+
+  const replaceHint = scored.positive ? t.keepHint : t.replaceHint;
 
   return {
     query: q,
@@ -197,28 +225,19 @@ export function buildReportFromMatches(params: {
     sources,
     conclusion: {
       title: t.conclusionTitle,
-      lead: t.conclusionLead,
-      positive,
+      lead,
+      positive: scored.positive,
     },
     classRisks:
       classRisks.length > 0
-        ? classRisks.map((c) => ({
-            ...c,
-            percent: Math.min(
-              95,
-              Math.round(c.percent * (0.4 + topSim / 100)),
-            ),
-          }))
-        : niceClasses.slice(0, 3).map((_, i) => ({
-            classNumber: Number(String(niceClasses[i]).match(/\d+/)?.[0] || 1),
-            percent: Math.round(topSim * (1 - i * 0.15)),
-          })),
+        ? classRisks
+        : [{ classNumber: 0, percent: scored.overallConflict }],
     recommendations: {
       title: t.recommendationsTitle,
-      replaceHint: t.replaceHint,
+      replaceHint,
       alternatives: [],
     },
-    lawyers: [],
+    lawyers: pickReportLawyers(locale, 3, q),
     disclaimer: t.disclaimer,
   };
 }

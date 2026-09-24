@@ -6,6 +6,7 @@ import { localePath } from "@/i18n/paths";
 import type { TrademarkReport } from "@/lib/check/types";
 import { createRequestId } from "@/lib/form/utils";
 import { submitLead } from "@/lib/form/submitLead";
+import { mapRiskToChance } from "@/lib/conclusion";
 import { Button } from "@/components/atoms/Button";
 import { ReportServiceUpsell } from "@/components/organisms/ReportServiceUpsell";
 import {
@@ -225,22 +226,34 @@ export function TrademarkReportView({
             {copy.report.conclusionTitle}
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-ink/80">
-            {report.conclusion?.lead || copy.report.conclusionLead}
+            {report.conclusion?.lead ||
+              (report.conclusion?.positive
+                ? copy.report.conclusionLeadPositive
+                : copy.report.conclusionLeadNegative) ||
+              copy.report.conclusionLead}
           </p>
           <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
-            {(report.classRisks || []).map((risk) => (
-              <div
-                key={risk.classNumber}
-                className="flex h-20 w-[calc(50%-0.25rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-2.5 sm:h-24 sm:w-28 sm:p-3"
-              >
-                <span className="text-xs text-ink-muted">
-                  {risk.classNumber} {copy.report.classSuffix}
-                </span>
-                <span className="text-xl font-semibold sm:text-2xl">
-                  {risk.percent}%
-                </span>
-              </div>
-            ))}
+            {(report.classRisks || []).map((risk) => {
+              const chance = mapRiskToChance(risk);
+              const mid = Math.round(
+                (chance.chanceMin + chance.chanceMax) / 2,
+              );
+              return (
+                <div
+                  key={risk.classNumber}
+                  className="flex h-20 w-[calc(50%-0.25rem)] max-w-28 flex-col justify-between rounded-xl bg-white p-2.5 sm:h-24 sm:w-28 sm:p-3"
+                >
+                  <span className="text-xs text-ink-muted">
+                    {risk.classNumber > 0
+                      ? `${risk.classNumber} ${copy.report.classSuffix}`
+                      : copy.report.classSuffix}
+                  </span>
+                  <span className="text-xl font-semibold sm:text-2xl">
+                    {mid}%
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -249,7 +262,9 @@ export function TrademarkReportView({
             {copy.report.recommendationsTitle}
           </h3>
           <p className="mt-4 text-sm text-white/75">
-            {copy.report.replaceHint}
+            {report.conclusion?.positive
+              ? copy.report.keepHint
+              : report.recommendations?.replaceHint || copy.report.replaceHint}
           </p>
           <p className="mt-2 break-words text-lg font-semibold">
             {(report.recommendations?.alternatives || []).join(" / ") || "—"}

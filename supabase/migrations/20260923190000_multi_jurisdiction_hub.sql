@@ -72,7 +72,9 @@ alter table public.integration_secrets
   );
 
 -- 5) search_trademarks_similar returns source for report block split
-create or replace function public.search_trademarks_similar(
+drop function if exists public.search_trademarks_similar(text, int[], int, real);
+
+create function public.search_trademarks_similar(
   p_query text,
   p_classes int[] default null,
   p_limit int default 20,

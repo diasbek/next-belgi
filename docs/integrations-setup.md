@@ -22,7 +22,28 @@
 | Ключи | поля в drawer; пустое secret-поле = оставить старое значение |
 | Вкл/выкл | чекбокс «Включено» |
 | Сброс всех в test/mock | кнопка «Все в тестовый режим» |
+| **Demo Mode** | тоггл сверху на `/admin/integrations/` — синтетика по всем юрисдикциям |
 | Env fallback | `EUIPO_CLIENT_ID`, `USPTO_API_KEY`, … — только если в БД нет строки |
+
+### Demo Mode (глобальный)
+
+Не путать с per-provider **mock/test**.
+
+| | |
+|--|--|
+| Флаг | `app_settings.demo_mode.enabled` |
+| Что реально | OpenAI chat (live) — придумывает совпадения; Nice classify тоже через OpenAI |
+| Что синтетика | Adliya / Madrid / EUIPO / USPTO / AU / KZ — не вызываются |
+| Картинки | локальный SVG wordmark (`data:image/svg+xml`) |
+| Кредиты | не списываются |
+| EUIPO Pending | не мешает — демо не ходит в EUIPO |
+
+Импорт ключа OpenAI из takleef (один раз):
+
+```bash
+# JSON из saas_platform_integrations.llm_gateway.providers.openai
+echo '{"api_key":"…","model":"gpt-4.1"}' | npx tsx --env-file=.env.local scripts/import-openai-from-takleef.ts --stdin
+```
 
 После live-настройки: проверь на `/account/check/` с выбором нужных юрисдикций.
 
@@ -68,20 +89,36 @@ Env (опционально): `ADLIYA_ACCESS_TOKEN`, `ADLIYA_API_BASE`.
 
 ## 3. EUIPO (Европа)
 
-**Зачем:** юрисдикция `eu` в проверке.
+**Зачем:** юрисдикция `eu` в проверке (Trademark Search). Goods & Services — опционально (Nice terms).
 
 ### Шаги
 
-1. Зарегистрируйся на [EUIPO Developer Portal](https://dev.euipo.europa.eu/) (или актуальный portal на developer.euipo.europa.eu).
-2. Создай приложение **client credentials** (OAuth2).
-3. Подпишись на **Trademark Search API** (sandbox → после approve production). Одобрение может занять ~неделю.
-4. `/admin/integrations/` → **EUIPO**.
-5. Режим **Sandbox** (разработка) или **Live**.
-6. `client_id` + `client_secret` → Сохранить.
-7. На проверке включи «Европа (EUIPO)» (+1 кредит).
+1. Зарегистрируйся на [EUIPO Developer Portal](https://dev.euipo.europa.eu/) (**Production**) и/или [Sandbox](https://dev-sandbox.euipo.europa.eu/) — это **разные** realm’ы и разные client_id/secret.
+2. Apps → создай приложение (client credentials / OAuth2).
+3. Подпиши app на продукты:
+   - [Trademark Search](https://dev.euipo.europa.eu/product/trademark-search_110)
+   - [Goods and Services](https://dev.euipo.europa.eu/product/goods-and-services_120) (по желанию)
+4. Дождись статуса **Approved** в Apps → Subscriptions.
+   - Sandbox: обычно быстрее (до ~недели).
+   - Production: нужны документы на `docs.apiplatform@euipo.europa.eu` (паспорт / выписка из реестра) — иначе API даёт **403** при живом токене.
+5. `/admin/integrations/` → **EUIPO**.
+6. Режим **Sandbox** или **Live** (должен совпадать с порталом, где выпущены ключи).
+7. `client_id` + `client_secret` → Сохранить → **Test**.
+8. На проверке включи «Европа (EUIPO)» (+1 кредит).
 
-**Mock:** демо-совпадения без ключей.  
-Env: `EUIPO_CLIENT_ID`, `EUIPO_CLIENT_SECRET` (+ опционально `EUIPO_SANDBOX_BASE`, `EUIPO_TOKEN_URL`).
+**Mock:** демо-совпадения без ключей.
+
+**Auth (официально):**
+- Live token: `https://euipo.europa.eu/cas-server-webapp/oidc/accessToken`
+- Sandbox token: `https://auth-sandbox.euipo.europa.eu/oidc/accessToken`
+- Каждый вызов API: `Authorization: Bearer …` **и** `X-IBM-Client-Id: <client_id>`
+- Поиск: RSQL `query=wordMarkSpecification.verbalElement==*NAME*` (не `markName`)
+
+Env: `EUIPO_CLIENT_ID`, `EUIPO_CLIENT_SECRET` (+ опционально `EUIPO_TOKEN_URL`, `EUIPO_SANDBOX_TOKEN_URL`, `EUIPO_LIVE_BASE`, `EUIPO_SANDBOX_BASE`).
+
+### Если Test: token OK, search 403
+
+Подписка ещё не Approved (или ключи от другого портала). Проверь Subscriptions и письмо с EUIPO; для prod отправь документы. Mock/Sandbox работают без prod-approve.
 
 ---
 

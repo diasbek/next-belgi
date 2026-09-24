@@ -15,6 +15,8 @@ import {
   hashConclusionPayload,
 } from "@/lib/conclusion";
 import type { ConclusionDocument } from "@/lib/conclusion";
+import { isDemoMode } from "@/lib/settings/demo-mode";
+import { buildDemoSearchBundle } from "./demo/invent";
 import { searchExternalJurisdiction } from "./external";
 import {
   normalizeJurisdictions,
@@ -188,6 +190,43 @@ export async function runTrademarkCheck(
     classification.primaryClassNumbers.length > 0
       ? classification.primaryClassNumbers
       : classification.classes.map((c) => c.classNumber);
+
+  if (await isDemoMode()) {
+    const demo = await buildDemoSearchBundle({
+      query,
+      activity,
+      niceClasses,
+      jurisdictions,
+      locale,
+    });
+    const report = buildReportFromMatches({
+      query,
+      activity,
+      classification,
+      locale,
+      matches: demo.matches,
+      externalBlocks: demo.externalBlocks,
+    });
+    const persisted = await persistCheck({
+      query,
+      activity,
+      locale,
+      userId: input.userId,
+      classification,
+      report,
+      source: "mock",
+      jurisdictions,
+    });
+    return {
+      ok: true,
+      source: "mock",
+      report,
+      checkId: persisted.checkId,
+      verificationCode: persisted.verificationCode,
+      conclusion: persisted.conclusion,
+      demoMode: true,
+    };
+  }
 
   const upstream = process.env.BELGI_CHECK_API_URL?.trim();
   if (!upstream) {

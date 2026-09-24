@@ -16,6 +16,7 @@ Canonical guide: [`docs/integrations-setup.md`](docs/integrations-setup.md).
 4. Madrid bulk import is on **`/admin/registry/`**, not Integrations.
 5. Kazpatent has no public REST API — keep unavailable; see `docs/research/kazpatent.md`.
 6. After wiring an adapter, remind: apply migration `20260923190000_multi_jurisdiction_hub.sql` if not applied; verify `/account/check/` with jurisdiction toggles (+1 credit each for eu/us/au/kz).
+7. **Demo Mode** (admin toggle on Integrations) is global synthetic checks — not the same as per-provider `mock`. Keep OpenAI on `live` while Demo Mode is on. Flag: `app_settings.demo_mode`. Pipeline: `src/lib/check/demo/*` + hook in `runTrademarkCheck`.
 
 ## Code map
 
@@ -23,6 +24,11 @@ Canonical guide: [`docs/integrations-setup.md`](docs/integrations-setup.md).
 |---------|------|
 | Catalog / modes / secrets shape | `src/lib/integrations/types.ts` |
 | Load/save encrypted payload | `src/lib/integrations/store.ts` |
+| Storage vault if provider CHECK missing | `src/lib/integrations/secrets-vault.ts` |
+| Demo Mode flag | `src/lib/settings/demo-mode.ts` |
+| Demo invent + wordmark | `src/lib/check/demo/*` |
+| Apply hub migration | `scripts/apply-hub-migration.ts` + SQL Editor |
+| Import OpenAI from takleef | `scripts/import-openai-from-takleef.ts` |
 | Admin UI + setup steps | `src/components/organisms/IntegrationsPanel.tsx` |
 | External search adapters | `src/lib/check/external/*` |
 | Madrid importer | `src/lib/registry/madrid-import.ts` |

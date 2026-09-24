@@ -81,4 +81,6 @@ export interface CheckResponse {
   source?: "upstream" | "mock" | "registry";
   /** Guest teaser — full check requires auth + credit */
   preview?: boolean;
+  /** Global admin Demo Mode — synthetic multi-jurisdiction hits */
+  demoMode?: boolean;
 }

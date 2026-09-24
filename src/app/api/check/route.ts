@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runTrademarkCheck } from "@/lib/check/client";
-import { buildMockReport } from "@/lib/check/mock";
+import { buildReportFromMatches } from "@/lib/check/mock";
+import { buildDemoSearchBundle } from "@/lib/check/demo/invent";
 import {
   classifyActivity,
   resolveActivityClassification,
@@ -22,6 +23,7 @@ import {
   normalizeJurisdictions,
   totalCheckCredits,
 } from "@/lib/check/jurisdictions";
+import { isDemoMode } from "@/lib/settings/demo-mode";
 
 const rateMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -96,6 +98,38 @@ export async function POST(request: Request) {
     });
     const classification =
       fromSelection ?? (await classifyActivity({ activity, locale }));
+    const niceClasses =
+      classification.primaryClassNumbers.length > 0
+        ? classification.primaryClassNumbers
+        : classification.classes.map((c) => c.classNumber);
+
+    if (await isDemoMode()) {
+      const demo = await buildDemoSearchBundle({
+        query,
+        activity,
+        niceClasses,
+        jurisdictions,
+        locale,
+      });
+      const report = buildReportFromMatches({
+        query,
+        activity,
+        classification,
+        locale,
+        matches: demo.matches,
+        externalBlocks: demo.externalBlocks,
+      });
+      return NextResponse.json({
+        ok: true,
+        preview: true,
+        demoMode: true,
+        source: "mock",
+        report,
+        loginRedirect: `${localePath(locale, "/login/")}?next=${encodeURIComponent(resume)}`,
+      });
+    }
+
+    const { buildMockReport } = await import("@/lib/check/mock");
     const report = buildMockReport(query, activity, classification, locale);
     return NextResponse.json({
       ok: true,
@@ -110,18 +144,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
 
-  const debit = await debitCheckCredits(appUser.id, creditCost);
-  if (!debit.ok) {
-    const status = debit.error === "insufficient_credits" ? 402 : 503;
-    return NextResponse.json(
-      {
-        ok: false,
-        error: debit.error,
-        creditCost,
-        redirect: `${localePath(locale, "/account/billing/")}?next=${encodeURIComponent(resume)}`,
-      },
-      { status },
-    );
+  const demoOn = await isDemoMode();
+  let debit: Awaited<ReturnType<typeof debitCheckCredits>> | null = null;
+  if (!demoOn) {
+    debit = await debitCheckCredits(appUser.id, creditCost);
+    if (!debit.ok) {
+      const status = debit.error === "insufficient_credits" ? 402 : 503;
+      return NextResponse.json(
+        {
+          ok: false,
+          error: debit.error,
+          creditCost,
+          redirect: `${localePath(locale, "/account/billing/")}?next=${encodeURIComponent(resume)}`,
+        },
+        { status },
+      );
+    }
   }
 
   const result = await runTrademarkCheck({
@@ -134,16 +172,20 @@ export async function POST(request: Request) {
   });
 
   if (!result.ok) {
-    for (const id of debit.ledgerIds) {
-      await refundCheckCredit(id);
+    if (debit?.ok) {
+      for (const id of debit.ledgerIds) {
+        await refundCheckCredit(id);
+      }
     }
     const status = result.error === "missing_fields" ? 400 : 502;
     return NextResponse.json(result, { status });
   }
 
   if (!result.checkId) {
-    for (const id of debit.ledgerIds) {
-      await refundCheckCredit(id);
+    if (debit?.ok) {
+      for (const id of debit.ledgerIds) {
+        await refundCheckCredit(id);
+      }
     }
     return NextResponse.json(
       { ok: false, error: "persist_failed" },
@@ -151,16 +193,19 @@ export async function POST(request: Request) {
     );
   }
 
-  await linkCheckEntitlement({
-    checkId: result.checkId,
-    ledgerId: debit.ledgerId,
-    userId: appUser.id,
-  });
+  if (debit?.ok) {
+    await linkCheckEntitlement({
+      checkId: result.checkId,
+      ledgerId: debit.ledgerId,
+      userId: appUser.id,
+    });
+  }
 
   return NextResponse.json({
     ...result,
     preview: false,
-    creditCost,
-    balanceAfter: appUser.balance - creditCost,
+    creditCost: demoOn ? 0 : creditCost,
+    balanceAfter: demoOn ? appUser.balance : appUser.balance - creditCost,
+    demoMode: demoOn || Boolean(result.demoMode),
   });
 }

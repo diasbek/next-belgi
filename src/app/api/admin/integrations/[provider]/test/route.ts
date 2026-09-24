@@ -5,6 +5,7 @@ import {
   getModuleCatalog,
   isIntegrationProvider,
 } from "@/lib/integrations/types";
+import { testEuipoConnection } from "@/lib/check/external/euipo";
 import { testEskizConnection } from "@/lib/notifications/eskiz";
 import { testResendConnection } from "@/lib/notifications/resend";
 import { testTelegramConnection } from "@/lib/notifications/telegram";
@@ -94,6 +95,8 @@ export async function POST(_request: Request, ctx: Ctx) {
         });
       }
     }
+    case "euipo":
+      return NextResponse.json(await testEuipoConnection());
     default:
       return NextResponse.json({ ok: false, error: "unsupported" }, { status: 400 });
   }

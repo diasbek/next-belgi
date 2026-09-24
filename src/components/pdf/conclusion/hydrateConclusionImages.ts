@@ -9,19 +9,53 @@ async function blobToDataUrl(blob: Blob): Promise<string> {
   });
 }
 
+/** Rasterize SVG data URL to PNG for react-pdf (no native SVG support). */
+async function svgDataUrlToPng(dataUrl: string): Promise<string | null> {
+  if (typeof document === "undefined") {
+    // Server: keep SVG; PDF path is client-only today.
+    return dataUrl;
+  }
+  try {
+    const img = new Image();
+    const loaded = new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => reject(new Error("svg_load_failed"));
+    });
+    img.src = dataUrl;
+    await loaded;
+    const w = Math.max(1, img.naturalWidth || 240);
+    const h = Math.max(1, img.naturalHeight || 120);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    ctx.drawImage(img, 0, 0);
+    return canvas.toDataURL("image/png");
+  } catch (e) {
+    console.warn("[pdf:svg]", e);
+    return null;
+  }
+}
+
 async function urlToDataUrl(url: string): Promise<string | null> {
-  if (!url || url.startsWith("data:")) return url || null;
+  if (!url) return null;
+  if (url.startsWith("data:image/svg+xml")) {
+    return svgDataUrlToPng(url);
+  }
+  if (url.startsWith("data:")) return url;
   try {
     const proxy = `/api/media/fetch/?u=${encodeURIComponent(url)}`;
     const res = await fetch(proxy, { credentials: "same-origin" });
     if (!res.ok) return null;
     const blob = await res.blob();
-    if (!blob.size || !blob.type.startsWith("image/")) {
-      // Some CDNs return octet-stream
-      if (!blob.type.startsWith("image/") && blob.size > 0) {
-        return blobToDataUrl(blob);
-      }
-      if (!blob.size) return null;
+    if (!blob.size) return null;
+    if (blob.type.includes("svg")) {
+      const svgData = await blobToDataUrl(blob);
+      return svgDataUrlToPng(svgData);
+    }
+    if (!blob.type.startsWith("image/") && blob.size > 0) {
+      return blobToDataUrl(blob);
     }
     return blobToDataUrl(blob);
   } catch (e) {
@@ -41,7 +75,9 @@ export async function hydrateConclusionImages(
       cards.map(async (card) => {
         if (!card.imageUrl) return card;
         const dataUrl = await urlToDataUrl(card.imageUrl);
-        return dataUrl ? { ...card, imageUrl: dataUrl } : { ...card, imageUrl: undefined };
+        return dataUrl
+          ? { ...card, imageUrl: dataUrl }
+          : { ...card, imageUrl: undefined };
       }),
     );
 

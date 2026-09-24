@@ -44,6 +44,8 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [demoMode, setDemoModeState] = useState(false);
+  const [demoBusy, setDemoBusy] = useState(false);
 
   const statusMap = useMemo(() => {
     const m = new Map<IntegrationProvider, Status>();
@@ -59,7 +61,10 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     setLoading(true);
     setErr(null);
     try {
-      const res = await fetch("/api/admin/integrations/");
+      const [res, demoRes] = await Promise.all([
+        fetch("/api/admin/integrations/"),
+        fetch("/api/admin/settings/demo-mode/"),
+      ]);
       const json = (await res.json()) as {
         ok?: boolean;
         items?: Status[];
@@ -70,6 +75,13 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
         return;
       }
       if (json.items) setItems(json.items);
+      if (demoRes.ok) {
+        const demoJson = (await demoRes.json()) as {
+          ok?: boolean;
+          enabled?: boolean;
+        };
+        if (demoJson.ok) setDemoModeState(Boolean(demoJson.enabled));
+      }
     } catch {
       setErr(copy.adminUi.error);
     } finally {
@@ -180,6 +192,39 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     }
   }
 
+  async function toggleDemoMode() {
+    setDemoBusy(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      const next = !demoMode;
+      const res = await fetch("/api/admin/settings/demo-mode/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled: next }),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        enabled?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !json.ok) {
+        setErr(json.error || copy.adminUi.error);
+        return;
+      }
+      setDemoModeState(Boolean(json.enabled));
+      setMsg(
+        json.enabled
+          ? copy.adminIntegrations.demoModeEnabled
+          : copy.adminIntegrations.demoModeDisabled,
+      );
+    } catch {
+      setErr(copy.adminUi.error);
+    } finally {
+      setDemoBusy(false);
+    }
+  }
+
   async function resetSilent() {
     setBusy(true);
     setMsg(null);
@@ -232,6 +277,36 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
         title={copy.adminIntegrations.title}
         lead={copy.adminIntegrations.lead}
       />
+      <div className="mb-6 max-w-2xl rounded-2xl border border-ink/15 bg-white p-4 sm:p-5">
+        <p className="m-0 text-sm font-semibold text-ink">
+          {copy.adminIntegrations.demoModeTitle}
+        </p>
+        <p className="m-0 mt-1.5 text-sm leading-relaxed text-ink">
+          {copy.adminIntegrations.demoModeLead}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant={demoMode ? "primary" : "secondary"}
+            disabled={demoBusy || loading}
+            onClick={() => void toggleDemoMode()}
+          >
+            {demoMode
+              ? copy.adminIntegrations.demoModeOff
+              : copy.adminIntegrations.demoModeOn}
+          </Button>
+          <span
+            className={cn(
+              "text-xs font-semibold uppercase tracking-wide",
+              demoMode ? "text-amber-800" : "text-ink-muted",
+            )}
+          >
+            {demoMode
+              ? copy.adminIntegrations.demoModeEnabled
+              : copy.adminIntegrations.demoModeDisabled}
+          </span>
+        </div>
+      </div>
       <div className="mb-6 max-w-2xl rounded-2xl border border-ink/15 bg-white p-4 sm:p-5">
         <p className="m-0 text-sm font-semibold text-ink">
           {copy.adminIntegrations.setupOrderTitle}

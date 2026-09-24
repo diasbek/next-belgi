@@ -436,6 +436,12 @@ export type AppCopy = {
     masterKeyNote: string;
     resetSilent: string;
     resetSilentDone: string;
+    demoModeTitle: string;
+    demoModeLead: string;
+    demoModeOn: string;
+    demoModeOff: string;
+    demoModeEnabled: string;
+    demoModeDisabled: string;
     catMessaging: string;
     catPayments: string;
     catAi: string;
@@ -960,6 +966,13 @@ export const uzApp: AppCopy = {
       "Maxfiy qiymatlar SECRETS_MASTER_KEY bilan shifrlangan. Boʻsh maydon — avvalgi qiymat saqlanadi.",
     resetSilent: "Barchasini sinov rejimiga",
     resetSilentDone: "Barcha modullar sinov / mock rejimida",
+    demoModeTitle: "Demo Mode",
+    demoModeLead:
+      "Yoqilganda tekshiruv Adliya/EUIPO va boshqa reestrlarga bormaydi — OpenAI (live) oʻxshash belgilarni uydiradi, wordmark rasmlar mahalliy chiziladi. Kredit yechilmaydi.",
+    demoModeOn: "Demo Mode yoqish",
+    demoModeOff: "Demo Mode oʻchirish",
+    demoModeEnabled: "Demo Mode yoqilgan",
+    demoModeDisabled: "Demo Mode oʻchirilgan",
     catMessaging: "Xabarlar va tasdiqlash kodlari",
     catPayments: "Toʻlovlar",
     catAi: "AI",
@@ -1072,15 +1085,15 @@ export const uzApp: AppCopy = {
         title: "EUIPO",
         lead: "Yevropa (EUTM) qidiruvi. Mock → Sandbox → Live.",
         steps: [
-          "dev.euipo.europa.eu da akkaunt oching.",
-          "OAuth2 client credentials ilovasini yarating.",
-          "Trademark Search API ga obuna (sandbox; live — tasdiq ~1 hafta).",
-          "Rejim Sandbox yoki Live → client_id + client_secret → Saqlash.",
+          "dev.euipo.europa.eu (yoki sandbox) da akkaunt oching — realm alohida.",
+          "App yarating; Trademark Search (+ Goods & Services) ga subscribe qiling.",
+          "Subscriptions da Approved kutib turing (prod: hujjatlar docs.apiplatform@euipo.europa.eu).",
+          "Rejim Sandbox/Live + client_id/secret → Saqlash → Test.",
           "Tekshiruvda «Yevropa (EUIPO)» ni yoqing (+1 kredit).",
         ],
         portalUrl: "https://dev.euipo.europa.eu/",
         afterSave:
-          "Mock kalitsiz ishlaydi. Live kalitlar boʻlmasa blok «manba mavjud emas» koʻrsatadi.",
+          "Mock kalitsiz ishlaydi. Token OK + search 403 = subscribe hali Approved emas.",
       },
       uspto: {
         title: "USPTO",
@@ -1635,6 +1648,13 @@ export const ruApp: AppCopy = {
       "Секреты шифруются SECRETS_MASTER_KEY. Пустое поле — прежнее значение сохраняется.",
     resetSilent: "Перевести все в тестовый режим",
     resetSilentDone: "Все модули в тестовом / mock-режиме",
+    demoModeTitle: "Demo Mode",
+    demoModeLead:
+      "При включении проверка не ходит в Adliya/EUIPO и другие реестры — OpenAI (live) придумывает совпадения, wordmark рисуется локально. Кредиты не списываются.",
+    demoModeOn: "Включить Demo Mode",
+    demoModeOff: "Выключить Demo Mode",
+    demoModeEnabled: "Demo Mode включён",
+    demoModeDisabled: "Demo Mode выключен",
     catMessaging: "Сообщения и коды подтверждения",
     catPayments: "Платежи",
     catAi: "AI",
@@ -1747,15 +1767,15 @@ export const ruApp: AppCopy = {
         title: "EUIPO",
         lead: "Поиск по ЕС (EUTM). Mock → Sandbox → Live.",
         steps: [
-          "Зарегистрируйтесь на dev.euipo.europa.eu.",
-          "Создайте приложение OAuth2 (client credentials).",
-          "Подпишитесь на Trademark Search API (sandbox; live — одобрение ~неделя).",
-          "Режим Sandbox или Live → client_id + client_secret → Сохранить.",
+          "Аккаунт на dev.euipo.europa.eu (или sandbox) — это разные realm’ы.",
+          "Создайте App; подпишитесь на Trademark Search (+ Goods & Services).",
+          "Дождитесь Approved в Subscriptions (prod: документы на docs.apiplatform@euipo.europa.eu).",
+          "Режим Sandbox/Live + client_id/secret → Сохранить → Test.",
           "В проверке включите «Европа (EUIPO)» (+1 кредит).",
         ],
         portalUrl: "https://dev.euipo.europa.eu/",
         afterSave:
-          "Mock работает без ключей. Без live-ключей блок покажет «источник недоступен».",
+          "Mock без ключей. Token OK + search 403 = подписка ещё не Approved.",
       },
       uspto: {
         title: "USPTO",
@@ -2308,6 +2328,13 @@ export const enApp: AppCopy = {
       "Secrets are encrypted with SECRETS_MASTER_KEY. An empty field keeps the previous value.",
     resetSilent: "Switch all to test mode",
     resetSilentDone: "All modules are in test / mock mode",
+    demoModeTitle: "Demo Mode",
+    demoModeLead:
+      "When on, checks skip Adliya/EUIPO and other registries — live OpenAI invents matches; wordmarks are drawn locally. Credits are not charged.",
+    demoModeOn: "Enable Demo Mode",
+    demoModeOff: "Disable Demo Mode",
+    demoModeEnabled: "Demo Mode is on",
+    demoModeDisabled: "Demo Mode is off",
     catMessaging: "Messaging and verification codes",
     catPayments: "Payments",
     catAi: "AI",
@@ -2420,15 +2447,15 @@ export const enApp: AppCopy = {
         title: "EUIPO",
         lead: "EU (EUTM) search. Mock → Sandbox → Live.",
         steps: [
-          "Register at dev.euipo.europa.eu.",
-          "Create an OAuth2 client-credentials app.",
-          "Subscribe to Trademark Search API (sandbox; live approval ~1 week).",
-          "Mode Sandbox or Live → client_id + client_secret → Save.",
+          "Account on dev.euipo.europa.eu (or sandbox) — separate auth realms.",
+          "Create an App; subscribe to Trademark Search (+ Goods & Services).",
+          "Wait for Approved in Subscriptions (prod: docs to docs.apiplatform@euipo.europa.eu).",
+          "Mode Sandbox/Live + client_id/secret → Save → Test.",
           "On check, enable “European Union (EUIPO)” (+1 credit).",
         ],
         portalUrl: "https://dev.euipo.europa.eu/",
         afterSave:
-          "Mock works without keys. Without live keys the block shows “source unavailable”.",
+          "Mock works without keys. Token OK + search 403 = subscription not Approved yet.",
       },
       uspto: {
         title: "USPTO",

@@ -5,6 +5,12 @@ import {
 } from "@/lib/crypto/aes";
 import { getServiceDb } from "@/lib/db/client";
 import {
+  deleteVaultRecord,
+  isProviderCheckConstraintError,
+  loadVaultRecord,
+  saveVaultRecord,
+} from "./secrets-vault";
+import {
   getModuleCatalog,
   type IntegrationPayloadMap,
   type IntegrationProvider,
@@ -144,28 +150,42 @@ async function loadFromDb(
 ): Promise<CacheEntry | null> {
   const db = getServiceDb();
   if (!db) return null;
-  const { data, error } = await db
+
+  const { data } = await db
     .from("integration_secrets")
     .select("payload_encrypted, enabled, updated_at")
     .eq("provider", provider)
     .maybeSingle();
-  if (error || !data) return null;
+
+  const row =
+    data ??
+    (await (async () => {
+      const vault = await loadVaultRecord(provider);
+      if (!vault) return null;
+      return {
+        payload_encrypted: vault.payload_encrypted,
+        enabled: vault.enabled,
+        updated_at: vault.updated_at,
+      };
+    })());
+
+  if (!row) return null;
   try {
     const payload = decryptSecretPayload<Record<string, unknown>>(
-      data.payload_encrypted,
+      row.payload_encrypted,
     );
     return {
       at: Date.now(),
-      enabled: data.enabled !== false,
+      enabled: row.enabled !== false,
       payload,
-      updated_at: data.updated_at ?? null,
+      updated_at: row.updated_at ?? null,
     };
   } catch {
     return {
       at: Date.now(),
       enabled: false,
       payload: null,
-      updated_at: data.updated_at ?? null,
+      updated_at: row.updated_at ?? null,
     };
   }
 }
@@ -298,7 +318,23 @@ export async function saveIntegration(
     },
     { onConflict: "provider" },
   );
-  if (error) return { ok: false, error: error.message };
+  if (error) {
+    if (isProviderCheckConstraintError(error.message)) {
+      const vault = await saveVaultRecord(provider, {
+        payload_encrypted: encrypted,
+        enabled: opts.enabled ?? true,
+        updated_at: new Date().toISOString(),
+        updated_by: opts.updatedBy ?? null,
+      });
+      if (!vault.ok) return vault;
+      console.warn(
+        `[integrations] provider check missing for ${provider} — saved to storage vault; apply migration 20260923190000_multi_jurisdiction_hub.sql`,
+      );
+      invalidateIntegrationCache(provider);
+      return { ok: true };
+    }
+    return { ok: false, error: error.message };
+  }
   invalidateIntegrationCache(provider);
   return { ok: true };
 }
@@ -312,7 +348,10 @@ export async function deleteIntegration(
     .from("integration_secrets")
     .delete()
     .eq("provider", provider);
-  if (error) return { ok: false, error: error.message };
+  await deleteVaultRecord(provider);
+  if (error && !isProviderCheckConstraintError(error.message)) {
+    return { ok: false, error: error.message };
+  }
   invalidateIntegrationCache(provider);
   return { ok: true };
 }

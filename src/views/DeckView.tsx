@@ -7,16 +7,12 @@ import {
   useRef,
   useState,
 } from "react";
-import Link from "next/link";
 import { deckCopy } from "@/data/deck";
 import { cn } from "@/lib/cn";
-import { Button } from "@/components/atoms/Button";
-
-export type DeckContacts = {
-  phone: string | null;
-  email: string | null;
-  telegramUrl: string | null;
-};
+import { DeckHowDemo } from "@/components/organisms/DeckHowDemo";
+import { DeckBusinessModel } from "@/components/organisms/DeckBusinessModel";
+import { DeckGtmPlan } from "@/components/organisms/DeckGtmPlan";
+import { DeckOfferSlide } from "@/components/organisms/DeckOfferSlide";
 
 const SLIDE_IDS = [
   "title",
@@ -35,10 +31,12 @@ function SlideShell({
   id,
   children,
   className,
+  contentClassName,
 }: {
   id: SlideId;
   children: React.ReactNode;
   className?: string;
+  contentClassName?: string;
 }) {
   return (
     <section
@@ -49,7 +47,9 @@ function SlideShell({
         className,
       )}
     >
-      <div className="mx-auto w-full max-w-4xl">{children}</div>
+      <div className={cn("mx-auto w-full max-w-4xl", contentClassName)}>
+        {children}
+      </div>
     </section>
   );
 }
@@ -70,7 +70,7 @@ function SlideHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function DeckView({ contacts }: { contacts: DeckContacts }) {
+export function DeckView() {
   const copy = deckCopy;
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -130,10 +130,7 @@ export function DeckView({ contacts }: { contacts: DeckContacts }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [active, scrollToIndex]);
 
-  const hasContacts =
-    Boolean(contacts.phone) ||
-    Boolean(contacts.email) ||
-    Boolean(contacts.telegramUrl);
+  const offerActive = active === SLIDE_IDS.indexOf("offer");
 
   return (
     <div className="relative bg-white text-ink">
@@ -183,84 +180,135 @@ export function DeckView({ contacts }: { contacts: DeckContacts }) {
           </ul>
         </SlideShell>
 
-        <SlideShell id="how">
+        <SlideShell id="how" contentClassName="max-w-5xl">
           <Eyebrow>{copy.how.eyebrow}</Eyebrow>
           <SlideHeading>{copy.how.heading}</SlideHeading>
-          <ol className="mt-8 m-0 grid list-none gap-4 p-0 sm:grid-cols-2">
-            {copy.how.steps.map((step, i) => (
-              <li
-                key={step.title}
-                className="rounded-xl border border-ink/10 p-4 sm:p-5"
-              >
-                <p className="m-0 text-xs font-semibold tabular-nums text-ink/40">
-                  {String(i + 1).padStart(2, "0")}
-                </p>
-                <p className="m-0 mt-2 font-semibold text-ink">{step.title}</p>
-                <p className="m-0 mt-1.5 text-sm leading-snug text-ink/65">
-                  {step.text}
-                </p>
-              </li>
-            ))}
-          </ol>
+          <DeckHowDemo
+            steps={copy.how.steps}
+            demo={copy.how.demo}
+            active={active === SLIDE_IDS.indexOf("how")}
+          />
         </SlideShell>
 
-        <SlideShell id="why">
+        <SlideShell id="why" contentClassName="max-w-5xl">
           <Eyebrow>{copy.why.eyebrow}</Eyebrow>
           <SlideHeading>{copy.why.heading}</SlideHeading>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {copy.why.against.map((line) => (
-              <p
-                key={line}
-                className="m-0 rounded-xl bg-ink/[0.04] px-4 py-3 text-sm leading-snug text-ink/60"
-              >
-                {line}
-              </p>
-            ))}
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-ink/10">
+            <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+              <thead>
+                <tr className="border-b border-ink/10 bg-surface-muted/80">
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-xs font-semibold uppercase tracking-[0.06em] text-ink/45 sm:px-4"
+                  >
+                    Параметр
+                  </th>
+                  {copy.why.columns.map((col, i) => (
+                    <th
+                      key={col}
+                      scope="col"
+                      className={cn(
+                        "px-2 py-3 text-center text-xs font-semibold sm:px-3",
+                        i === 0
+                          ? "bg-lime/60 text-ink"
+                          : "text-ink/70",
+                      )}
+                    >
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {copy.why.rows.map((row) => (
+                  <tr
+                    key={row.label}
+                    className="border-b border-ink/10 last:border-b-0"
+                  >
+                    <th
+                      scope="row"
+                      className="max-w-[14rem] px-3 py-2.5 text-left text-[0.8125rem] font-medium leading-snug text-ink sm:px-4 sm:text-sm"
+                    >
+                      {row.label}
+                    </th>
+                    {row.values.map((value, i) => (
+                      <td
+                        key={`${row.label}-${i}`}
+                        className={cn(
+                          "px-2 py-2.5 text-center sm:px-3",
+                          i === 0 && "bg-lime/25",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "inline-flex min-w-[1.5rem] items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-semibold",
+                            value === "yes" && "bg-ink text-white",
+                            value === "partial" &&
+                              "bg-ink/10 text-ink/70",
+                            value === "no" && "text-ink/30",
+                          )}
+                          title={
+                            value === "yes"
+                              ? copy.why.legendYes
+                              : value === "partial"
+                                ? copy.why.legendPartial
+                                : copy.why.legendNo
+                          }
+                        >
+                          {value === "yes"
+                            ? "✓"
+                            : value === "partial"
+                              ? "~"
+                              : "—"}
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <ul className="mt-6 m-0 list-none space-y-2.5 p-0">
-            {copy.why.points.map((point) => (
-              <li
-                key={point}
-                className="flex gap-3 text-sm leading-snug text-ink"
-              >
-                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-ink" />
-                {point}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-3 m-0 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink/45">
+            <span>✓ {copy.why.legendYes}</span>
+            <span>~ {copy.why.legendPartial}</span>
+            <span>— {copy.why.legendNo}</span>
+          </p>
+          <p className="mt-2 m-0 text-xs leading-relaxed text-ink/40">
+            {copy.why.footnote}
+          </p>
         </SlideShell>
 
-        <SlideShell id="business">
+        <SlideShell
+          id="business"
+          contentClassName="max-w-5xl"
+          className="justify-start overflow-y-auto py-12 sm:justify-center sm:py-14"
+        >
           <Eyebrow>{copy.business.eyebrow}</Eyebrow>
           <SlideHeading>{copy.business.heading}</SlideHeading>
-          <ul className="mt-8 m-0 list-none space-y-3 p-0">
-            {copy.business.points.map((point) => (
-              <li
-                key={point}
-                className="rounded-xl border border-ink/10 px-4 py-3.5 text-sm leading-snug text-ink sm:px-5"
-              >
-                {point}
-              </li>
-            ))}
-          </ul>
+          <DeckBusinessModel
+            actors={copy.business.actors}
+            flows={copy.business.flows}
+            moneyTitle={copy.business.moneyTitle}
+            moneySources={copy.business.moneySources}
+            satisfactionTitle={copy.business.satisfactionTitle}
+            satisfactionSteps={copy.business.satisfactionSteps}
+            legend={copy.business.legend}
+            footnote={copy.business.footnote}
+          />
         </SlideShell>
 
-        <SlideShell id="gtm">
+        <SlideShell
+          id="gtm"
+          contentClassName="max-w-5xl"
+          className="justify-start overflow-y-auto py-12 sm:justify-center sm:py-14"
+        >
           <Eyebrow>{copy.gtm.eyebrow}</Eyebrow>
           <SlideHeading>{copy.gtm.heading}</SlideHeading>
-          <ul className="mt-8 m-0 grid list-none gap-3 p-0 sm:grid-cols-2">
-            {copy.gtm.points.map((point, i) => (
-              <li
-                key={point}
-                className="rounded-xl bg-lime/40 px-4 py-4 text-sm leading-snug text-ink sm:px-5"
-              >
-                <span className="block text-xs font-semibold tabular-nums text-ink/40">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="mt-2 block">{point}</span>
-              </li>
-            ))}
-          </ul>
+          <DeckGtmPlan
+            lead={copy.gtm.lead}
+            stages={copy.gtm.stages}
+            footnote={copy.gtm.footnote}
+          />
         </SlideShell>
 
         <SlideShell id="team">
@@ -279,78 +327,16 @@ export function DeckView({ contacts }: { contacts: DeckContacts }) {
           </ul>
         </SlideShell>
 
-        <SlideShell id="offer">
-          <Eyebrow>{copy.offer.eyebrow}</Eyebrow>
-          <SlideHeading>{copy.offer.heading}</SlideHeading>
-          <ul className="mt-6 m-0 list-none space-y-2.5 p-0">
-            {copy.offer.offers.map((offer) => (
-              <li
-                key={offer}
-                className="flex gap-3 text-sm leading-snug text-ink sm:text-[0.9375rem]"
-              >
-                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-ink" />
-                {offer}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8 border-t border-ink/10 pt-6">
-            <p className="m-0 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
-              {copy.offer.contactsLabel}
-            </p>
-            {hasContacts ? (
-              <ul className="mt-3 m-0 list-none space-y-1.5 p-0 text-sm text-ink">
-                {contacts.phone ? (
-                  <li>
-                    <a
-                      href={`tel:${contacts.phone.replace(/\s/g, "")}`}
-                      className="text-ink underline-offset-2 hover:underline"
-                    >
-                      {contacts.phone}
-                    </a>
-                  </li>
-                ) : null}
-                {contacts.email ? (
-                  <li>
-                    <a
-                      href={`mailto:${contacts.email}`}
-                      className="text-ink underline-offset-2 hover:underline"
-                    >
-                      {contacts.email}
-                    </a>
-                  </li>
-                ) : null}
-                {contacts.telegramUrl ? (
-                  <li>
-                    <a
-                      href={contacts.telegramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-ink underline-offset-2 hover:underline"
-                    >
-                      Telegram
-                    </a>
-                  </li>
-                ) : null}
-              </ul>
-            ) : (
-              <p className="mt-3 m-0 text-sm text-ink/55">
-                {copy.offer.contactsFallback}
-              </p>
-            )}
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button href="/check/" variant="primary">
-                {copy.offer.ctaCheck}
-              </Button>
-              <Button href="/contacts/" variant="secondary">
-                {copy.offer.ctaContacts}
-              </Button>
-            </div>
-            <p className="mt-8 m-0 font-display text-xl font-semibold tracking-tight text-ink">
-              <Link href="/" className="text-ink no-underline">
-                {copy.brand}
-              </Link>
-            </p>
-          </div>
+        <SlideShell
+          id="offer"
+          contentClassName="max-w-5xl"
+          className="justify-start overflow-y-auto bg-[#171917] py-12 text-white sm:justify-center sm:py-14"
+        >
+          <DeckOfferSlide
+            heading={copy.offer.heading}
+            items={copy.offer.items}
+            contact={copy.offer.contact}
+          />
         </SlideShell>
       </div>
 
@@ -366,7 +352,13 @@ export function DeckView({ contacts }: { contacts: DeckContacts }) {
             aria-current={active === i ? "true" : undefined}
             className={cn(
               "pointer-events-auto size-2 rounded-full transition",
-              active === i ? "bg-ink scale-125" : "bg-ink/25 hover:bg-ink/50",
+              active === i
+                ? offerActive
+                  ? "scale-125 bg-lime"
+                  : "scale-125 bg-ink"
+                : offerActive
+                  ? "bg-white/35 hover:bg-white/60"
+                  : "bg-ink/25 hover:bg-ink/50",
             )}
             onClick={() => scrollToIndex(i)}
           />
@@ -378,7 +370,12 @@ export function DeckView({ contacts }: { contacts: DeckContacts }) {
           type="button"
           aria-label="Предыдущий слайд"
           disabled={active === 0}
-          className="pointer-events-auto flex size-9 items-center justify-center rounded-full border border-ink/15 bg-white/90 text-sm text-ink shadow-sm disabled:opacity-30"
+          className={cn(
+            "pointer-events-auto flex size-9 items-center justify-center rounded-full border text-sm shadow-sm disabled:opacity-30",
+            offerActive
+              ? "border-white/20 bg-[#222622]/90 text-white"
+              : "border-ink/15 bg-white/90 text-ink",
+          )}
           onClick={() => scrollToIndex(active - 1)}
         >
           ↑
@@ -387,7 +384,12 @@ export function DeckView({ contacts }: { contacts: DeckContacts }) {
           type="button"
           aria-label="Следующий слайд"
           disabled={active === SLIDE_IDS.length - 1}
-          className="pointer-events-auto flex size-9 items-center justify-center rounded-full border border-ink/15 bg-white/90 text-sm text-ink shadow-sm disabled:opacity-30"
+          className={cn(
+            "pointer-events-auto flex size-9 items-center justify-center rounded-full border text-sm shadow-sm disabled:opacity-30",
+            offerActive
+              ? "border-white/20 bg-[#222622]/90 text-white"
+              : "border-ink/15 bg-white/90 text-ink",
+          )}
           onClick={() => scrollToIndex(active + 1)}
         >
           ↓

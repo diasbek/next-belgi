@@ -242,6 +242,7 @@ export function TrademarkReportView({
                 disclaimer: copy.report.assessmentDisclaimer,
                 showCalculator: copy.report.showCalculator,
                 hideCalculator: copy.report.hideCalculator,
+                resetCalculator: copy.report.resetCalculator,
                 legendPoor: copy.report.legendPoor,
                 legendNeeds: copy.report.legendNeeds,
                 legendGood: copy.report.legendGood,

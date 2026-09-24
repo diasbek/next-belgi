@@ -331,6 +331,7 @@ export const uzCopy: SiteCopy = {
       "Oʻxshashlik va Nice sinflariga asoslangan orientir, yuridik xulosa emas.",
     showCalculator: "Kalkulyatorni koʻrsatish",
     hideCalculator: "Kalkulyatorni yashirish",
+    resetCalculator: "Qayta tiklash",
     legendPoor: "0–49",
     legendNeeds: "50–89",
     legendGood: "90–100",

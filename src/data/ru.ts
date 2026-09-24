@@ -331,6 +331,7 @@ export const ruCopy: SiteCopy = {
       "Ориентир на основе сходства и классов Nice, не юридическое заключение.",
     showCalculator: "Показать калькулятор",
     hideCalculator: "Скрыть калькулятор",
+    resetCalculator: "Сбросить",
     legendPoor: "0–49",
     legendNeeds: "50–89",
     legendGood: "90–100",

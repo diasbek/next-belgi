@@ -14,6 +14,7 @@ export type ScoreGaugeLabels = {
   disclaimer: string;
   showCalculator: string;
   hideCalculator: string;
+  resetCalculator: string;
   legendPoor: string;
   legendNeeds: string;
   legendGood: string;
@@ -473,7 +474,47 @@ export function RegistrationScoreGauge({
 }) {
   const [openCalc, setOpenCalc] = useState(false);
   const calcId = useId();
-  const tone = toneOf(assessment.score);
+  const [draftScores, setDraftScores] = useState<Record<AssessmentMetricId, number>>(
+    () =>
+      Object.fromEntries(
+        assessment.metrics.map((m) => [m.id, m.score]),
+      ) as Record<AssessmentMetricId, number>,
+  );
+
+  // Sync drafts when a new report assessment arrives
+  const metricsKey = assessment.metrics
+    .map((m) => `${m.id}:${m.score}`)
+    .join(",");
+  useEffect(() => {
+    setDraftScores(
+      Object.fromEntries(
+        assessment.metrics.map((m) => [m.id, m.score]),
+      ) as Record<AssessmentMetricId, number>,
+    );
+  }, [metricsKey, assessment.metrics]);
+
+  const liveMetrics: AssessmentMetric[] = assessment.metrics.map((m) => {
+    const score = Math.max(
+      0,
+      Math.min(100, Math.round(draftScores[m.id] ?? m.score)),
+    );
+    return {
+      ...m,
+      score,
+      tone: toneOf(score),
+    };
+  });
+  const liveScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(liveMetrics.reduce((sum, m) => sum + m.weight * m.score, 0)),
+    ),
+  );
+  const tone = toneOf(liveScore);
+  const dirty = liveMetrics.some(
+    (m, i) => m.score !== assessment.metrics[i]?.score,
+  );
 
   return (
     <div className="mt-4 sm:mt-5">
@@ -484,8 +525,8 @@ export function RegistrationScoreGauge({
         )}
       >
         <ExplodeyGauge
-          score={assessment.score}
-          metrics={assessment.metrics}
+          score={liveScore}
+          metrics={liveMetrics}
           size={compact ? 176 : 220}
           compact={compact}
         />
@@ -538,7 +579,8 @@ export function RegistrationScoreGauge({
             className="m-0 mt-2 text-xs font-medium tabular-nums"
             style={{ color: toneColor(tone) }}
           >
-            {assessment.score}/100
+            {liveScore}/100
+            {dirty ? " *" : ""}
           </p>
         </div>
       </div>
@@ -569,13 +611,30 @@ export function RegistrationScoreGauge({
           id={calcId}
           className="mt-3 overflow-x-auto rounded-xl border border-border bg-white"
         >
-          <table className="w-full min-w-[280px] border-collapse text-left text-xs">
+          <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2">
+            <p className="m-0 text-xs font-medium text-ink-muted">
+              {labels.showCalculator}
+            </p>
+            <button
+              type="button"
+              className="text-xs font-medium text-[#1a73e8] underline-offset-2 hover:underline disabled:opacity-40"
+              disabled={!dirty}
+              onClick={() =>
+                setDraftScores(
+                  Object.fromEntries(
+                    assessment.metrics.map((m) => [m.id, m.score]),
+                  ) as Record<AssessmentMetricId, number>,
+                )
+              }
+            >
+              {labels.resetCalculator}
+            </button>
+          </div>
+          <table className="w-full min-w-[320px] border-collapse text-left text-xs">
             <thead>
               <tr className="border-b border-border text-ink-muted">
                 <th className="px-3 py-2 font-medium">{labels.metricLabel}</th>
-                <th className="px-3 py-2 font-medium tabular-nums">
-                  {labels.scoreLabel}
-                </th>
+                <th className="px-3 py-2 font-medium">{labels.scoreLabel}</th>
                 <th className="px-3 py-2 font-medium">{labels.weightLabel}</th>
                 <th className="px-3 py-2 font-medium">
                   {labels.contributionLabel}
@@ -583,12 +642,12 @@ export function RegistrationScoreGauge({
               </tr>
             </thead>
             <tbody>
-              {assessment.metrics.map((m) => (
+              {liveMetrics.map((m) => (
                 <tr
                   key={m.id}
                   className="border-b border-border/60 last:border-0"
                 >
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-2.5 align-middle">
                     <span
                       className="mr-1.5 inline-block size-1.5 rounded-full align-middle"
                       style={{ background: toneColor(m.tone) }}
@@ -598,11 +657,33 @@ export function RegistrationScoreGauge({
                       {labels.metricNames[m.id]}
                     </span>
                   </td>
-                  <td className="px-3 py-2 tabular-nums">{m.score}</td>
-                  <td className="px-3 py-2 tabular-nums">
+                  <td className="px-3 py-2.5 align-middle">
+                    <div className="flex min-w-[9rem] items-center gap-2">
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={m.score}
+                        aria-label={`${m.id} ${labels.scoreLabel}`}
+                        className="h-1.5 w-full accent-[var(--color-primary)]"
+                        onChange={(e) => {
+                          const next = Number(e.target.value);
+                          setDraftScores((prev) => ({
+                            ...prev,
+                            [m.id]: next,
+                          }));
+                        }}
+                      />
+                      <span className="w-7 shrink-0 tabular-nums text-right font-medium">
+                        {m.score}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-3 py-2.5 tabular-nums align-middle">
                     {Math.round(m.weight * 100)}%
                   </td>
-                  <td className="px-3 py-2 tabular-nums font-medium">
+                  <td className="px-3 py-2.5 tabular-nums font-medium align-middle">
                     {Math.round(m.weight * m.score)}
                   </td>
                 </tr>
@@ -611,7 +692,12 @@ export function RegistrationScoreGauge({
                 <td className="px-3 py-2" colSpan={3}>
                   Σ
                 </td>
-                <td className="px-3 py-2 tabular-nums">{assessment.score}</td>
+                <td
+                  className="px-3 py-2 tabular-nums"
+                  style={{ color: toneColor(tone) }}
+                >
+                  {liveScore}
+                </td>
               </tr>
             </tbody>
           </table>

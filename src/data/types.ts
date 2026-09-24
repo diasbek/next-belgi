@@ -217,6 +217,7 @@ export interface SiteCopy {
     assessmentDisclaimer: string;
     showCalculator: string;
     hideCalculator: string;
+    resetCalculator: string;
     legendPoor: string;
     legendNeeds: string;
     legendGood: string;

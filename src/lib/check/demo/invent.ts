@@ -39,10 +39,27 @@ function asMatchList(value: unknown): InventedMatch[] {
   return Array.isArray(value) ? (value as InventedMatch[]) : [];
 }
 
+/** Stable per-query demo outlook — ~35% clear (high score), ~20% caution, rest conflict. */
+export type DemoOutlook = "clear" | "caution" | "conflict";
+
+export function demoOutlookForQuery(query: string): DemoOutlook {
+  const s = query.trim().toLowerCase() || "mark";
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  const bucket = (h >>> 0) % 100;
+  if (bucket < 35) return "clear";
+  if (bucket < 55) return "caution";
+  return "conflict";
+}
+
 function fallbackMatches(
   query: string,
   jurisdictions: JurisdictionCode[],
   niceClasses: number[] = [],
+  outlook: DemoOutlook = "conflict",
 ): InventedPayload {
   const q = query.trim() || "Mark";
   const upper = q.toUpperCase();
@@ -52,6 +69,101 @@ function fallbackMatches(
       : [35, 25, 3];
   const fmt = (n: number, label: string) =>
     `[${String(n).padStart(2, "0")}] ${label}`;
+
+  // Distant / weak hits → registration score in the green zone (90+)
+  if (outlook === "clear") {
+    const other =
+      classes.find((c) => c !== classes[0]) ??
+      (classes[0] === 35 ? 25 : 35);
+    const uz: InventedMatch[] = [
+      {
+        name: `${upper.slice(0, 2)}ORA`,
+        owner: 'OOO "DEMO CLEAR UZ"',
+        status: "Registered",
+        classesText: fmt(other, "Unrelated goods"),
+        similarity: 14,
+        registeredFrom: "04.05.2019",
+      },
+      {
+        name: `NOVA ${upper.slice(0, 3)}`,
+        owner: 'MChJ "Quiet Brands"',
+        status: "Expired",
+        classesText: fmt(42, "Tech"),
+        similarity: 9,
+        registeredFrom: "11.01.2016",
+      },
+    ];
+    const wipo: InventedMatch[] = [
+      {
+        name: `IR-FAR-${upper.slice(0, 4)}`,
+        owner: "Distant Demo SA",
+        status: "Protected",
+        classesText: "[01] Chemicals",
+        similarity: 11,
+        registeredFrom: "20.08.2018",
+      },
+    ];
+    const blocks: Record<string, InventedMatch[]> = {};
+    for (const code of jurisdictions) {
+      if (code === "uz" || code === "wipo") continue;
+      blocks[code] = [
+        {
+          name: `AXON ${code.toUpperCase()}`,
+          owner: `Clear Demo ${code.toUpperCase()}`,
+          status: "Registered",
+          classesText: fmt(other, "Services"),
+          similarity: 12,
+        },
+      ];
+    }
+    return { uz, wipo, blocks };
+  }
+
+  // Mid conflict → orange zone
+  if (outlook === "caution") {
+    const uz: InventedMatch[] = [
+      {
+        name: `${upper.slice(0, Math.min(4, upper.length))}X`,
+        owner: 'OOO "DEMO MID UZ"',
+        status: "Pending",
+        classesText: fmt(classes[0]!, "Goods/services"),
+        similarity: 48,
+        registeredFrom: "09.04.2023",
+      },
+      {
+        name: `${q} LAB`,
+        owner: 'MChJ "Demo Soft"',
+        status: "Published",
+        classesText: fmt(classes[1] ?? classes[0]!, "Related"),
+        similarity: 36,
+        registeredFrom: "14.10.2022",
+      },
+    ];
+    const wipo: InventedMatch[] = [
+      {
+        name: `IR-${upper.slice(0, 6)}`,
+        owner: "Madrid Soft SA",
+        status: "Designated",
+        classesText: fmt(classes[0]!, "International"),
+        similarity: 41,
+        registeredFrom: "02.07.2021",
+      },
+    ];
+    const blocks: Record<string, InventedMatch[]> = {};
+    for (const code of jurisdictions) {
+      if (code === "uz" || code === "wipo") continue;
+      blocks[code] = [
+        {
+          name: `${q} ${code.toUpperCase()}`,
+          owner: `Demo Owner ${code.toUpperCase()}`,
+          status: "Published",
+          classesText: fmt(classes[0]!, "Services"),
+          similarity: 38,
+        },
+      ];
+    }
+    return { uz, wipo, blocks };
+  }
 
   const uz: InventedMatch[] = [
     {
@@ -140,8 +252,9 @@ function ensureLocalHits(
   query: string,
   jurisdictions: JurisdictionCode[],
   niceClasses: number[] = [],
+  outlook: DemoOutlook = "conflict",
 ): InventedPayload {
-  const fallback = fallbackMatches(query, jurisdictions, niceClasses);
+  const fallback = fallbackMatches(query, jurisdictions, niceClasses, outlook);
   return {
     uz: invented.uz.length > 0 ? invented.uz : fallback.uz,
     wipo: invented.wipo.length > 0 ? invented.wipo : fallback.wipo,
@@ -222,6 +335,7 @@ async function inventWithOpenAi(params: {
   niceClasses: number[];
   jurisdictions: JurisdictionCode[];
   locale: Locale;
+  outlook: DemoOutlook;
 }): Promise<InventedPayload | null> {
   const cfg = await getIntegration("openai");
   if (!cfg?.api_key || (cfg.mode || "mock") === "mock") return null;
@@ -230,6 +344,13 @@ async function inventWithOpenAi(params: {
   const external = params.jurisdictions.filter(
     (j) => j !== "uz" && j !== "wipo",
   );
+
+  const outlookHint =
+    params.outlook === "clear"
+      ? "OUTLOOK=clear: invent only WEAK distant hits (similarity 5-20), different Nice classes from niceClasses, no near-identical names. Goal: high registration chance."
+      : params.outlook === "caution"
+        ? "OUTLOOK=caution: invent moderate hits (similarity 35-55), limited class overlap. Goal: mixed/orange registration outlook."
+        : "OUTLOOK=conflict: At least one uz hit MUST use a Nice class from niceClasses with similarity >= 80 (name conflict in same class). Include 1-2 hits without class overlap with lower similarity.";
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -255,10 +376,8 @@ async function inventWithOpenAi(params: {
               "uz = national Uzbekistan (Adliya) registry hits — ALWAYS 2-4 items, never empty.",
               "wipo = Madrid/WIPO international registrations designating UZ — ALWAYS 2-4 items, never empty.",
               "Each hit: name, owner, status, classesText, similarity (1-99), registeredFrom (optional date string).",
-              "At least one uz hit MUST use a Nice class from niceClasses with similarity >= 80 (name conflict in same class).",
-              "Include 1-2 hits without class overlap (different Nice class) with lower similarity.",
-              "For each requested external jurisdiction in blocks return 2-3 hits.",
-              "Names should be phonetically or visually similar to the query.",
+              outlookHint,
+              "For each requested external jurisdiction in blocks return 1-3 hits.",
             ].join(" "),
           },
           {
@@ -268,6 +387,7 @@ async function inventWithOpenAi(params: {
               query: params.query,
               activity: params.activity,
               niceClasses: params.niceClasses,
+              outlook: params.outlook,
               requiredLocal: ["uz", "wipo"],
               externalJurisdictions: external,
             }),
@@ -296,11 +416,14 @@ async function inventWithOpenAi(params: {
 export type DemoSearchBundle = {
   matches: TrademarkMatch[];
   externalBlocks: ExternalBlockInput[];
+  /** Deterministic demo outlook used for this query */
+  outlook: DemoOutlook;
 };
 
 /**
  * Invent multi-jurisdiction matches + wordmark images for Demo Mode.
  * Adliya (uz) and Madrid (wipo) are always filled — never empty.
+ * Sometimes (stable per query) invents a clear / high-score scenario.
  */
 export async function buildDemoSearchBundle(params: {
   query: string;
@@ -310,12 +433,14 @@ export async function buildDemoSearchBundle(params: {
   locale: Locale;
 }): Promise<DemoSearchBundle> {
   const q = params.query.trim();
+  const outlook = demoOutlookForQuery(q);
   const invented = ensureLocalHits(
-    (await inventWithOpenAi(params)) ??
-      fallbackMatches(q, params.jurisdictions, params.niceClasses),
+    (await inventWithOpenAi({ ...params, outlook })) ??
+      fallbackMatches(q, params.jurisdictions, params.niceClasses, outlook),
     q,
     params.jurisdictions,
     params.niceClasses,
+    outlook,
   );
 
   const matches: TrademarkMatch[] = [
@@ -328,7 +453,9 @@ export async function buildDemoSearchBundle(params: {
   for (const code of params.jurisdictions) {
     if (code === "uz" || code === "wipo") continue;
     const rows = invented.blocks[code] || [];
-    const fallbackExt = fallbackMatches(q, [code]).blocks[code] || [];
+    const fallbackExt =
+      fallbackMatches(q, [code], params.niceClasses, outlook).blocks[code] ||
+      [];
     const filled = rows.length > 0 ? rows : fallbackExt;
     const label = SOURCE_LABEL[code] || code.toUpperCase();
     externalBlocks.push({
@@ -340,5 +467,5 @@ export async function buildDemoSearchBundle(params: {
     });
   }
 
-  return { matches, externalBlocks };
+  return { matches, externalBlocks, outlook };
 }

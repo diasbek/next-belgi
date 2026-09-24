@@ -331,6 +331,7 @@ export const enCopy: SiteCopy = {
       "Indicative score from similarity and Nice classes — not a legal opinion.",
     showCalculator: "Show calculator",
     hideCalculator: "Hide calculator",
+    resetCalculator: "Reset",
     legendPoor: "0–49",
     legendNeeds: "50–89",
     legendGood: "90–100",

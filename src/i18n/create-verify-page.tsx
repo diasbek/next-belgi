@@ -51,8 +51,8 @@ export function createVerifyPage(locale: Locale) {
         </main>
         <footer className="border-t border-border px-4 py-6 sm:px-6">
           <PageContainer>
-            <p className="m-0 text-center text-xs leading-relaxed text-ink-muted">
-              {conclusion.disclaimer}
+            <p className="m-0 mx-auto max-w-xl text-center text-xs leading-relaxed text-ink-muted">
+              {conclusion.verifyFooterNote}
             </p>
           </PageContainer>
         </footer>

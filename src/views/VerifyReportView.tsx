@@ -7,6 +7,39 @@ import type { VerifyResponse } from "@/lib/conclusion/types";
 import { ConclusionPdfButton } from "@/components/pdf/conclusion/ConclusionPdfButton";
 import { cn } from "@/lib/cn";
 
+function uniqueDates(...values: Array<string | undefined>): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of values) {
+    const v = raw?.trim();
+    if (!v) continue;
+    const key = v.replace(/\s+/g, " ").toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(v);
+  }
+  return out;
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="grid gap-1 border-b border-ink/10 py-3 last:border-b-0 sm:grid-cols-[9.5rem_minmax(0,1fr)] sm:gap-4 sm:py-3.5">
+      <dt className="text-xs font-medium uppercase tracking-[0.04em] text-ink-muted sm:pt-0.5">
+        {label}
+      </dt>
+      <dd className="m-0 min-w-0 text-sm leading-snug text-ink sm:text-[0.9375rem]">
+        {children}
+      </dd>
+    </div>
+  );
+}
+
 export function VerifyReportView({
   locale,
   code,
@@ -43,93 +76,133 @@ export function VerifyReportView({
       : status === "revoked"
         ? copy.verifyRevoked
         : copy.verifyNotFound;
+  const dates = uniqueDates(data?.issuedAt, data?.reportAt);
+  const classes = data?.subject?.niceClasses ?? [];
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto w-full max-w-xl">
       <p className="m-0 text-sm font-medium text-ink-muted">{copy.agencyName}</p>
       <h1 className="m-0 mt-2 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
         {copy.verifyPageTitle}
       </h1>
-      <p className="mt-2 font-mono text-sm tracking-wider text-ink-muted">
+      <p className="mt-2 font-mono text-sm tracking-[0.14em] text-ink/55">
         {code.toUpperCase()}
       </p>
 
       {loading ? (
-        <p className="mt-8 text-ink-muted" aria-live="polite">
-          {copy.verifyPageTitle}…
+        <p className="mt-10 text-sm text-ink-muted" aria-live="polite">
+          {copy.verifyLoading}
         </p>
       ) : (
-        <div
+        <article
           className={cn(
-            "mt-8 rounded-2xl border px-5 py-5",
+            "mt-8 overflow-hidden rounded-2xl border",
             status === "valid"
-              ? "border-lime bg-row-selected"
+              ? "border-ink/10 bg-[#f7fbe9]"
               : "border-border bg-surface-muted",
           )}
         >
-          <p
+          <div
             className={cn(
-              "m-0 text-lg font-semibold",
-              status === "valid" ? "text-ink" : "text-ink-muted",
+              "flex items-start gap-3 border-b px-5 py-4 sm:px-6",
+              status === "valid" ? "border-ink/10" : "border-border",
             )}
           >
-            {statusLabel}
-          </p>
+            <span
+              className={cn(
+                "mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
+                status === "valid"
+                  ? "bg-ink text-white"
+                  : "bg-ink/15 text-ink-muted",
+              )}
+              aria-hidden
+            >
+              {status === "valid" ? "✓" : "!"}
+            </span>
+            <div className="min-w-0">
+              <p
+                className={cn(
+                  "m-0 text-base font-semibold sm:text-lg",
+                  status === "valid" ? "text-ink" : "text-ink-muted",
+                )}
+              >
+                {statusLabel}
+              </p>
+              {status === "valid" ? (
+                <p className="m-0 mt-1 text-xs leading-relaxed text-ink/60">
+                  {copy.verifyValidHint}
+                </p>
+              ) : null}
+            </div>
+          </div>
 
           {status === "valid" && data ? (
-            <dl className="mt-4 space-y-3 text-sm">
+            <dl className="m-0 px-5 sm:px-6">
               {data.docNumber ? (
-                <div>
-                  <dt className="text-ink-muted">{copy.verifyDocNumber}</dt>
-                  <dd className="m-0 mt-0.5 font-medium text-ink">
+                <Field label={copy.verifyDocNumber}>
+                  <span className="font-mono text-[0.8125rem] tracking-wide">
                     {data.docNumber}
-                  </dd>
-                </div>
+                  </span>
+                </Field>
               ) : null}
+
               {data.subject?.mark ? (
-                <div>
-                  <dt className="text-ink-muted">{copy.markLabel}</dt>
-                  <dd className="m-0 mt-0.5 font-medium text-ink">
-                    {data.subject.mark}
-                    {data.subject.niceClasses?.length
-                      ? ` · ${copy.classLabel} ${data.subject.niceClasses.join(", ")}`
-                      : null}
-                  </dd>
-                </div>
+                <Field label={copy.markLabel}>
+                  <span className="font-semibold">{data.subject.mark}</span>
+                  {data.subject.markType ? (
+                    <span className="mt-0.5 block text-xs text-ink-muted">
+                      {data.subject.markType}
+                    </span>
+                  ) : null}
+                </Field>
               ) : null}
-              {data.issuedAt || data.reportAt ? (
-                <div>
-                  <dt className="text-ink-muted">{copy.reportLabel}</dt>
-                  <dd className="m-0 mt-0.5 text-ink">
-                    {[data.issuedAt, data.reportAt].filter(Boolean).join(" / ")}
-                  </dd>
-                </div>
-              ) : null}
-              {data.verdict?.length ? (
-                <div>
-                  <dt className="text-ink-muted">{copy.verdictTitle}</dt>
-                  <dd className="m-0 mt-1 space-y-1 text-ink">
-                    {data.verdict.map((v) => (
-                      <p key={v.classNumber} className="m-0">
-                        {copy.classLabel} {v.classNumber} — {v.chanceLabel}
-                      </p>
+
+              {classes.length > 0 ? (
+                <Field label={copy.verifyClassesLabel}>
+                  <div className="flex flex-wrap gap-1.5">
+                    {classes.map((n) => (
+                      <span
+                        key={n}
+                        className="inline-flex rounded-md bg-white/80 px-2 py-0.5 text-xs font-semibold tabular-nums text-ink ring-1 ring-ink/10"
+                      >
+                        {copy.classLabel} {n}
+                      </span>
                     ))}
-                  </dd>
-                </div>
+                  </div>
+                </Field>
               ) : null}
-              {data.hashPrefix ? (
-                <div>
-                  <dt className="text-ink-muted">{copy.verifyHash}</dt>
-                  <dd className="m-0 mt-0.5 font-mono text-xs text-ink-muted">
-                    {data.hashPrefix}…
-                  </dd>
-                </div>
+
+              {dates.length > 0 ? (
+                <Field label={copy.reportLabel}>{dates[0]}</Field>
+              ) : null}
+
+              {data.verdict?.length ? (
+                <Field label={copy.verifyChanceLabel}>
+                  <ul className="m-0 list-none space-y-2 p-0">
+                    {data.verdict.map((v) => (
+                      <li
+                        key={v.classNumber}
+                        className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
+                      >
+                        <span className="text-ink-muted">
+                          {copy.classLabel} {v.classNumber}
+                        </span>
+                        <span className="font-semibold tabular-nums text-ink">
+                          {v.chanceLabel}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="m-0 mt-2 text-xs leading-relaxed text-ink/55">
+                    {copy.verifyChanceHint}
+                  </p>
+                </Field>
               ) : null}
             </dl>
           ) : null}
 
           {status === "valid" && data?.conclusion ? (
-            <div className="mt-5">
+            <div className="border-t border-ink/10 px-5 py-4 sm:px-6">
               <ConclusionPdfButton
                 locale={locale}
                 conclusion={data.conclusion}
@@ -137,7 +210,13 @@ export function VerifyReportView({
               />
             </div>
           ) : null}
-        </div>
+
+          {status === "valid" && data?.hashPrefix ? (
+            <p className="m-0 border-t border-ink/10 px-5 py-3 font-mono text-[0.6875rem] tracking-wide text-ink/40 sm:px-6">
+              {copy.verifyHash} {data.hashPrefix}
+            </p>
+          ) : null}
+        </article>
       )}
     </div>
   );

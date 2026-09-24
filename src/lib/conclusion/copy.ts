@@ -34,14 +34,20 @@ export type ConclusionCopy = {
   previewWatermark: string;
   verifyPageTitle: string;
   verifyValid: string;
+  verifyValidHint: string;
   verifyNotFound: string;
   verifyRevoked: string;
   verifyDocNumber: string;
   verifyHash: string;
+  verifyClassesLabel: string;
+  verifyChanceLabel: string;
+  verifyChanceHint: string;
+  verifyLoading: string;
+  verifyFooterNote: string;
 };
 
 const uz: ConclusionCopy = {
-  agencyName: "Belgi.ai — trademark search service",
+  agencyName: "Belgi.ai",
   title: "TOVAR BELGISI QIDIRUV XIZMATI HISOBOTI",
   appearanceWord: "so‘zli",
   markLabel: "Belgi",
@@ -82,14 +88,22 @@ const uz: ConclusionCopy = {
   previewWatermark: "PREVIEW",
   verifyPageTitle: "Hisobot haqiqiyligi",
   verifyValid: "Hujjat haqiqiy",
+  verifyValidHint: "Kod Belgi.ai tizimida topildi. Toʻliq matn PDF da.",
   verifyNotFound: "Kod topilmadi",
   verifyRevoked: "Hujjat bekor qilingan",
   verifyDocNumber: "Hujjat raqami",
-  verifyHash: "Hash",
+  verifyHash: "ID",
+  verifyClassesLabel: "Sinflar",
+  verifyChanceLabel: "Roʻyxatga olish ehtimoli",
+  verifyChanceHint:
+    "Axborot bahosi, yuridik xulosa emas. Yakuniy qaror — vakolatli organ nikida.",
+  verifyLoading: "Tekshirilmoqda…",
+  verifyFooterNote:
+    "Hisobot axborot xarakteriga ega va yuridik xulosa emas. Adliya ekspertizasi fikri farq qilishi mumkin.",
 };
 
 const ru: ConclusionCopy = {
-  agencyName: "Belgi.ai — сервис поиска товарных знаков",
+  agencyName: "Belgi.ai",
   title: "ОТЧЁТ ПО ПОИСКУ ТОВАРНОГО ЗНАКА",
   appearanceWord: "словесный",
   markLabel: "Обозначение",
@@ -130,14 +144,22 @@ const ru: ConclusionCopy = {
   previewWatermark: "PREVIEW",
   verifyPageTitle: "Подлинность отчёта",
   verifyValid: "Документ подлинный",
+  verifyValidHint: "Код найден в системе Belgi.ai. Полный текст — в PDF.",
   verifyNotFound: "Код не найден",
   verifyRevoked: "Документ отозван",
   verifyDocNumber: "Номер документа",
-  verifyHash: "Hash",
+  verifyHash: "ID",
+  verifyClassesLabel: "Классы",
+  verifyChanceLabel: "Шанс регистрации",
+  verifyChanceHint:
+    "Информационная оценка, не юридическое заключение. Решение принимает уполномоченный орган.",
+  verifyLoading: "Проверяем…",
+  verifyFooterNote:
+    "Отчёт носит информационный характер и не является юридическим заключением. Мнение экспертизы Минюста может отличаться.",
 };
 
 const en: ConclusionCopy = {
-  agencyName: "Belgi.ai — trademark search service",
+  agencyName: "Belgi.ai",
   title: "TRADEMARK SEARCH REPORT",
   appearanceWord: "word mark",
   markLabel: "Mark",
@@ -178,10 +200,18 @@ const en: ConclusionCopy = {
   previewWatermark: "PREVIEW",
   verifyPageTitle: "Report authenticity",
   verifyValid: "Document is authentic",
+  verifyValidHint: "Code found in Belgi.ai. Full text is in the PDF.",
   verifyNotFound: "Code not found",
   verifyRevoked: "Document revoked",
   verifyDocNumber: "Document number",
-  verifyHash: "Hash",
+  verifyHash: "ID",
+  verifyClassesLabel: "Classes",
+  verifyChanceLabel: "Registration outlook",
+  verifyChanceHint:
+    "Informational estimate, not a legal opinion. The competent authority decides.",
+  verifyLoading: "Checking…",
+  verifyFooterNote:
+    "This report is informational and is not a legal opinion. The Ministry examination may differ.",
 };
 
 export function getConclusionCopy(locale: Locale): ConclusionCopy {

@@ -19,8 +19,9 @@ function formatDate(d: Date, locale: Locale): string {
   const day = String(d.getDate()).padStart(2, "0");
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
+  if (locale === "ru") return `${day}.${month}.${year}`;
   if (locale === "en") return `${day}.${month}.${year}`;
-  return `${day}.${month}.${year} y.`;
+  return `${day}.${month}.${year}`;
 }
 
 function parseNiceClassNumbers(niceClasses: string[]): number[] {

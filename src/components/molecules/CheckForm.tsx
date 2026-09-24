@@ -11,6 +11,7 @@ import { NiceActivityField } from "@/components/molecules/NiceActivityField";
 import { NiceGoodsPicker } from "@/components/molecules/NiceGoodsPicker";
 import { NiceClassesPreview } from "@/components/molecules/NiceClassesPreview";
 import {
+  clearNiceSelection,
   customOptionValue,
   optionsToSelection,
   readNiceSelection,
@@ -53,23 +54,28 @@ type Step = 1 | 2 | 3;
 
 function optionsFromSelectionOrActivity(
   initialActivity: string,
+  opts?: { restoreStored?: boolean },
 ): ActivityOption[] {
-  const stored = typeof window !== "undefined" ? readNiceSelection() : null;
+  const restoreStored = opts?.restoreStored !== false;
+  const stored =
+    restoreStored && typeof window !== "undefined"
+      ? readNiceSelection()
+      : null;
   if (stored && (stored.terms.length > 0 || stored.customText)) {
-    const opts: ActivityOption[] = stored.terms.map((t) => ({
+    const optsList: ActivityOption[] = stored.terms.map((t) => ({
       kind: "term" as const,
       value: t.id,
       label: t.term,
       classNumber: t.classNumber,
     }));
     if (stored.customText?.trim()) {
-      opts.push({
+      optsList.push({
         kind: "custom",
         value: customOptionValue(stored.customText.trim()),
         label: stored.customText.trim(),
       });
     }
-    return opts;
+    return optsList;
   }
   if (!initialActivity.trim() || initialActivity.trim() === "general") {
     return [];
@@ -246,9 +252,19 @@ export function CheckForm({
   const copy = getContent(locale);
   const s = copy.check.stepper;
   const router = useRouter();
+  const isFreshStart = !initialQuery.trim();
   const [query, setQuery] = useState(initialQuery);
-  const [activityOptions, setActivityOptions] = useState<ActivityOption[]>(() =>
-    optionsFromSelectionOrActivity(initialActivity),
+  const [activityOptions, setActivityOptions] = useState<ActivityOption[]>(
+    () => {
+      // Fresh "new check" must not inherit goods/services from the previous run
+      if (isFreshStart) {
+        clearNiceSelection();
+        return optionsFromSelectionOrActivity(initialActivity, {
+          restoreStored: false,
+        });
+      }
+      return optionsFromSelectionOrActivity(initialActivity);
+    },
   );
   const [activitySeed, setActivitySeed] = useState(initialActivity);
   if (initialActivity !== activitySeed) {
@@ -261,7 +277,14 @@ export function CheckForm({
     setQuery(initialQuery);
   }
   const [step, setStep] = useState<Step>(() =>
-    initialStep(initialQuery, optionsFromSelectionOrActivity(initialActivity)),
+    initialStep(
+      initialQuery,
+      isFreshStart
+        ? optionsFromSelectionOrActivity(initialActivity, {
+            restoreStored: false,
+          })
+        : optionsFromSelectionOrActivity(initialActivity),
+    ),
   );
   const [pending, setPending] = useState(false);
   const [jurisdictions, setJurisdictions] = useState<JurisdictionCode[]>(() =>

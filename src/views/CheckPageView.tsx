@@ -18,7 +18,7 @@ import { trackEvent } from "@/lib/analytics/events";
 import {
   checkResumePath,
 } from "@/lib/navigation/safe-next";
-import { readNiceSelection } from "@/lib/nice";
+import { clearNiceSelection, readNiceSelection } from "@/lib/nice";
 import { readJurisdictions } from "@/lib/check/jurisdiction-storage";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
@@ -142,6 +142,8 @@ export function CheckPageView({
         verificationCode: isPreview ? null : (json.verificationCode ?? null),
         conclusion: isPreview ? null : (json.conclusion ?? null),
       });
+      // Drop Nice goods/services so the next check starts with an empty selection
+      clearNiceSelection();
       trackEvent("check_success", {
         source: json.source,
         preview: isPreview,

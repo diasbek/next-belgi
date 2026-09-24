@@ -230,7 +230,8 @@ body {
 
 .psi-gauge__score {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 42px;
+  /* Lighthouse uses radius * 0.625; slightly tighter for breathing room */
+  font-size: calc(var(--psi-radius-inner) * 0.52);
   font-weight: 500;
   transition: opacity 0.3s ease-in;
   pointer-events: none;

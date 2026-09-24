@@ -128,11 +128,9 @@ function envFallback(
       if (!api_key) return null;
       return { mode: silent, api_key };
     }
-    case "ipaustralia": {
-      const api_key = process.env.IPAUSTRALIA_API_KEY?.trim();
-      if (!api_key) return null;
-      return { mode: silent, api_key };
-    }
+    case "ipaustralia":
+      // Secrets only via Admin → Integrations (encrypted in Supabase).
+      return null;
     default:
       return { mode: silent };
   }

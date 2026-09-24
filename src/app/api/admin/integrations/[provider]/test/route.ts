@@ -6,6 +6,7 @@ import {
   isIntegrationProvider,
 } from "@/lib/integrations/types";
 import { testEuipoConnection } from "@/lib/check/external/euipo";
+import { testIpAustraliaConnection } from "@/lib/check/external/ipaustralia";
 import { testEskizConnection } from "@/lib/notifications/eskiz";
 import { testResendConnection } from "@/lib/notifications/resend";
 import { testTelegramConnection } from "@/lib/notifications/telegram";
@@ -67,10 +68,7 @@ export async function POST(_request: Request, ctx: Ctx) {
         const { createRegistryProvider } = await import(
           "@/lib/registry/provider"
         );
-        const token =
-          (cfg as { access_token?: string }).access_token ||
-          process.env.ADLIYA_ACCESS_TOKEN ||
-          "";
+        const token = (cfg as { access_token?: string }).access_token || "";
         if (!token) {
           return NextResponse.json({
             ok: false,
@@ -97,6 +95,8 @@ export async function POST(_request: Request, ctx: Ctx) {
     }
     case "euipo":
       return NextResponse.json(await testEuipoConnection());
+    case "ipaustralia":
+      return NextResponse.json(await testIpAustraliaConnection());
     default:
       return NextResponse.json({ ok: false, error: "unsupported" }, { status: 400 });
   }

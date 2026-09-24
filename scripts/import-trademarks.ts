@@ -9,14 +9,16 @@
  *   npx tsx --env-file=.env.local scripts/import-trademarks.ts --start-page=10
  *
  * Requires:
- *   ADLIYA_ACCESS_TOKEN
+ *   Admin → Integrations → Adliya (access_token in Supabase), OR ADLIYA_ACCESS_TOKEN
  *   NEXT_PUBLIC_SUPABASE_URL
  *   SUPABASE_SERVICE_ROLE_KEY  OR  (anon key + BELGI_IMPORT_SECRET)
+ *   SECRETS_MASTER_KEY (to decrypt Admin secrets)
  */
 
 import { createClient } from "@supabase/supabase-js";
 import { runRegistrySync } from "../src/lib/registry/sync";
 import { createRegistryProvider } from "../src/lib/registry/provider";
+import { getIntegration } from "../src/lib/integrations/store";
 
 function argFlag(name: string): boolean {
   return process.argv.includes(`--${name}`);
@@ -29,11 +31,21 @@ function argValue(name: string): string | undefined {
 }
 
 async function main() {
-  if (!process.env.ADLIYA_ACCESS_TOKEN?.trim()) {
+  const adliya = await getIntegration("adliya");
+  const token =
+    adliya?.access_token?.trim() ||
+    process.env.ADLIYA_ACCESS_TOKEN?.trim() ||
+    "";
+  if (!token) {
     throw new Error(
-      "ADLIYA_ACCESS_TOKEN is required. Log in at https://im.adliya.uz and copy Bearer token.",
+      "Adliya access_token missing. Set it in Admin → Integrations (preferred) or ADLIYA_ACCESS_TOKEN.",
     );
   }
+
+  const apiBase =
+    adliya?.api_base?.trim() ||
+    process.env.ADLIYA_API_BASE?.trim() ||
+    undefined;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   if (!supabaseUrl) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
@@ -54,8 +66,8 @@ async function main() {
   });
 
   const provider = createRegistryProvider({
-    token: process.env.ADLIYA_ACCESS_TOKEN,
-    apiBase: process.env.ADLIYA_API_BASE,
+    token,
+    apiBase,
   });
 
   const listOnly = argFlag("list-only");

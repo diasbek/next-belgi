@@ -87,7 +87,17 @@ export type UsptoSecrets = {
 };
 
 export type IpAustraliaSecrets = {
-  mode?: "live" | "mock";
+  mode?: "live" | "test" | "mock";
+  /** Production (Live) OAuth client */
+  live_client_id?: string;
+  live_client_secret?: string;
+  /** UAT (Test) OAuth client */
+  test_client_id?: string;
+  test_client_secret?: string;
+  /** @deprecated Use live_* / test_*. Still read as fallback for either mode. */
+  client_id?: string;
+  client_secret?: string;
+  /** @deprecated Prefer *_client_secret. */
   api_key?: string;
 };
 
@@ -444,6 +454,7 @@ export const MODULE_CATALOG: ModuleCatalogItem[] = [
     defaultMode: "mock",
     modes: [
       { value: "mock", labelKey: "modeMock" },
+      { value: "test", labelKey: "modeTest" },
       { value: "live", labelKey: "modeLive" },
     ],
     fields: [
@@ -452,14 +463,35 @@ export const MODULE_CATALOG: ModuleCatalogItem[] = [
         kind: "select",
         options: [
           { value: "mock", labelKey: "modeMock" },
+          { value: "test", labelKey: "modeTest" },
           { value: "live", labelKey: "modeLive" },
         ],
       },
       {
-        key: "api_key",
+        key: "test_client_id",
+        kind: "text",
+        requiredInModes: ["test"],
+        hideWhenModes: ["mock", "live"],
+      },
+      {
+        key: "test_client_secret",
+        kind: "password",
+        secret: true,
+        requiredInModes: ["test"],
+        hideWhenModes: ["mock", "live"],
+      },
+      {
+        key: "live_client_id",
+        kind: "text",
+        requiredInModes: ["live"],
+        hideWhenModes: ["mock", "test"],
+      },
+      {
+        key: "live_client_secret",
         kind: "password",
         secret: true,
         requiredInModes: ["live"],
+        hideWhenModes: ["mock", "test"],
       },
     ],
   },
@@ -504,7 +536,12 @@ const SECRET_FIELD_HINTS: Record<IntegrationProvider, string[]> = {
   adliya: ["access_token"],
   euipo: ["client_secret"],
   uspto: ["api_key"],
-  ipaustralia: ["api_key"],
+  ipaustralia: [
+    "test_client_secret",
+    "live_client_secret",
+    "client_secret",
+    "api_key",
+  ],
   kazpatent: [],
 };
 
@@ -593,7 +630,18 @@ export function isPayloadConfigured(
       return Boolean(payload.api_key);
     case "ipaustralia":
       if (mode === "mock") return true;
-      return Boolean(payload.api_key);
+      if (mode === "test") {
+        return Boolean(
+          (payload.test_client_id && payload.test_client_secret) ||
+            (payload.client_id &&
+              (payload.client_secret || payload.api_key)),
+        );
+      }
+      // live
+      return Boolean(
+        (payload.live_client_id && payload.live_client_secret) ||
+          (payload.client_id && (payload.client_secret || payload.api_key)),
+      );
     case "kazpatent":
       return true;
     default:

@@ -140,17 +140,32 @@ Env: `USPTO_API_KEY` (+ `USPTO_TM_SEARCH_URL` при смене endpoint).
 
 ## 5. IP Australia
 
-**Зачем:** юрисдикция `au`.
+**Зачем:** юрисдикция `au` — [Australian Trade Mark Search API](https://descriptions.api.gov.au/ipaustralia/trademark-search/iptms.html).  
+Локальный спек **v1.0.5**: [`docs/research/ipaustralia/`](research/ipaustralia/).
+
+| Env | Base URL |
+|-----|----------|
+| Test (UAT) | `https://test.api.ipaustralia.gov.au/public/australian-trade-mark-search-api/v1` |
+| Production | `https://production.api.ipaustralia.gov.au/public/australian-trade-mark-search-api/v1` |
+
+OAuth token (client credentials):  
+`…/public/external-token-api/v1/access_token` на том же host (test или production).
+
+Адаптер:
+
+1. `POST /page/advanced` — pageable `ApiTrademark[]` (word PART, statuses `PENDING_REGISTERED`)
+2. Fallback: `POST /search/quick` → `trademarkIds` → `GET /trade-mark/{id}`
 
 ### Шаги
 
-1. [IP Australia API portal](https://www.ipaustralia.gov.au/) / developer registration для Trade Mark Search API.
-2. Получи API key (если портал требует).
-3. `/admin/integrations/` → **IP Australia** → **Live** → `api_key` → Сохранить.
-4. В проверке включи «Австралия».
+1. [IP Australia Developer Portal](https://portal.api.ipaustralia.gov.au/) — запроси доступ к **Australian Trade Mark Search API**.
+2. Выпусти **client_id** + **client_secret** (OAuth client credentials).
+3. `/admin/integrations/` → **IP Australia** → **Test** или **Live** → `client_id` / `client_secret` → Сохранить → **Test**.
+4. В проверке включи «Австралия» (+1 кредит).
 
-**Mock:** демо.  
-Env: `IPAUSTRALIA_API_KEY`, `IPAUSTRALIA_BASE`.
+**Mock:** демо без ключей.  
+Ключи только через Admin → Integrations (Supabase `integration_secrets`). Env для секретов не используется.  
+Override host (не секреты): `IPAUSTRALIA_TEST_BASE`, `IPAUSTRALIA_LIVE_BASE`.
 
 ---
 

@@ -149,3 +149,182 @@ body {
     animation-duration: 0.01s;
   }
 }
+
+/* ── PageSpeed / Lighthouse explodey score gauge ── */
+.psi-gauge {
+  --psi-peek-dur: 2.5s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.psi-gauge__svg {
+  display: block;
+  margin: 0 auto;
+  overflow: visible;
+  will-change: transform;
+}
+
+.psi-gauge__disc {
+  transition: fill 0.3s ease;
+  pointer-events: none;
+}
+
+.psi-gauge__outer {
+  transform-origin: 0 0;
+}
+
+.psi-gauge__metric {
+  transform: scale(var(--psi-scale-initial));
+  transform-origin: 0 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.1s 0.2s ease-out,
+    opacity 0.3s ease-out,
+    stroke-width 0.1s ease-out;
+}
+
+.psi-gauge__metric-track {
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.psi-gauge__metric-arc {
+  opacity: 0;
+  stroke-dasharray: 0 calc(var(--psi-circ) * var(--psi-radius-outer));
+  transition: 0s 0.005s;
+  pointer-events: none;
+}
+
+.psi-gauge__metric-hit {
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.psi-gauge__metric-label {
+  fill: var(--color-ink);
+  font-size: 5.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.psi-gauge__metric-value {
+  font-size: 6px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.psi-gauge__inner {
+  color: inherit;
+  cursor: pointer;
+}
+
+.psi-gauge__arc {
+  transition: stroke-dasharray 0.05s linear;
+}
+
+.psi-gauge__score {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 42px;
+  font-weight: 500;
+  transition: opacity 0.3s ease-in;
+  pointer-events: none;
+}
+
+/* Expanded — outer metrics explode out */
+.psi-gauge--expanded .psi-gauge__metric {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    transform 0.3s ease-out,
+    opacity 0.3s ease-in,
+    stroke-width 0.1s ease-out;
+  transition-delay: calc(var(--i, 0) * 0.05s);
+}
+
+.psi-gauge--expanded .psi-gauge__metric-arc {
+  opacity: 1;
+  stroke-dasharray: var(--metric-array);
+  transition: 0.3s;
+}
+
+.psi-gauge--expanded .psi-gauge__metric-label {
+  opacity: 1;
+}
+
+.psi-gauge--expanded .psi-gauge__inner .psi-gauge__arc {
+  opacity: 0.15;
+  transition: opacity 0.3s;
+}
+
+/* Highlight one metric */
+.psi-gauge--highlight .psi-gauge__metric {
+  opacity: 0.28;
+}
+
+.psi-gauge--highlight .psi-gauge__metric--active {
+  opacity: 1;
+}
+
+.psi-gauge--highlight .psi-gauge__metric--active .psi-gauge__metric-track,
+.psi-gauge--highlight .psi-gauge__metric--active .psi-gauge__metric-arc {
+  stroke-width: calc(1.5 * var(--psi-stroke));
+}
+
+.psi-gauge--highlight .psi-gauge__metric--active .psi-gauge__metric-value {
+  opacity: 1;
+}
+
+.psi-gauge--highlight .psi-gauge__score {
+  opacity: 0 !important;
+}
+
+/* Peek tease on first load */
+.psi-gauge--peek .psi-gauge__metric {
+  transition-delay: 0ms;
+  animation: psi-peek var(--psi-peek-dur) cubic-bezier(0.46, 0.03, 0.52, 0.96)
+    forwards;
+}
+
+.psi-gauge--peek .psi-gauge__metric-label {
+  opacity: 0 !important;
+}
+
+.psi-gauge--peek .psi-gauge__inner .psi-gauge__arc {
+  opacity: 0.12;
+}
+
+@keyframes psi-peek {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(0.92);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psi-gauge__metric,
+  .psi-gauge--expanded .psi-gauge__metric,
+  .psi-gauge--expanded .psi-gauge__metric-arc,
+  .psi-gauge__score,
+  .psi-gauge__disc {
+    transition: none !important;
+    animation: none !important;
+  }
+  .psi-gauge--peek .psi-gauge__metric {
+    animation: none !important;
+  }
+}

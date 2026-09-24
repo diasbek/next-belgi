@@ -51,6 +51,8 @@ export async function AdminUsersPage({
 
   if (db) {
     const weekAgoMs = 7 * 24 * 60 * 60 * 1000;
+    // Request-time cutoff for "active in last 7 days" stats.
+    // eslint-disable-next-line react-hooks/purity -- server page needs wall-clock "now"
     const weekAgoCutoff = new Date(Date.now() - weekAgoMs).toISOString();
 
     let listReq = db

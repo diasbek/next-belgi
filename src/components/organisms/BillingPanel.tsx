@@ -142,12 +142,6 @@ export function BillingPanel({
     ? selectedId
     : (plans[0]?.id ?? "");
 
-  useEffect(() => {
-    if (resolvedSelectedId !== selectedId) {
-      setSelectedId(resolvedSelectedId);
-    }
-  }, [resolvedSelectedId, selectedId]);
-
   let resolvedProvider: "payme" | "click" | null = provider;
   if (provider === "payme" && !paymeOk) {
     resolvedProvider = clickOk ? "click" : null;
@@ -156,12 +150,6 @@ export function BillingPanel({
   } else if (!provider && defaultProvider) {
     resolvedProvider = defaultProvider;
   }
-
-  useEffect(() => {
-    if (resolvedProvider !== provider) {
-      setProvider(resolvedProvider);
-    }
-  }, [resolvedProvider, provider]);
 
   useEffect(() => {
     if (!paidId) return;

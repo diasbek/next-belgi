@@ -11,7 +11,6 @@ import {
 } from "@/lib/navigation/safe-next";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import { Button } from "@/components/atoms/Button";
-import { CheckForm } from "@/components/molecules/CheckForm";
 import { TrademarkReportView } from "@/components/organisms/TrademarkReportView";
 import {
   readStoredReport,
@@ -76,36 +75,42 @@ export function CheckResultPageView({
       const stored = readStoredReport();
       const meta = readStoredCheckMeta();
       // Prefer session cache only when URL matches stored report (or URL empty).
-      if (
-        stored &&
-        (!query || stored.query === query) &&
-        (!activity || !stored.activity || stored.activity === activity)
-      ) {
-        const isPreview = readStoredReportPreview();
-        const safe = isPreview
-          ? sanitizeStoredPreview(stored, locale)
-          : stored;
-        if (isPreview && safe !== stored) {
-          storeReport(safe, true);
+      const apply = () => {
+        if (
+          stored &&
+          (!query || stored.query === query) &&
+          (!activity || !stored.activity || stored.activity === activity)
+        ) {
+          const isPreview = readStoredReportPreview();
+          const safe = isPreview
+            ? sanitizeStoredPreview(stored, locale)
+            : stored;
+          if (isPreview && safe !== stored) {
+            storeReport(safe, true);
+          }
+          setReport(safe);
+          setPreview(isPreview);
+          setCheckMeta(meta);
+          setNotFound(false);
+          setLoading(false);
+          return;
         }
-        setReport(safe);
-        setPreview(isPreview);
-        setCheckMeta(meta);
-        setNotFound(false);
+        setReport(null);
+        setPreview(false);
+        setCheckMeta(null);
+        setNotFound(true);
         setLoading(false);
-        return;
-      }
-      setReport(null);
-      setPreview(false);
-      setCheckMeta(null);
-      setNotFound(true);
-      setLoading(false);
-      return;
+      };
+      const t = window.setTimeout(apply, 0);
+      return () => window.clearTimeout(t);
     }
 
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
+    const boot = window.setTimeout(() => {
+      if (cancelled) return;
+      setLoading(true);
+      setNotFound(false);
+    }, 0);
 
     (async () => {
       try {
@@ -161,10 +166,10 @@ export function CheckResultPageView({
 
     return () => {
       cancelled = true;
+      window.clearTimeout(boot);
     };
   }, [checkId, query, activity, locale]);
 
-  const checkFormPath = actionPath;
   const resultEmptyHref = localePath(locale, actionPath);
 
   if (loading) {
@@ -239,59 +244,42 @@ export function CheckResultPageView({
     />
   );
 
-  const content = (
-    <>
-      <CheckForm
-        locale={locale}
-        brandPlaceholder={copy.ui.brandPlaceholder}
-        activityPlaceholder={copy.ui.activityPlaceholder}
-        submitLabel={copy.ui.check}
-        compact
-        idPrefix={embedded ? "account-result-check" : "result-check"}
-        actionPath={checkFormPath}
-        initialQuery={report.query}
-        initialActivity={report.activity || activity}
-        className="mb-6 sm:mb-8"
-      />
+  const content = preview ? (
+    <div className="relative">
+      <div
+        className="pointer-events-none max-h-[min(70vh,42rem)] overflow-hidden select-none"
+        aria-hidden
+      >
+        <div className="blur-[7px] sm:blur-md">{previewBody}</div>
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/90 to-transparent"
+          aria-hidden
+        />
+      </div>
 
-      {preview ? (
-        <div className="relative">
-          <div
-            className="pointer-events-none max-h-[min(70vh,42rem)] overflow-hidden select-none"
-            aria-hidden
+      <div className="relative z-10 mx-auto -mt-28 max-w-md rounded-[1.5rem] border border-black/5 bg-white px-5 py-6 text-center shadow-md sm:-mt-32 sm:px-8 sm:py-8">
+        <h2 className="m-0 font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+          {appCopy.checkGate.unlockTitle}
+        </h2>
+        <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-ink-muted sm:text-base">
+          {appCopy.checkGate.unlockLead}
+        </p>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button href={loginHref} className="w-full sm:w-auto">
+            {appCopy.checkGate.signIn}
+          </Button>
+          <Button
+            href={registerHref}
+            variant="secondary"
+            className="w-full sm:w-auto"
           >
-            <div className="blur-[7px] sm:blur-md">{previewBody}</div>
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/90 to-transparent"
-              aria-hidden
-            />
-          </div>
-
-          <div className="relative z-10 mx-auto -mt-28 max-w-md rounded-[1.5rem] border border-black/5 bg-white px-5 py-6 text-center shadow-md sm:-mt-32 sm:px-8 sm:py-8">
-            <h2 className="m-0 font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-              {appCopy.checkGate.unlockTitle}
-            </h2>
-            <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-ink-muted sm:text-base">
-              {appCopy.checkGate.unlockLead}
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Button href={loginHref} className="w-full sm:w-auto">
-                {appCopy.checkGate.signIn}
-              </Button>
-              <Button
-                href={registerHref}
-                variant="secondary"
-                className="w-full sm:w-auto"
-              >
-                {appCopy.checkGate.signUp}
-              </Button>
-            </div>
-          </div>
+            {appCopy.checkGate.signUp}
+          </Button>
         </div>
-      ) : (
-        reportBody
-      )}
-    </>
+      </div>
+    </div>
+  ) : (
+    reportBody
   );
 
   if (embedded) {

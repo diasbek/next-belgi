@@ -213,7 +213,7 @@ function normalizeJsonRecord(row: unknown): MadridRecord | null {
   };
 }
 
-export function parseMadridDump(content: string, fileLabel?: string): MadridRecord[] {
+export function parseMadridDump(content: string, _fileLabel?: string): MadridRecord[] {
   const trimmed = content.trim();
   if (!trimmed) return [];
   if (trimmed.startsWith("<") || trimmed.includes("<?xml")) {

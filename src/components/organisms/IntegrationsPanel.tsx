@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
 import { localePath } from "@/i18n/paths";
@@ -57,7 +57,7 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     ? MODULE_CATALOG.find((c) => c.provider === active)
     : null;
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     setErr(null);
     try {
@@ -87,14 +87,14 @@ export function IntegrationsPanel({ locale }: { locale: Locale }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [copy.adminUi.error]);
 
   useEffect(() => {
     const id = window.setTimeout(() => {
       void load();
     }, 0);
     return () => window.clearTimeout(id);
-  }, []);
+  }, [load]);
 
   function openModule(provider: IntegrationProvider) {
     const st = statusMap.get(provider);

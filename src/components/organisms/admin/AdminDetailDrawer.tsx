@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { BottomSheet } from "@/components/molecules/BottomSheet";
 import { IconButton } from "@/components/atoms/admin/IconButton";
 import { useIsLg } from "@/hooks/useIsLg";
 import { cn } from "@/lib/cn";
+
+function useClientMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
 
 /**
  * Desktop: portaled side panel (above AppShell).
@@ -27,11 +35,7 @@ export function AdminDetailDrawer({
   wide?: boolean;
 }) {
   const isLg = useIsLg();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useClientMounted();
 
   useEffect(() => {
     if (!open || isLg !== true) return;

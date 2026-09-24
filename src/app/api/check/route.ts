@@ -22,7 +22,7 @@ import {
   totalCheckCredits,
 } from "@/lib/check/jurisdictions";
 import { isDemoMode } from "@/lib/settings/demo-mode";
-import { buildGuestPreviewReport } from "@/lib/check/preview-report";
+import { buildGuestPreviewReport } from "@/lib/check/preview-report-server";
 
 const rateMap = new Map<string, { count: number; resetAt: number }>();
 

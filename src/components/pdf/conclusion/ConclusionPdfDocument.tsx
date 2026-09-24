@@ -9,59 +9,73 @@ import {
 import type { ConclusionDocument } from "@/lib/conclusion";
 import { getConclusionCopy } from "@/lib/conclusion/copy";
 import { ensureConclusionPdfFonts } from "./pdfFonts";
+import { pdfBrand, pdfFontFamily } from "./pdfTheme";
 
 export { ensureConclusionPdfFonts };
 
-const BLUE = "#c5daf5";
-const BORDER = "#222";
+const C = pdfBrand;
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "DejaVu",
-    fontSize: 9,
-    paddingTop: 28,
-    paddingBottom: 32,
-    paddingHorizontal: 32,
-    color: "#111",
+    fontFamily: pdfFontFamily,
+    fontSize: 9.5,
+    paddingTop: 34,
+    paddingBottom: 36,
+    paddingHorizontal: 34,
+    color: C.ink,
+    backgroundColor: C.surface,
+  },
+  brandBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 6,
+    backgroundColor: C.lime,
   },
   agency: {
-    fontSize: 7.5,
-    color: "#444",
+    fontSize: 8,
+    color: C.inkMuted,
     marginBottom: 4,
+    letterSpacing: 0.2,
   },
   title: {
     textAlign: "center",
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: 700,
-    marginBottom: 6,
-    letterSpacing: 0.3,
+    marginBottom: 8,
+    letterSpacing: 0.4,
+    color: C.ink,
   },
   metaRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 6,
-    fontSize: 8,
+    marginBottom: 8,
+    fontSize: 8.5,
+    color: C.inkMuted,
   },
   subjectTable: {
-    borderWidth: 1,
-    borderColor: BORDER,
-    marginBottom: 6,
+    borderWidth: 1.25,
+    borderColor: C.border,
+    marginBottom: 8,
   },
   subjectHeader: {
     flexDirection: "row",
-    backgroundColor: BLUE,
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
+    backgroundColor: C.lime,
+    borderBottomWidth: 1.25,
+    borderBottomColor: C.border,
   },
   subjectRow: {
     flexDirection: "row",
+    backgroundColor: C.surface,
   },
   cell: {
-    paddingVertical: 3,
-    paddingHorizontal: 5,
-    fontSize: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+    fontSize: 8.5,
+    color: C.ink,
     borderRightWidth: 1,
-    borderRightColor: BORDER,
+    borderRightColor: C.border,
   },
   cellLast: {
     borderRightWidth: 0,
@@ -70,82 +84,101 @@ const styles = StyleSheet.create({
   cMark: { width: "33%" },
   cClass: { width: "33%" },
   intro: {
-    fontSize: 7.5,
-    lineHeight: 1.25,
+    fontSize: 8,
+    lineHeight: 1.35,
     textAlign: "justify",
-    marginBottom: 3,
+    marginBottom: 4,
+    color: C.ink,
   },
   excludedTitle: {
-    fontSize: 7.5,
+    fontSize: 8,
     fontWeight: 700,
-    marginBottom: 1,
-    marginTop: 2,
+    marginBottom: 2,
+    marginTop: 3,
+    color: C.ink,
   },
   excludedItem: {
-    fontSize: 7.5,
+    fontSize: 8,
     marginLeft: 6,
-    marginBottom: 0,
-    lineHeight: 1.2,
+    marginBottom: 1,
+    lineHeight: 1.3,
+    color: C.inkMuted,
   },
   sectionBar: {
-    backgroundColor: BLUE,
-    paddingVertical: 3,
-    paddingHorizontal: 6,
-    marginTop: 8,
+    backgroundColor: C.lime,
+    paddingVertical: 4,
+    paddingHorizontal: 7,
+    marginTop: 10,
     marginBottom: 0,
+    borderWidth: 1.25,
+    borderColor: C.border,
+    borderBottomWidth: 0,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  sectionBarAccent: {
+    width: 3,
+    alignSelf: "stretch",
+    backgroundColor: C.primary,
+    marginRight: 7,
+    marginLeft: -7,
+    marginVertical: -4,
   },
   sectionBarText: {
-    fontSize: 9,
+    fontSize: 9.5,
     fontWeight: 700,
+    color: C.ink,
   },
   matchTable: {
-    borderWidth: 1,
-    borderColor: BORDER,
+    borderWidth: 1.25,
+    borderColor: C.border,
     borderTopWidth: 0,
-    marginBottom: 4,
+    marginBottom: 5,
   },
   matchHead: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-    backgroundColor: "#f7f7f7",
+    borderBottomColor: C.border,
+    backgroundColor: C.surfaceMuted,
   },
   matchBody: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: BORDER,
+    borderBottomColor: C.border,
     minHeight: 56,
+    backgroundColor: C.surface,
   },
   matchFoot: {
-    paddingVertical: 3,
-    paddingHorizontal: 5,
-    fontSize: 7.5,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+    backgroundColor: C.rowSelected,
   },
   colImg: {
     width: "32%",
     borderRightWidth: 1,
-    borderRightColor: BORDER,
-    padding: 4,
+    borderRightColor: C.border,
+    padding: 5,
     alignItems: "center",
     justifyContent: "center",
   },
   colOwner: {
     width: "40%",
     borderRightWidth: 1,
-    borderRightColor: BORDER,
-    padding: 5,
+    borderRightColor: C.border,
+    padding: 6,
     justifyContent: "center",
   },
   colTerm: {
     width: "28%",
-    padding: 5,
+    padding: 6,
     justifyContent: "center",
   },
   headCell: {
-    fontSize: 7,
+    fontSize: 7.5,
     fontWeight: 700,
     paddingVertical: 3,
     paddingHorizontal: 5,
+    color: C.ink,
   },
   logo: {
     width: 64,
@@ -153,70 +186,79 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
   logoFallback: {
-    fontSize: 9,
+    fontSize: 9.5,
     fontWeight: 700,
     textAlign: "center",
+    color: C.ink,
   },
   matchMeta: {
-    fontSize: 7.5,
-    color: "#222",
+    fontSize: 8,
+    color: C.ink,
     marginBottom: 1,
   },
   statusPill: {
-    marginTop: 3,
+    marginTop: 4,
     alignSelf: "flex-start",
-    backgroundColor: "#ececec",
-    paddingVertical: 1,
-    paddingHorizontal: 4,
-    fontSize: 6.5,
+    backgroundColor: C.limeSoft,
+    borderWidth: 1,
+    borderColor: C.primary,
+    paddingVertical: 2,
+    paddingHorizontal: 5,
+    fontSize: 7,
+    fontWeight: 700,
+    color: C.ink,
   },
   emptyBox: {
-    borderWidth: 1,
-    borderColor: BORDER,
+    borderWidth: 1.25,
+    borderColor: C.border,
     borderTopWidth: 0,
-    paddingVertical: 5,
-    paddingHorizontal: 6,
-    marginBottom: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 7,
+    marginBottom: 5,
+    backgroundColor: C.surfaceMuted,
   },
   empty: {
-    fontSize: 8,
-    color: "#333",
+    fontSize: 8.5,
+    color: C.inkMuted,
   },
   note: {
-    fontSize: 7,
+    fontSize: 7.5,
     marginTop: 2,
-    color: "#444",
+    color: C.inkMuted,
   },
   verdictBox: {
-    borderWidth: 1,
-    borderColor: BORDER,
+    borderWidth: 1.25,
+    borderColor: C.border,
     borderTopWidth: 0,
-    padding: 6,
-    marginBottom: 4,
+    padding: 8,
+    marginBottom: 5,
+    backgroundColor: C.rowSelected,
   },
   verdictLead: {
-    fontSize: 8,
-    marginBottom: 3,
+    fontSize: 8.5,
+    marginBottom: 4,
+    color: C.ink,
   },
   verdictLine: {
-    fontSize: 9,
+    fontSize: 9.5,
     fontWeight: 700,
-    marginBottom: 1,
+    marginBottom: 2,
+    color: C.ink,
   },
   disclaimer: {
-    fontSize: 7,
-    lineHeight: 1.25,
-    marginTop: 6,
-    color: "#333",
+    fontSize: 7.5,
+    lineHeight: 1.35,
+    marginTop: 8,
+    color: C.inkMuted,
     textAlign: "justify",
   },
   qrBlock: {
-    marginTop: 8,
+    marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-    paddingTop: 6,
+    borderTopWidth: 1.25,
+    borderTopColor: C.border,
+    paddingTop: 8,
   },
   qrImage: {
     width: 56,
@@ -224,40 +266,46 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   qrText: {
-    fontSize: 7.5,
-    lineHeight: 1.3,
+    fontSize: 8,
+    lineHeight: 1.35,
     flex: 1,
+    color: C.ink,
   },
   qrCode: {
-    fontFamily: "DejaVu",
+    fontFamily: pdfFontFamily,
     fontWeight: 700,
-    fontSize: 8,
-    marginTop: 1,
+    fontSize: 9,
+    marginTop: 2,
+    color: C.ink,
   },
   watermark: {
     position: "absolute",
     top: "40%",
-    left: "15%",
+    left: "12%",
     fontSize: 48,
-    color: "#e8e8e8",
+    color: C.watermark,
     transform: "rotate(-30deg)",
     fontWeight: 700,
   },
   footer: {
     position: "absolute",
     bottom: 14,
-    left: 32,
-    right: 32,
-    fontSize: 7,
-    color: "#888",
+    left: 34,
+    right: 34,
+    fontSize: 7.5,
+    color: C.footer,
     flexDirection: "row",
     justifyContent: "space-between",
+    borderTopWidth: 1,
+    borderTopColor: C.borderSoft,
+    paddingTop: 4,
   },
 });
 
 function SectionBar({ title }: { title: string }) {
   return (
     <View style={styles.sectionBar} wrap={false}>
+      <View style={styles.sectionBarAccent} />
       <Text style={styles.sectionBarText}>{title}</Text>
     </View>
   );
@@ -352,6 +400,8 @@ export function ConclusionPdfDocument({
       subject={data.subject.mark}
     >
       <Page size="A4" style={styles.page} wrap>
+        <View style={styles.brandBar} fixed />
+
         {data.preview ? (
           <Text style={styles.watermark}>{copy.previewWatermark}</Text>
         ) : null}
@@ -448,7 +498,7 @@ export function ConclusionPdfDocument({
 
         <SectionBar title={data.sections.internetTitle} />
         <View style={styles.emptyBox}>
-          <Text style={[styles.empty, { marginBottom: 2 }]}>
+          <Text style={[styles.empty, { marginBottom: 2, color: C.ink }]}>
             {data.sections.internetSubtitle}
           </Text>
           {data.sections.internet.length === 0 ? (
@@ -456,7 +506,7 @@ export function ConclusionPdfDocument({
           ) : (
             data.sections.internet.map((item, i) => (
               <View key={`${item.title}-${i}`} style={{ marginBottom: 2 }}>
-                <Text style={{ fontSize: 8, fontWeight: 700 }}>
+                <Text style={{ fontSize: 8.5, fontWeight: 700, color: C.ink }}>
                   {i + 1}. {item.title}
                 </Text>
                 {item.note ? (

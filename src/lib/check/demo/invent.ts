@@ -18,7 +18,11 @@ type InventedMatch = {
 };
 
 type InventedPayload = {
-  local: InventedMatch[];
+  /** Adliya / national UZ SoT */
+  uz: InventedMatch[];
+  /** Madrid / WIPO designations for UZ */
+  wipo: InventedMatch[];
+  /** External offices keyed by jurisdiction code */
   blocks: Record<string, InventedMatch[]>;
 };
 
@@ -31,35 +35,68 @@ const SOURCE_LABEL: Record<string, string> = {
   kz: "KZ",
 };
 
+function asMatchList(value: unknown): InventedMatch[] {
+  return Array.isArray(value) ? (value as InventedMatch[]) : [];
+}
+
 function fallbackMatches(
   query: string,
   jurisdictions: JurisdictionCode[],
 ): InventedPayload {
   const q = query.trim() || "Mark";
-  const local: InventedMatch[] = [
+  const upper = q.toUpperCase();
+
+  const uz: InventedMatch[] = [
     {
-      name: `${q.toUpperCase()}`,
-      owner: 'OOO "DEMO TRADE"',
+      name: upper,
+      owner: 'OOO "DEMO TRADE UZ"',
       status: "Registered",
       classesText: "[35] Advertising",
-      similarity: 72,
+      similarity: 74,
       registeredFrom: "12.03.2022",
     },
     {
       name: `${q} PLUS`,
-      owner: "Demo Brands LLC",
+      owner: 'MChJ "Demo Brands"',
       status: "Pending",
       classesText: "[25] Clothing",
-      similarity: 48,
+      similarity: 51,
       registeredFrom: "01.08.2024",
     },
     {
-      name: `IR-${q.slice(0, 8).toUpperCase()}`,
+      name: `${upper} GROUP`,
+      owner: "Demo Hygiene LLC",
+      status: "Registered",
+      classesText: "[03] Cosmetics",
+      similarity: 38,
+      registeredFrom: "18.11.2021",
+    },
+  ];
+
+  const wipo: InventedMatch[] = [
+    {
+      name: `IR-${upper.slice(0, 8)}`,
       owner: "Madrid Demo SA",
       status: "Protected",
       classesText: "[09] Software",
-      similarity: 41,
-      registeredFrom: "2021-06-15",
+      similarity: 62,
+      registeredFrom: "15.06.2021",
+    },
+    {
+      name: `${q} INTERNATIONAL`,
+      owner: "WIPO Demo Holdings AG",
+      status: "Designated",
+      classesText: "[35] Services",
+      similarity: 44,
+      registeredFrom: "03.02.2023",
+    },
+    {
+      name: `${upper}-MD`,
+      owner: "Global Marks Demo B.V.",
+      status: "Protected",
+      classesText: "[42] Tech services",
+      similarity: 29,
+      registeredFrom: "22.09.2020",
     },
   ];
 
@@ -83,7 +120,20 @@ function fallbackMatches(
       },
     ];
   }
-  return { local, blocks };
+  return { uz, wipo, blocks };
+}
+
+function ensureLocalHits(
+  invented: InventedPayload,
+  query: string,
+  jurisdictions: JurisdictionCode[],
+): InventedPayload {
+  const fallback = fallbackMatches(query, jurisdictions);
+  return {
+    uz: invented.uz.length > 0 ? invented.uz : fallback.uz,
+    wipo: invented.wipo.length > 0 ? invented.wipo : fallback.wipo,
+    blocks: { ...fallback.blocks, ...invented.blocks },
+  };
 }
 
 function toMatch(
@@ -111,6 +161,46 @@ function toMatch(
     sourceLabel,
     imageUrl: renderWordmarkImage(name),
   };
+}
+
+function normalizeInventedPayload(raw: unknown): InventedPayload | null {
+  if (!raw || typeof raw !== "object") return null;
+  const data = raw as Record<string, unknown>;
+
+  // New shape: explicit uz + wipo
+  let uz = asMatchList(data.uz);
+  let wipo = asMatchList(data.wipo);
+
+  // Legacy shape: local array (first half UZ, rest Madrid)
+  const local = asMatchList(data.local);
+  if (uz.length === 0 && wipo.length === 0 && local.length > 0) {
+    const split = Math.max(1, Math.ceil(local.length / 2));
+    uz = local.slice(0, split);
+    wipo = local.slice(split);
+    if (wipo.length === 0) wipo = local.slice(0, 1);
+  }
+
+  const blocksRaw =
+    data.blocks && typeof data.blocks === "object"
+      ? (data.blocks as Record<string, unknown>)
+      : {};
+  const blocks: Record<string, InventedMatch[]> = {};
+  for (const [key, value] of Object.entries(blocksRaw)) {
+    blocks[key] = asMatchList(value);
+  }
+
+  // OpenAI sometimes puts uz/wipo inside blocks — lift them
+  if (uz.length === 0 && blocks.uz?.length) {
+    uz = blocks.uz;
+    delete blocks.uz;
+  }
+  if (wipo.length === 0 && (blocks.wipo?.length || blocks.madrid?.length)) {
+    wipo = blocks.wipo?.length ? blocks.wipo : blocks.madrid;
+    delete blocks.wipo;
+    delete blocks.madrid;
+  }
+
+  return { uz, wipo, blocks };
 }
 
 async function inventWithOpenAi(params: {
@@ -148,10 +238,11 @@ async function inventWithOpenAi(params: {
             content: [
               "You invent realistic but fictional trademark search hits for a DEMO product.",
               "Do not copy real famous brand owners verbatim as legal entities; invent plausible fictional owners.",
-              "Return JSON only with keys: local (array, 2-4 UZ+Madrid style hits), blocks (object keyed by jurisdiction codes).",
+              "Return JSON only with keys: uz (array), wipo (array), blocks (object keyed by external jurisdiction codes).",
+              "uz = national Uzbekistan (Adliya) registry hits — ALWAYS 2-4 items, never empty.",
+              "wipo = Madrid/WIPO international registrations designating UZ — ALWAYS 2-4 items, never empty.",
               "Each hit: name, owner, status, classesText, similarity (1-99), registeredFrom (optional date string).",
-              "First 1-2 local hits are national UZ; remaining local hits are Madrid/WIPO designations for UZ.",
-              "For each requested external jurisdiction return 2-3 hits.",
+              "For each requested external jurisdiction in blocks return 2-3 hits.",
               "Names should be phonetically or visually similar to the query.",
             ].join(" "),
           },
@@ -162,6 +253,7 @@ async function inventWithOpenAi(params: {
               query: params.query,
               activity: params.activity,
               niceClasses: params.niceClasses,
+              requiredLocal: ["uz", "wipo"],
               externalJurisdictions: external,
             }),
           },
@@ -177,15 +269,7 @@ async function inventWithOpenAi(params: {
     };
     const content = json.choices?.[0]?.message?.content;
     if (!content) return null;
-    const parsed = JSON.parse(content) as InventedPayload;
-    if (!parsed || !Array.isArray(parsed.local)) return null;
-    return {
-      local: parsed.local,
-      blocks:
-        parsed.blocks && typeof parsed.blocks === "object"
-          ? parsed.blocks
-          : {},
-    };
+    return normalizeInventedPayload(JSON.parse(content));
   } catch (e) {
     console.warn("[demo:invent]", e);
     return null;
@@ -199,7 +283,10 @@ export type DemoSearchBundle = {
   externalBlocks: ExternalBlockInput[];
 };
 
-/** Invent multi-jurisdiction matches + wordmark images for Demo Mode. */
+/**
+ * Invent multi-jurisdiction matches + wordmark images for Demo Mode.
+ * Adliya (uz) and Madrid (wipo) are always filled — never empty.
+ */
 export async function buildDemoSearchBundle(params: {
   query: string;
   activity: string;
@@ -208,24 +295,29 @@ export async function buildDemoSearchBundle(params: {
   locale: Locale;
 }): Promise<DemoSearchBundle> {
   const q = params.query.trim();
-  const invented =
+  const invented = ensureLocalHits(
     (await inventWithOpenAi(params)) ??
-    fallbackMatches(q, params.jurisdictions);
+      fallbackMatches(q, params.jurisdictions),
+    q,
+    params.jurisdictions,
+  );
 
-  const matches: TrademarkMatch[] = invented.local.map((row, i) => {
-    const isWipo = i >= Math.ceil(invented.local.length / 2);
-    return toMatch(q, row, isWipo ? "demo-wipo" : "demo-uz", isWipo ? "WIPO" : "UZ", i);
-  });
+  const matches: TrademarkMatch[] = [
+    ...invented.uz.map((row, i) => toMatch(q, row, "demo-uz", "UZ", i)),
+    ...invented.wipo.map((row, i) => toMatch(q, row, "demo-wipo", "WIPO", i)),
+  ];
 
   const externalBlocks: ExternalBlockInput[] = [];
   const asOf = new Date().toISOString();
   for (const code of params.jurisdictions) {
     if (code === "uz" || code === "wipo") continue;
     const rows = invented.blocks[code] || [];
+    const fallbackExt = fallbackMatches(q, [code]).blocks[code] || [];
+    const filled = rows.length > 0 ? rows : fallbackExt;
     const label = SOURCE_LABEL[code] || code.toUpperCase();
     externalBlocks.push({
       id: code,
-      matches: rows.map((row, i) =>
+      matches: filled.map((row, i) =>
         toMatch(q, row, `demo-${code}`, label, i),
       ),
       asOf,

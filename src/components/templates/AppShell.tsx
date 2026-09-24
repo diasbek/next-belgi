@@ -49,12 +49,14 @@ export function AppShell({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [navPath, setNavPath] = useState(pathname);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  if (pathname !== navPath) {
+    setNavPath(pathname);
     setMenuOpen(false);
     setMoreOpen(false);
-  }, [pathname]);
+  }
   const homeHref = localePath(locale, "/");
   const rootHref =
     variant === "admin"

@@ -968,7 +968,7 @@ export const uzApp: AppCopy = {
     resetSilentDone: "Barcha modullar sinov / mock rejimida",
     demoModeTitle: "Demo rejim",
     demoModeLead:
-      "Yoqilganda tekshiruv Adliya/EUIPO va boshqa reestrlarga bormaydi — OpenAI (live) oʻxshash belgilarni sunʼiy yaratadi, wordmark rasmlar mahalliy chiziladi. Kredit yechilmaydi.",
+      "Yoqilganda tekshiruv Adliya/Madrid/EUIPO va boshqa reestrlarga bormaydi — OpenAI (live) oʻxshash belgilarni (jumladan Adliya va Madrid) sunʼiy yaratadi, wordmark rasmlar mahalliy chiziladi. Kredit yechilmaydi.",
     demoModeOn: "Demo rejimni yoqish",
     demoModeOff: "Demo rejimni oʻchirish",
     demoModeEnabled: "Demo rejim yoqilgan",
@@ -1650,7 +1650,7 @@ export const ruApp: AppCopy = {
     resetSilentDone: "Все модули в тестовом / mock-режиме",
     demoModeTitle: "Demo Mode",
     demoModeLead:
-      "При включении проверка не ходит в Adliya/EUIPO и другие реестры — OpenAI (live) придумывает совпадения, wordmark рисуется локально. Кредиты не списываются.",
+      "При включении проверка не ходит в Adliya/Madrid/EUIPO и другие реестры — OpenAI (live) придумывает совпадения, в том числе по Adliya и Madrid; wordmark рисуется локально. Кредиты не списываются.",
     demoModeOn: "Включить Demo Mode",
     demoModeOff: "Выключить Demo Mode",
     demoModeEnabled: "Demo Mode включён",
@@ -2330,7 +2330,7 @@ export const enApp: AppCopy = {
     resetSilentDone: "All modules are in test / mock mode",
     demoModeTitle: "Demo Mode",
     demoModeLead:
-      "When on, checks skip Adliya/EUIPO and other registries — live OpenAI invents matches; wordmarks are drawn locally. Credits are not charged.",
+      "When on, checks skip Adliya/Madrid/EUIPO and other registries — live OpenAI invents matches including Adliya and Madrid; wordmarks are drawn locally. Credits are not charged.",
     demoModeOn: "Enable Demo Mode",
     demoModeOff: "Disable Demo Mode",
     demoModeEnabled: "Demo Mode is on",

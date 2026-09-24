@@ -1,11 +1,8 @@
 import type { Locale } from "@/i18n/config";
-import type { ActivityClassification } from "@/lib/classify";
-import { niceClassesFromClassification } from "@/lib/classify";
 import type { TrademarkReport, TrademarkSourceBlock } from "./types";
 
 /**
- * Guest / unpaid teaser payload. Must never include registry hits, owners,
- * similarity scores, class risks, conclusion polarity, or lawyer PII.
+ * Guest / unpaid teaser helpers (client-safe — no Node crypto / classify).
  * Visual blur on the client is cosmetic only — this is the real gate.
  */
 
@@ -54,6 +51,10 @@ const titles = {
   },
 } as const;
 
+export function previewReportTitles(locale: Locale = "uz") {
+  return titles[locale] ?? titles.uz;
+}
+
 function emptyBlock(id: string, title: string, emptyText: string): TrademarkSourceBlock {
   return {
     id,
@@ -70,7 +71,7 @@ export function toPreviewReport(
   report: TrademarkReport,
   locale: Locale = "uz",
 ): TrademarkReport {
-  const t = titles[locale] ?? titles.uz;
+  const t = previewReportTitles(locale);
   return {
     query: report.query,
     activity: report.activity,
@@ -96,53 +97,6 @@ export function toPreviewReport(
     lawyers: [],
     disclaimer: t.disclaimer,
   };
-}
-
-/** Build a guest teaser without running mock/demo invent or live search. */
-export function buildGuestPreviewReport(params: {
-  query: string;
-  activity: string;
-  classification?: ActivityClassification;
-  locale?: Locale;
-}): TrademarkReport {
-  const locale = params.locale ?? "uz";
-  const t = titles[locale] ?? titles.uz;
-  const niceClasses = params.classification
-    ? niceClassesFromClassification(params.classification).map((c) => {
-        const n = String(c).match(/\d+/)?.[0];
-        return n ? `[${n}]` : c;
-      })
-    : [...t.niceFallback];
-
-  const shell: TrademarkReport = {
-    query: params.query.trim() || "Mark",
-    activity:
-      params.classification?.activityNormalized?.trim() ||
-      params.activity.trim() ||
-      "",
-    markType: t.markType,
-    niceClasses,
-    sources: [
-      emptyBlock("uz", t.registryUz, t.emptyText),
-      emptyBlock("wipo", t.wipo, t.emptyText),
-      emptyBlock("internet", t.internet, t.emptyText),
-    ],
-    conclusion: {
-      title: t.conclusionTitle,
-      lead: t.conclusionLead,
-      positive: false,
-    },
-    classRisks: [],
-    recommendations: {
-      title: t.recommendationsTitle,
-      replaceHint: t.replaceHint,
-      alternatives: [],
-    },
-    lawyers: [],
-    disclaimer: t.disclaimer,
-  };
-
-  return toPreviewReport(shell, locale);
 }
 
 /** True if payload has no match/owner/risk leakage suitable for guest preview. */

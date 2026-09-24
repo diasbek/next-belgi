@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { getContent } from "@/i18n/get-content";
 import {
@@ -34,35 +34,37 @@ export function NiceGoodsPicker({
   const [q, setQ] = useState("");
   const [hits, setHits] = useState<ActivityOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedIds = new Set(value.map((o) => o.value));
+  const queryTrimmed = q.trim();
 
   useEffect(() => {
-    const query = q.trim();
-    if (query.length < 2) {
-      setHits([]);
-      setLoading(false);
+    if (queryTrimmed.length < 2) {
       return;
     }
-    setLoading(true);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      void searchNiceTerms(locale, query, 40).then((terms) => {
+    let cancelled = false;
+    const t = window.setTimeout(() => {
+      setLoading(true);
+      void searchNiceTerms(locale, queryTrimmed, 40).then((terms) => {
+        if (cancelled) return;
         setHits(
-          terms.map((t) => ({
+          terms.map((term) => ({
             kind: "term" as const,
-            value: t.id,
-            label: t.label,
-            classNumber: t.classNumber,
+            value: term.id,
+            label: term.label,
+            classNumber: term.classNumber,
           })),
         );
         setLoading(false);
       });
     }, 150);
     return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
+      cancelled = true;
+      window.clearTimeout(t);
     };
-  }, [q, locale]);
+  }, [queryTrimmed, locale]);
+
+  const visibleHits = queryTrimmed.length < 2 ? [] : hits;
+  const visibleLoading = queryTrimmed.length < 2 ? false : loading;
 
   function toggle(opt: ActivityOption) {
     if (selectedIds.has(opt.value)) {
@@ -73,7 +75,7 @@ export function NiceGoodsPicker({
   }
 
   function addCustom() {
-    const label = q.trim();
+    const label = queryTrimmed;
     if (label.length < 2) return;
     const custom: ActivityOption = {
       kind: "custom",
@@ -86,9 +88,11 @@ export function NiceGoodsPicker({
   }
 
   const showCreate =
-    q.trim().length >= 2 &&
-    !hits.some((h) => h.label.toLowerCase() === q.trim().toLowerCase()) &&
-    !value.some((o) => o.label.toLowerCase() === q.trim().toLowerCase());
+    queryTrimmed.length >= 2 &&
+    !visibleHits.some(
+      (h) => h.label.toLowerCase() === queryTrimmed.toLowerCase(),
+    ) &&
+    !value.some((o) => o.label.toLowerCase() === queryTrimmed.toLowerCase());
 
   return (
     <div>
@@ -104,7 +108,7 @@ export function NiceGoodsPicker({
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              if (hits[0]) toggle(hits[0]);
+              if (visibleHits[0]) toggle(visibleHits[0]);
               else if (showCreate) addCustom();
             }
           }}
@@ -125,14 +129,14 @@ export function NiceGoodsPicker({
         ) : null}
       </div>
 
-      {q.trim().length >= 2 ? (
+      {queryTrimmed.length >= 2 ? (
         <div className="mt-4">
           <p className="m-0 mb-2 text-xs font-medium text-ink-muted">
             {s.searchResults}
-            {loading ? "…" : null}
+            {visibleLoading ? "…" : null}
           </p>
           <ul className="m-0 max-h-[min(22rem,50vh)] list-none space-y-0.5 overflow-y-auto overscroll-contain p-0">
-            {hits.map((opt) => {
+            {visibleHits.map((opt) => {
               const checked = selectedIds.has(opt.value);
               return (
                 <li key={opt.value}>
@@ -171,12 +175,15 @@ export function NiceGoodsPicker({
                     +
                   </span>
                   <span>
-                    {copy.ui.activityCreateLabel.replace("{input}", q.trim())}
+                    {copy.ui.activityCreateLabel.replace(
+                      "{input}",
+                      queryTrimmed,
+                    )}
                   </span>
                 </button>
               </li>
             ) : null}
-            {!loading && hits.length === 0 && !showCreate ? (
+            {!visibleLoading && visibleHits.length === 0 && !showCreate ? (
               <li className="px-3 py-2 text-sm text-ink-muted">
                 {copy.ui.activityNoOptions}
               </li>
@@ -189,7 +196,7 @@ export function NiceGoodsPicker({
         </p>
       )}
 
-      {value.length > 0 && q.trim().length < 2 ? (
+      {value.length > 0 && queryTrimmed.length < 2 ? (
         <ul className="m-0 mt-4 list-none space-y-0.5 p-0">
           {value.map((opt) => (
             <li key={opt.value}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { getAppCopy } from "@/i18n/app-copy";
@@ -104,15 +104,17 @@ export function AccountHistoryTable({
   }, [checks, q, classFilter, dateFilter, nowMs]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const filterKey = `${q}|${classFilter}|${dateFilter}`;
+  const [pageFilterKey, setPageFilterKey] = useState(filterKey);
+  if (filterKey !== pageFilterKey) {
+    setPageFilterKey(filterKey);
+    setPage(1);
+  }
   const safePage = Math.min(page, pageCount);
   const pageRows = filtered.slice(
     (safePage - 1) * pageSize,
     safePage * pageSize,
   );
-
-  useEffect(() => {
-    setPage(1);
-  }, [q, classFilter, dateFilter]);
 
   if (!checks.length) {
     return (

@@ -33,7 +33,7 @@
 |--|--|
 | Флаг | `app_settings.demo_mode.enabled` |
 | Что реально | OpenAI chat (live) — придумывает совпадения; Nice classify тоже через OpenAI |
-| Что синтетика | Adliya / Madrid / EUIPO / USPTO / AU / KZ — не вызываются |
+| Что синтетика | Adliya + Madrid **всегда** заполняются выдуманными хитами; EUIPO / USPTO / AU / KZ — тоже (по выбранным юрисдикциям). Живые реестры не вызываются |
 | Картинки | локальный SVG wordmark (`data:image/svg+xml`) |
 | Кредиты | не списываются |
 | EUIPO Pending | не мешает — демо не ходит в EUIPO |

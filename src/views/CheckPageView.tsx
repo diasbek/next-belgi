@@ -256,23 +256,6 @@ export function CheckPageView({
               <span className="check-bar-shimmer absolute inset-0" aria-hidden />
             </div>
           </div>
-          <div
-            className="mt-3 flex items-center justify-center gap-1.5"
-            aria-hidden
-          >
-            {pipelineSteps.map((_, i) => (
-              <span
-                key={i}
-                className={
-                  i < activeStep
-                    ? "size-1.5 rounded-full bg-primary/70 transition-colors duration-500"
-                    : i === activeStep
-                      ? "check-dot-active size-1.5 rounded-full bg-primary"
-                      : "size-1.5 rounded-full bg-ink/15 transition-colors duration-500"
-                }
-              />
-            ))}
-          </div>
         </div>
       </>
     );

@@ -4,12 +4,14 @@ import { getContent } from "@/i18n/get-content";
 import { localePath } from "@/i18n/paths";
 import { PageContainer } from "@/components/atoms/PageContainer";
 import {
+  PageHero,
+  pageHeroPrimaryClassName,
+} from "@/components/molecules/PageHero";
+import {
   gridSpanThirdStack,
   section,
   sectionDense,
   sectionGrid,
-  sectionLead,
-  sectionTitle,
 } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 
@@ -18,10 +20,22 @@ export function CoveragePageView({ locale }: { locale: Locale }) {
 
   return (
     <>
+      <PageHero
+        eyebrow="Belgi.ai"
+        title={copy.coverage.title}
+        lead={copy.coverage.lead}
+        actions={
+          <Link
+            href={localePath(locale, "/check/")}
+            className={pageHeroPrimaryClassName()}
+          >
+            {copy.coverage.cta}
+          </Link>
+        }
+      />
+
       <section className={`${sectionDense} bg-white`}>
         <PageContainer>
-          <h1 className={sectionTitle}>{copy.coverage.title}</h1>
-          <p className={cn(sectionLead, "mb-6 sm:mb-8")}>{copy.coverage.lead}</p>
           <div className={cn(sectionGrid, gridSpanThirdStack)}>
             {copy.coverage.items.map((item) => (
               <article
@@ -56,14 +70,6 @@ export function CoveragePageView({ locale }: { locale: Locale }) {
         <PageContainer measure="copy">
           <p className="m-0 text-sm leading-relaxed text-ink-muted">
             {copy.coverage.disclaimer}
-          </p>
-          <p className="mt-8">
-            <Link
-              href={localePath(locale, "/check/")}
-              className="font-semibold text-ink underline-offset-2 hover:underline"
-            >
-              {copy.coverage.cta}
-            </Link>
           </p>
         </PageContainer>
       </section>

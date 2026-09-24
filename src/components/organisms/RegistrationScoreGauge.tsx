@@ -64,10 +64,12 @@ function easeOutExpo(t: number) {
 }
 
 function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
+  const [reduced, setReduced] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
     const onChange = () => setReduced(mq.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -76,16 +78,13 @@ function usePrefersReducedMotion() {
 }
 
 function useCountUp(target: number, durationMs: number, enabled: boolean) {
-  const [value, setValue] = useState(enabled ? 0 : target);
+  const [value, setValue] = useState(0);
   useEffect(() => {
-    if (!enabled) {
-      setValue(target);
-      return;
-    }
-    setValue(0);
+    if (!enabled) return;
     let raf = 0;
-    const start = performance.now();
+    let start = 0;
     const tick = (now: number) => {
+      if (!start) start = now;
       const t = Math.min(1, (now - start) / durationMs);
       setValue(Math.round(easeOutExpo(t) * target));
       if (t < 1) raf = requestAnimationFrame(tick);
@@ -93,7 +92,7 @@ function useCountUp(target: number, durationMs: number, enabled: boolean) {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [target, durationMs, enabled]);
-  return value;
+  return enabled ? value : target;
 }
 
 type Trig = {
@@ -178,13 +177,34 @@ function ExplodeyGauge({
   const totalWeight = metrics.reduce((s, m) => s + m.weight, 0) || 1;
 
   const metricLayout = useMemo(() => {
+    const radiusTextOuter = trig.radiusOuter + trig.stroke;
+    const radiusTextInner = trig.radiusOuter - trig.stroke;
+    const rows: Array<{
+      m: AssessmentMetric;
+      i: number;
+      weightingPct: number;
+      metricLengthMax: number;
+      metricLength: number;
+      hoverLength: number;
+      contribution: number;
+      offset: number;
+      labelX: number;
+      labelY: number;
+      valueX: number;
+      valueY: number;
+      labelAnchor: "start" | "end" | "middle";
+      valueAnchor: "start" | "end" | "middle";
+      labelBaseline: "hanging" | "auto" | "middle";
+      valueBaseline: "hanging" | "auto" | "middle";
+      color: string;
+    }> = [];
+
     let offsetAdder =
       0.25 * trig.circOuter - trig.endDiffOuter - 0.5 * trig.strokeGap;
     let angleAdder = -0.5 * Math.PI;
-    const radiusTextOuter = trig.radiusOuter + trig.stroke;
-    const radiusTextInner = trig.radiusOuter - trig.stroke;
 
-    return metrics.map((m, i) => {
+    for (let i = 0; i < metrics.length; i++) {
+      const m = metrics[i]!;
       const weightingPct = m.weight / totalWeight;
       const metricLengthMax = metricArcLength(trig, weightingPct);
       const metricPercent = (m.score / 100) * weightingPct;
@@ -197,16 +217,7 @@ function ExplodeyGauge({
       const cos = Math.cos(midAngle);
       const sin = Math.sin(midAngle);
 
-      const labelAnchor: "start" | "end" | "middle" =
-        cos > 0 ? "start" : cos < 0 ? "end" : "middle";
-      const valueAnchor: "start" | "end" | "middle" =
-        cos > 0 ? "end" : cos < 0 ? "start" : "middle";
-      const labelBaseline: "hanging" | "auto" | "middle" =
-        sin > 0 ? "hanging" : sin < 0 ? "auto" : "middle";
-      const valueBaseline: "hanging" | "auto" | "middle" =
-        sin < 0 ? "hanging" : sin > 0 ? "auto" : "middle";
-
-      const layout = {
+      rows.push({
         m,
         i,
         weightingPct,
@@ -219,17 +230,18 @@ function ExplodeyGauge({
         labelY: radiusTextOuter * sin,
         valueX: radiusTextInner * cos,
         valueY: radiusTextInner * sin,
-        labelAnchor,
-        valueAnchor,
-        labelBaseline,
-        valueBaseline,
+        labelAnchor: cos > 0 ? "start" : cos < 0 ? "end" : "middle",
+        valueAnchor: cos > 0 ? "end" : cos < 0 ? "start" : "middle",
+        labelBaseline: sin > 0 ? "hanging" : sin < 0 ? "auto" : "middle",
+        valueBaseline: sin < 0 ? "hanging" : sin > 0 ? "auto" : "middle",
         color: toneColor(m.tone),
-      };
+      });
 
       offsetAdder -= metricOffset;
       angleAdder += weightingPct * 2 * Math.PI;
-      return layout;
-    });
+    }
+
+    return rows;
   }, [metrics, totalWeight, trig]);
 
   // Peek tease like Lighthouse (~1s delay, 2.5s peek)
@@ -474,24 +486,26 @@ export function RegistrationScoreGauge({
 }) {
   const [openCalc, setOpenCalc] = useState(false);
   const calcId = useId();
-  const [draftScores, setDraftScores] = useState<Record<AssessmentMetricId, number>>(
+  const metricsKey = assessment.metrics
+    .map((m) => `${m.id}:${m.score}`)
+    .join(",");
+  const [draftScores, setDraftScores] = useState<
+    Record<AssessmentMetricId, number>
+  >(
     () =>
       Object.fromEntries(
         assessment.metrics.map((m) => [m.id, m.score]),
       ) as Record<AssessmentMetricId, number>,
   );
-
-  // Sync drafts when a new report assessment arrives
-  const metricsKey = assessment.metrics
-    .map((m) => `${m.id}:${m.score}`)
-    .join(",");
-  useEffect(() => {
+  const [syncedKey, setSyncedKey] = useState(metricsKey);
+  if (metricsKey !== syncedKey) {
+    setSyncedKey(metricsKey);
     setDraftScores(
       Object.fromEntries(
         assessment.metrics.map((m) => [m.id, m.score]),
       ) as Record<AssessmentMetricId, number>,
     );
-  }, [metricsKey, assessment.metrics]);
+  }
 
   const liveMetrics: AssessmentMetric[] = assessment.metrics.map((m) => {
     const score = Math.max(

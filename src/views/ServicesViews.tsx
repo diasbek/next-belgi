@@ -12,6 +12,11 @@ import {
 } from "@/data/patent-attorneys";
 import { getContent } from "@/i18n/get-content";
 import { PageContainer } from "@/components/atoms/PageContainer";
+import {
+  PageHero,
+  pageHeroPrimaryClassName,
+  pageHeroSecondaryClassName,
+} from "@/components/molecules/PageHero";
 import { PatentAttorneysList } from "@/components/organisms/PatentAttorneysList";
 import { FeeCalculator } from "@/components/organisms/FeeCalculator";
 import { ServiceOrderForm } from "@/components/organisms/ServiceOrderForm";
@@ -19,8 +24,6 @@ import {
   gridSpanHalf,
   sectionDense,
   sectionGrid,
-  sectionLead,
-  sectionTitle,
 } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 import Link from "next/link";
@@ -36,23 +39,21 @@ export function ServicesHubView({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-br from-lime via-white to-surface-muted">
-        <PageContainer className="py-12 sm:py-16 md:py-20">
-          <p className="m-0 font-display text-sm font-semibold uppercase tracking-[0.12em] text-ink/70">
-            Belgi.ai
-          </p>
-          <h1 className={cn(sectionTitle, "mt-2 max-w-[18ch]")}>{hub.title}</h1>
-          <p className={cn(sectionLead, "mt-4 max-w-[40rem]")}>{hub.lead}</p>
-          <p className="mt-6">
-            <Link
-              href={localePath(locale, "/check/")}
-              className="inline-flex rounded-xl bg-ink px-5 py-2.5 text-sm font-semibold text-white"
-            >
-              {hub.checkCta}
-            </Link>
-          </p>
-        </PageContainer>
-      </section>
+      <PageHero
+        eyebrow="Belgi.ai"
+        title={hub.title}
+        lead={hub.lead}
+        titleMaxCh={18}
+        spacious
+        actions={
+          <Link
+            href={localePath(locale, "/check/")}
+            className={pageHeroPrimaryClassName()}
+          >
+            {hub.checkCta}
+          </Link>
+        }
+      />
 
       <section className={`${sectionDense} bg-white`}>
         <PageContainer>
@@ -148,34 +149,35 @@ export function ServiceDetailView({
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-br from-lime via-white to-surface-muted">
-        <PageContainer className="py-12 sm:py-16">
-          <p className="m-0 text-sm text-ink-muted">
-            <Link
-              href={localePath(locale, "/services/")}
-              className="underline-offset-2 hover:underline"
-            >
-              {hub.title}
-            </Link>
-          </p>
-          <h1 className={cn(sectionTitle, "mt-2 max-w-[22ch]")}>{d.title}</h1>
-          <p className={cn(sectionLead, "mt-4 max-w-[40rem]")}>{d.hero}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
+      <PageHero
+        title={d.title}
+        lead={d.hero}
+        titleMaxCh={22}
+        breadcrumb={
+          <Link
+            href={localePath(locale, "/services/")}
+            className="underline-offset-2 hover:underline"
+          >
+            {hub.title}
+          </Link>
+        }
+        actions={
+          <>
             <Link
               href={resolveHref(locale, d.primaryCta.href)}
-              className="inline-flex rounded-xl bg-ink px-5 py-2.5 text-sm font-semibold text-white"
+              className={pageHeroPrimaryClassName()}
             >
               {d.primaryCta.label}
             </Link>
             <Link
               href={resolveHref(locale, d.secondaryCta.href)}
-              className="inline-flex rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-ink ring-1 ring-ink/15"
+              className={pageHeroSecondaryClassName()}
             >
               {d.secondaryCta.label}
             </Link>
-          </div>
-        </PageContainer>
-      </section>
+          </>
+        }
+      />
 
       <section className={`${sectionDense} bg-white`}>
         <PageContainer>

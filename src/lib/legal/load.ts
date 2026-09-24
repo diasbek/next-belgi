@@ -57,3 +57,8 @@ export function extractLegalDescription(
   }
   return fallback;
 }
+
+/** Drop the first H1 so PageHero can own the page title. */
+export function stripLeadingLegalH1(markdown: string): string {
+  return markdown.replace(/^#\s+.+\n+/, "");
+}

@@ -30,7 +30,7 @@ import {
   totalCheckCredits,
   type JurisdictionCode,
 } from "@/lib/check/jurisdictions";
-import { fieldInput } from "@/styles/ui";
+import { fieldInput, fieldInputPill } from "@/styles/ui";
 import { cn } from "@/lib/cn";
 
 interface CheckFormProps {
@@ -345,7 +345,7 @@ export function CheckForm({
         <form
           onSubmit={onSubmitCompact}
           className={cn(
-            "grid w-full items-center gap-3 text-left",
+            "grid w-full items-stretch gap-3 text-left",
             "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)_auto]",
           )}
         >
@@ -358,12 +358,12 @@ export function CheckForm({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={brandPlaceholder}
-            className={cn(fieldInput, "h-14 min-h-14")}
+            className={fieldInputPill}
             required
             autoComplete="off"
           />
 
-          <div className="min-w-0">
+          <div className="min-w-0 self-center">
             <label className="sr-only" htmlFor={activityId}>
               {activityPlaceholder}
             </label>
@@ -371,7 +371,7 @@ export function CheckForm({
               locale={locale}
               value={activityOptions}
               onChange={setActivityOptions}
-              placeholder={copy.ui.activitySearchHint}
+              placeholder={activityPlaceholder}
               createLabel={copy.ui.activityCreateLabel}
               noOptionsMessage={copy.ui.activityNoOptions}
               loadingMessage={copy.ui.activityLoading}
@@ -384,7 +384,7 @@ export function CheckForm({
           <Button
             type="submit"
             disabled={pending || !activityText.trim()}
-            className="h-14 min-h-14 w-full py-0 lg:w-auto lg:min-w-[9.5rem] lg:px-8"
+            className="h-14 min-h-14 w-full self-center py-0 lg:w-auto lg:min-w-[9.5rem] lg:px-8"
           >
             {submitLabel}
           </Button>

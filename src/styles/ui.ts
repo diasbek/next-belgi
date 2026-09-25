@@ -87,7 +87,19 @@ export const btnHeroPrimary = btnPrimary;
 export const btnHeroSecondary = btnSecondary;
 
 export const fieldInput =
-  "min-h-14 w-full rounded-[var(--radius-lg)] border-2 border-[#7a7e74] bg-white px-4 text-base text-ink outline-none placeholder:text-[#3a3e38] focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/30 sm:px-5";
+  "min-h-14 w-full rounded-[var(--radius-lg)] border border-ink/15 bg-white px-4 text-base leading-normal text-ink shadow-[inset_0_1px_0_rgb(26_28_24/0.03)] outline-none transition-[border-color,box-shadow] placeholder:text-ink/40 focus:border-ink/35 focus-visible:border-ink/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 sm:px-5";
+
+/** Single-line control matching compact check row + CTA pills. */
+export const fieldInputPill =
+  "min-h-14 h-14 w-full rounded-[var(--radius-pill)] border border-ink/15 bg-white px-4 text-base leading-none text-ink shadow-[inset_0_1px_0_rgb(26_28_24/0.03)] outline-none transition-[border-color,box-shadow] placeholder:text-ink/40 focus:border-ink/35 focus-visible:border-ink/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 sm:px-5";
+
+/** Borderless control nested inside a pill / shell (hero search). */
+export const fieldInputBare =
+  "min-h-12 w-full flex-1 border-0 bg-transparent px-4 text-base text-ink outline-none placeholder:text-ink/40 focus-visible:outline-none sm:min-h-14 sm:px-6";
+
+/** Outer shell for pill search (input + CTA). */
+export const fieldShell =
+  "flex w-full items-center gap-1.5 rounded-[var(--radius-pill)] bg-white p-1.5 shadow-md transition-[box-shadow] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/25";
 
 export const focusRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2";

@@ -93,6 +93,7 @@ type LocaleBundle = {
     title: string;
     lead: string;
     classesLabel: string;
+    classesOf: string;
     jurisdictionsLabel: string;
     estimateTitle: string;
     totalLabel: string;
@@ -306,6 +307,7 @@ const uz: LocaleBundle = {
     title: "Yigʻimlar kalkulyatori",
     lead: "Sinflar soni va davlatlarni tanlang — orientir smeta.",
     classesLabel: "Sinflar soni",
+    classesOf: "MKTU · 1–45",
     jurisdictionsLabel: "Davlatlar / reestrlar",
     estimateTitle: "Smeta",
     totalLabel: "Jami (orientir)",
@@ -516,6 +518,7 @@ const ru: LocaleBundle = {
     title: "Калькулятор пошлин",
     lead: "Укажите число классов и страны — ориентировочная смета.",
     classesLabel: "Число классов",
+    classesOf: "МКТУ · 1–45",
     jurisdictionsLabel: "Страны / реестры",
     estimateTitle: "Смета",
     totalLabel: "Итого (ориентир)",
@@ -726,6 +729,7 @@ const en: LocaleBundle = {
     title: "Fee calculator",
     lead: "Pick class count and countries for an indicative estimate.",
     classesLabel: "Number of classes",
+    classesOf: "Nice · 1–45",
     jurisdictionsLabel: "Countries / registries",
     estimateTitle: "Estimate",
     totalLabel: "Total (indicative)",

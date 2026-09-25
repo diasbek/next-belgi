@@ -5,6 +5,8 @@ import { PageContainer } from "@/components/atoms/PageContainer";
 import { CheckForm } from "@/components/molecules/CheckForm";
 import {
   contentBand,
+  fieldInputBare,
+  fieldShell,
   section,
   sectionLead,
   sectionTitle,
@@ -212,7 +214,10 @@ export function HomePageView({ locale }: { locale: Locale }) {
               <form
                 action={checkHref}
                 method="get"
-                className="flex w-full flex-col gap-1.5 rounded-[1.5rem] bg-white p-1.5 shadow-md sm:flex-row sm:items-center sm:gap-0 sm:rounded-[var(--radius-pill)] sm:p-1.5"
+                className={cn(
+                  fieldShell,
+                  "flex-col sm:flex-row sm:gap-0 rounded-[1.5rem] sm:rounded-[var(--radius-pill)]",
+                )}
               >
                 <label className="sr-only" htmlFor="hero-query">
                   {copy.ui.brandPlaceholder}
@@ -221,12 +226,13 @@ export function HomePageView({ locale }: { locale: Locale }) {
                   id="hero-query"
                   name="q"
                   placeholder={copy.ui.brandPlaceholder}
-                  className="min-h-12 w-full flex-1 border-0 bg-transparent px-4 text-base outline-none sm:min-h-14 sm:px-6"
+                  className={fieldInputBare}
                   required
+                  autoComplete="off"
                 />
                 <button
                   type="submit"
-                  className="min-h-12 w-full shrink-0 rounded-[var(--radius-pill)] bg-primary px-6 text-sm font-semibold text-white sm:min-h-14 sm:w-auto sm:px-7"
+                  className="min-h-12 w-full shrink-0 rounded-[var(--radius-pill)] bg-primary px-6 text-sm font-semibold text-white transition-colors hover:bg-primary-hover sm:min-h-14 sm:w-auto sm:px-7"
                 >
                   {copy.ui.check}
                 </button>
@@ -243,7 +249,7 @@ export function HomePageView({ locale }: { locale: Locale }) {
               <form
                 action={checkHref}
                 method="get"
-                className="flex w-full items-center rounded-[var(--radius-pill)] bg-white p-1.5 shadow-md"
+                className={fieldShell}
               >
                 <label className="sr-only" htmlFor="hero-query-desktop">
                   {copy.ui.brandPlaceholder}
@@ -252,12 +258,13 @@ export function HomePageView({ locale }: { locale: Locale }) {
                   id="hero-query-desktop"
                   name="q"
                   placeholder={copy.ui.brandPlaceholder}
-                  className="min-h-14 w-full flex-1 border-0 bg-transparent px-6 text-base outline-none"
+                  className={fieldInputBare}
                   required
+                  autoComplete="off"
                 />
                 <button
                   type="submit"
-                  className="min-h-14 shrink-0 rounded-[var(--radius-pill)] bg-primary px-7 text-sm font-semibold text-white"
+                  className="min-h-14 shrink-0 rounded-[var(--radius-pill)] bg-primary px-7 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
                 >
                   {copy.ui.check}
                 </button>

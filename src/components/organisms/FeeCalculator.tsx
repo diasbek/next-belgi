@@ -84,17 +84,38 @@ export function FeeCalculator({ locale }: { locale: Locale }) {
       </h2>
       <p className="mt-2 text-sm text-ink-muted">{copy.lead}</p>
 
-      <label className="mt-5 block text-sm font-medium text-ink">
-        {copy.classesLabel}
+      <div className="mt-5">
+        <div className="flex items-end justify-between gap-3">
+          <label htmlFor="fee-classes" className="text-sm font-medium text-ink">
+            {copy.classesLabel}
+          </label>
+          <p className="m-0 flex items-baseline gap-1.5 tabular-nums">
+            <span className="text-2xl font-semibold tracking-tight text-ink">
+              {classCount}
+            </span>
+            <span className="text-xs text-ink-muted">{copy.classesOf}</span>
+          </p>
+        </div>
         <input
-          type="number"
+          id="fee-classes"
+          type="range"
           min={1}
           max={45}
+          step={1}
           value={classCount}
-          onChange={(e) => setClassCount(Number(e.target.value) || 1)}
-          className="mt-1.5 w-full max-w-[8rem] rounded-lg border border-ink/15 bg-white px-3 py-2 text-ink"
+          onChange={(e) => setClassCount(Number(e.target.value))}
+          className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-full bg-ink/10 accent-[var(--color-primary)] [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink [&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-ink"
+          aria-valuemin={1}
+          aria-valuemax={45}
+          aria-valuenow={classCount}
         />
-      </label>
+        <div className="mt-1.5 flex justify-between text-[11px] tabular-nums text-ink-muted">
+          <span>1</span>
+          <span>15</span>
+          <span>30</span>
+          <span>45</span>
+        </div>
+      </div>
 
       <fieldset className="mt-5 m-0 border-0 p-0">
         <legend className="text-sm font-medium text-ink">

@@ -16,9 +16,17 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--color-primary) 45%, transparent);
-  outline-offset: 2px;
+/* Prefer ring utilities on controls; keep a fallback for plain links/buttons. */
+@layer base {
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid
+      color-mix(in srgb, var(--color-primary) 45%, transparent);
+    outline-offset: 2px;
+  }
 }
 
 .skip-link {

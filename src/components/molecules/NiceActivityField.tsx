@@ -56,74 +56,123 @@ function buildSelectStyles(
   compact: boolean,
 ): StylesConfig<SelectOption, true, GroupBase<SelectOption>> {
   return {
-  control: (base, state) => ({
-    ...base,
-    minHeight: compact ? "3.5rem" : "var(--tap-min)",
-    borderRadius: compact ? "var(--radius-lg)" : "var(--radius-md)",
+    control: (base, state) => ({
+      ...base,
+      minHeight: compact ? "3.5rem" : "var(--tap-min)",
+      height: compact ? "3.5rem" : undefined,
+      borderRadius: compact ? "var(--radius-pill)" : "var(--radius-md)",
       borderColor: state.isFocused
-        ? "var(--color-primary)"
-        : "#7a7e74",
-    boxShadow: state.isFocused
-      ? "0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent)"
-      : "none",
-    borderWidth: 2,
-    backgroundColor: "#fff",
-    ":hover": {
-      borderColor: state.isFocused
-        ? "var(--color-primary)"
-        : "#5c6058",
-    },
-  }),
-  valueContainer: (base) => ({
-    ...base,
-    padding: compact ? "0 1.25rem" : "6px 12px",
-    gap: 4,
-  }),
-  multiValue: (base) => ({
-    ...base,
-    backgroundColor: "#f4fbe6",
-    borderRadius: 8,
-    border: "1px solid #b8d96a",
-  }),
-  multiValueLabel: (base) => ({
-    ...base,
-    color: "var(--color-ink, #1a1c18)",
-    fontSize: "0.8125rem",
-    padding: "2px 6px",
-  }),
-  multiValueRemove: (base) => ({
-    ...base,
-    color: "rgb(26 28 24 / 0.55)",
-    ":hover": { backgroundColor: "#dfff9e", color: "#1a1c18" },
-  }),
-  placeholder: (base) => ({
-    ...base,
-    color: "#3a3e38",
-    fontSize: "0.9375rem",
-  }),
-  input: (base) => ({ ...base, margin: 0, padding: 0 }),
-  menu: (base) => ({
-    ...base,
-    borderRadius: 12,
-    overflow: "hidden",
-    zIndex: 40,
-    border: "1px solid rgb(26 28 24 / 0.08)",
-    boxShadow: "0 8px 24px rgb(26 28 24 / 0.08)",
-  }),
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isFocused ? "#f4fbe6" : "#fff",
-    color: "#1a1c18",
-    fontSize: "0.875rem",
-    cursor: "pointer",
-  }),
-  indicatorSeparator: () => ({ display: "none" }),
-  indicatorsContainer: (base) => ({
-    ...base,
-    padding: compact ? "0 0.5rem" : base.padding,
-  }),
-  dropdownIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.55)" }),
-  clearIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.55)" }),
+        ? "color-mix(in srgb, var(--color-ink) 35%, transparent)"
+        : "color-mix(in srgb, var(--color-ink) 15%, transparent)",
+      boxShadow: state.isFocused
+        ? "0 0 0 2px color-mix(in srgb, var(--color-primary) 20%, transparent)"
+        : "inset 0 1px 0 rgb(26 28 24 / 0.03)",
+      borderWidth: 1,
+      backgroundColor: "#fff",
+      alignItems: "center",
+      flexWrap: "nowrap",
+      cursor: "text",
+      ":hover": {
+        borderColor: state.isFocused
+          ? "color-mix(in srgb, var(--color-ink) 35%, transparent)"
+          : "color-mix(in srgb, var(--color-ink) 25%, transparent)",
+      },
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      padding: compact ? "0 1.15rem" : "6px 12px",
+      gap: 4,
+      flexWrap: compact ? "nowrap" : "wrap",
+      alignItems: "center",
+      overflow: "hidden",
+      ...(compact
+        ? {
+            height: "100%",
+            display: "flex",
+          }
+        : null),
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: "#f4fbe6",
+      borderRadius: 8,
+      border: "1px solid #b8d96a",
+      margin: compact ? "0 2px" : base.margin,
+      maxWidth: compact ? "9rem" : undefined,
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: "var(--color-ink, #1a1c18)",
+      fontSize: "0.8125rem",
+      padding: "2px 6px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: "rgb(26 28 24 / 0.55)",
+      ":hover": { backgroundColor: "#dfff9e", color: "#1a1c18" },
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "color-mix(in srgb, var(--color-ink) 40%, transparent)",
+      fontSize: compact ? "1rem" : "0.9375rem",
+      margin: 0,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      maxWidth: "100%",
+      ...(compact
+        ? {
+            position: "absolute",
+            top: "50%",
+            transform: "translateY(-50%)",
+            left: "1.15rem",
+            right: "1.15rem",
+            lineHeight: 1.25,
+          }
+        : null),
+    }),
+    input: (base) => ({
+      ...base,
+      margin: 0,
+      padding: 0,
+      outline: "none",
+      boxShadow: "none",
+      ...(compact
+        ? {
+            marginTop: 0,
+            marginBottom: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+          }
+        : null),
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: 12,
+      overflow: "hidden",
+      zIndex: 40,
+      border: "1px solid rgb(26 28 24 / 0.08)",
+      boxShadow: "0 8px 24px rgb(26 28 24 / 0.08)",
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? "#f4fbe6" : "#fff",
+      color: "#1a1c18",
+      fontSize: "0.875rem",
+      cursor: "pointer",
+    }),
+    indicatorSeparator: () => ({ display: "none" }),
+    indicatorsContainer: (base) => ({
+      ...base,
+      padding: compact ? "0 0.35rem" : base.padding,
+      alignSelf: "center",
+      height: compact ? "100%" : undefined,
+    }),
+    dropdownIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.55)" }),
+    clearIndicator: (base) => ({ ...base, color: "rgb(26 28 24 / 0.55)" }),
   };
 }
 
